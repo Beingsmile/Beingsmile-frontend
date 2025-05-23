@@ -2,10 +2,29 @@
 @plugin "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
 
+@source "../node_modules/flowbite";
+
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
   --color-primary: oklch(0.99 0 0);
+  /* animation: var(--fade-in); */
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slide-up {
+    from { 
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer base {
@@ -21,6 +40,7 @@
     @apply transition-colors duration-300;
   }
 }
+
 
 body {
   box-sizing: border-box;
