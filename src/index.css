@@ -2,15 +2,29 @@
 @plugin "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme {
+  --color-primary: oklch(0.99 0 0);
+}
+
+@layer base {
+  html {
+    @apply bg-white dark:bg-gray-900;
+    @apply text-gray-900 dark:text-white;
+    @apply transition-colors duration-300;
+  }
+
+  body {
+    @apply bg-white dark:bg-gray-900;
+    @apply text-gray-900 dark:text-white;
+    @apply transition-colors duration-300;
+  }
+}
+
 body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
-}
-
-@theme {
-
-  --color-primary: oklch(0.99 0 0);
-
+  font-family: "Inter", sans-serif;
 }
