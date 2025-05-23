@@ -41,7 +41,7 @@ const Navbar = () => {
           <button
             onClick={toggleTheme}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-            className="px-2 py-1 flex justify-center items-center text-center mr-2 rounded-full bg-blue-800 dark:bg-blue-800 hover:bg-blue-600 dark:hovertransition-colors transition-all duration-300 cursor-pointer"
+            className="px-2 py-1 flex justify-center items-center text-center mr-2 md:mr-4 rounded-full bg-blue-800 dark:bg-blue-800 hover:bg-blue-600 dark:hovertransition-colors transition-all duration-300 cursor-pointer"
           >
             {theme === "dark" ? (
               <span className="text-yellow-300 text-xl">🔆</span>
