@@ -1,49 +1,39 @@
-import heroImage from "../assets/hero.jpg"; // Adjust the path as necessary
+import heroImage from "../assets/hero.jpg";
 
 const Hero = () => {
   return (
-    <section className="relative ">
-      {/* Background Image with Overlay */}
+    <section className="relative min-h-[90vh] flex items-center md:justify-start justify-center">
+      {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
           src={heroImage}
-          alt="Happy beneficiary"
-          className="w-full h-full object-cover opacity-100 dark:opacity-70"
+          alt="Volunteers helping"
+          className="w-full h-full object-cover"
         />
+        {/* subtle gradient to left */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
       </div>
 
-      {/* Content Container */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 md:py-40 text-center">
-        {/* Background effect */}
-        <div
-          className="absolute inset-0 bg-[url('/your-bg-image.jpg')] bg-cover bg-center opacity-20 dark:opacity-25"
-          aria-hidden="true"
-        ></div>
-        
-
-        {/* Content */}
-        <div className="relative z-10">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-white dark:text-white leading-tight tracking-tight drop-shadow-lg">
-            <span className="block">Empower Hope.</span>
-            <span className="block text-blue-600 dark:text-blue-400">
-              Fund Dreams.
-            </span>
+      {/* Content Positioned Bottom Left */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 flex items-end h-full w-full ">
+        <div className="text-left text-white max-w-xl">
+          <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight drop-shadow-lg">
+            Empower Hope. <br />
+            <span className="text-blue-700">Fund Dreams.</span>
           </h1>
-
-          <p className="mt-6 text-lg md:text-2xl text-white font-semibold max-w-3xl mx-auto drop-shadow-lg">
+          <p className="mt-4 text-lg sm:text-xl font-medium text-gray-200 drop-shadow">
             Start or support life-changing campaigns around the world.
           </p>
-
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+          <div className="mt-6 flex flex-col sm:flex-row gap-4">
             <a
               href="#"
-              className="px-8 py-4 text-lg font-semibold rounded-xl bg-blue-600 text-white shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 transition-all"
+              className="px-6 py-3 text-base font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition focus:ring-4 focus:ring-blue-400"
             >
               🚀 Start a Campaign
             </a>
             <a
               href="#"
-              className="px-8 py-4 text-lg font-semibold rounded-xl bg-white text-gray-900 shadow-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 transition-all"
+              className="px-6 py-3 text-base font-semibold rounded-lg bg-white text-gray-800 hover:bg-gray-100 transition focus:ring-4 focus:ring-gray-300"
             >
               🔍 Browse Campaigns
             </a>
