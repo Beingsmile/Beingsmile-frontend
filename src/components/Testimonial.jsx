@@ -73,12 +73,13 @@ const Testimonial = () => {
     <section className="bg-gray-50 dark:bg-gray-900 py-8 md:py-16">
       <div className="max-w-4xl mx-auto px-4">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white mb-4">
-  What People Say About <span className="text-blue-600 dark:text-blue-400">BeingSmile</span>
-</h2>
-<p className="text-center text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-4 sm:mb-6 md:mb-8">
-  Real voices. Real stories. Discover how BeingSmile is changing lives through impactful campaigns.
-</p>
-
+          What People Say About{" "}
+          <span className="text-blue-600 dark:text-blue-400">BeingSmile</span>
+        </h2>
+        <p className="text-center text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-4 sm:mb-6 md:mb-8">
+          Real voices. Real stories. Discover how BeingSmile is changing lives
+          through impactful campaigns.
+        </p>
 
         <div className="relative overflow-hidden">
           {/* Testimonial Slider */}

@@ -15,7 +15,7 @@ const Footer = () => {
               Empowering dreams through commission-free crowdfunding.
             </p>
             <p className="text-gray-500 dark:text-gray-400 text-sm">
-              © 2025 BeingSmile, Developed by Neexzen
+              © 2025 BeingSmile, Developed by <a href="https://neexzen.com/" className="underline underline-offset-2">Neexzen</a>
             </p>
           </div>
 
