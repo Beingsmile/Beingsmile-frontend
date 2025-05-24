@@ -32,9 +32,12 @@ const HowItWorks = () => {
 
   return (
     <section className="py-16 px-4 bg-white dark:bg-gray-900">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+      <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white text-center">
         How It <span className="text-blue-600 dark:text-blue-400">Works</span>
       </h2>
+      <p className="mt-2 mb-8 md:mb-12 text-center text-gray-600 dark:text-gray-300 text-sm sm:text-base">
+        A simple 3-step process to start your fundraiser and make an impact.
+      </p>
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-start">
         {/* Image */}
         <div className="relative w-full aspect-[4/3] bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden shadow-md">
