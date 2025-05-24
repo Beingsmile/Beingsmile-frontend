@@ -2,7 +2,7 @@ import heroImage from "../assets/hero.jpg";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-[90vh] flex items-center md:justify-start justify-center">
+    <section className="relative min-h-[90vh] flex items-end md:items-center md:justify-start justify-center">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
@@ -15,15 +15,18 @@ const Hero = () => {
       </div>
 
       {/* Content Positioned Bottom Left */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 flex items-end h-full w-full ">
-        <div className="text-left text-white max-w-xl">
-          <h1 className="text-4xl sm:text-5xl font-extrabold leading-tight drop-shadow-lg">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 flex items-end h-full w-full">
+        <div className="text-center md:text-left text-white max-w-xl">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold leading-snug sm:leading-tight text-white drop-shadow-lg text-center sm:text-left">
             Empower Hope. <br />
-            <span className="text-blue-700">Fund Dreams.</span>
+            <span className="text-blue-600 dark:text-blue-400">
+              Fund Dreams.
+            </span>
           </h1>
-          <p className="mt-4 text-lg sm:text-xl font-medium text-gray-200 drop-shadow">
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg md:text-xl font-medium text-gray-200 dark:text-gray-300 drop-shadow text-center sm:text-left max-w-md sm:max-w-xl mx-auto sm:mx-0">
             Start or support life-changing campaigns around the world.
           </p>
+
           <div className="mt-6 flex flex-col sm:flex-row gap-4">
             <a
               href="#"

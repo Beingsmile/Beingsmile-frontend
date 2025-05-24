@@ -88,7 +88,7 @@ export function NavComponent() {
         <NavbarToggle />
       </div>
       <NavbarCollapse >
-        <div className="flex gap-3 lg:gap-6 md:flex-row flex-col lg:text-base items-center flex-nowrap">
+        <div className="flex gap-3 lg:gap-6 md:flex-row flex-col lg:text-base items-center flex-nowrap p-3">
           <NavbarLink href="#" active>
             Home
           </NavbarLink>
