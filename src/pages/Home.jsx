@@ -4,6 +4,7 @@ import Hero from "../components/Hero";
 import HowItWorks from "../components/HowItWorks";
 import Navbar from "../components/Navbar";
 import Testimonial from "../components/Testimonial";
+import WhyBeingSmile from "../components/WhyBeingSmile";
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <Navbar />
       <main className="min-h-screen">
         <Hero />
+        <WhyBeingSmile />
         <HowItWorks />
         <Testimonial />
         <FAQ />

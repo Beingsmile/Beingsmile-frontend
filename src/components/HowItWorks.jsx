@@ -33,7 +33,7 @@ const HowItWorks = () => {
   return (
     <section className="py-16 px-4 bg-white dark:bg-gray-900">
       <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-        How It Works
+        How It <span className="text-blue-600 dark:text-blue-400">Works</span>
       </h2>
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-start">
         {/* Image */}

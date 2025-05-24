@@ -73,7 +73,7 @@ const Testimonial = () => {
     <section className="bg-gray-50 dark:bg-gray-900 py-8 md:py-16">
       <div className="max-w-4xl mx-auto px-4">
         <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 dark:text-white mb-6 md:mb-12">
-          What People Say About BeingSmile
+          What People Say About <span className="text-blue-600 dark:text-blue-400">BeingSmile</span>
         </h2>
 
         <div className="relative overflow-hidden">
