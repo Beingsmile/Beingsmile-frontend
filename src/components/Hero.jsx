@@ -2,7 +2,7 @@ import heroImage from "../assets/hero.jpg";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-[90vh] flex items-end md:items-center md:justify-start justify-center">
+    <section className="relative min-h-[80vh] md:min-h-[90vh] flex items-end md:items-center md:justify-start justify-center">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <img
@@ -17,9 +17,9 @@ const Hero = () => {
       {/* Content Positioned Bottom Left */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 flex items-end h-full w-full">
         <div className="text-center md:text-left text-white max-w-xl">
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold leading-snug sm:leading-tight text-white drop-shadow-lg text-center sm:text-left">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-snug sm:leading-tight text-white drop-shadow-lg text-center sm:text-left">
             Empower Hope. <br />
-            <span className="text-blue-600 dark:text-blue-400">
+            <span className="text-blue-600 dark:text-blue-500">
               Fund Dreams.
             </span>
           </h1>
