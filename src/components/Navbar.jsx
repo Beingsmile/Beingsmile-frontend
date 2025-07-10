@@ -14,7 +14,7 @@ import { useContext, useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { AuthContext } from "../contexts/AuthProvider";
 
-export function NavComponent() {
+export function NavComponent({ setAuth }) {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const { user } = useContext(AuthContext);
 
@@ -98,7 +98,9 @@ export function NavComponent() {
     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
     dark:focus:ring-offset-gray-800
     text-sm sm:text-base
+    cursor-pointer
   "
+              onClick={() => setAuth("login")}
             >
               Login
             </button>
