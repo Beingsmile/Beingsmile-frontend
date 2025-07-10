@@ -119,13 +119,12 @@ const Login = ({ setAuth }) => {
 
         <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
           Don't have an account?{" "}
-          <a
-            href="#"
-            onClick={setAuth("login")}
-            className="text-blue-600 hover:text-blue-500 dark:text-blue-400"
+          <button
+            onClick={() => setAuth("register")}
+            className="text-blue-600 hover:text-blue-500 dark:text-blue-400 cursor-pointer"
           >
             Sign up
-          </a>
+            </button>
         </div>
       </div>
     </div>
