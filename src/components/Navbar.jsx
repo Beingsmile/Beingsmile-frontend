@@ -10,11 +10,13 @@ import {
   NavbarLink,
   NavbarToggle,
 } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
+import { AuthContext } from "../contexts/AuthProvider";
 
 export function NavComponent() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -61,33 +63,50 @@ export function NavComponent() {
           )}
         </button>
         <div className="mr-4">
-          <Dropdown
-            arrowIcon={false}
-            inline
-            label={
-              <Avatar
-                alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                rounded
-              />
-            }
-          >
-            <DropdownHeader>
-              <span className="block text-sm">Bonnie Green</span>
-              <span className="block truncate text-sm font-medium">
-                name@flowbite.com
-              </span>
-            </DropdownHeader>
-            <DropdownItem>Dashboard</DropdownItem>
-            <DropdownItem>Settings</DropdownItem>
-            <DropdownItem>Earnings</DropdownItem>
-            <DropdownDivider />
-            <DropdownItem>Sign out</DropdownItem>
-          </Dropdown>
+          {user ? (
+            <Dropdown
+              arrowIcon={false}
+              inline
+              label={
+                <Avatar
+                  alt="User settings"
+                  img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                  rounded
+                />
+              }
+            >
+              <DropdownHeader>
+                <span className="block text-sm">Bonnie Green</span>
+                <span className="block truncate text-sm font-medium">
+                  name@flowbite.com
+                </span>
+              </DropdownHeader>
+              <DropdownItem>Dashboard</DropdownItem>
+              <DropdownItem>Settings</DropdownItem>
+              <DropdownItem>Earnings</DropdownItem>
+              <DropdownDivider />
+              <DropdownItem>Sign out</DropdownItem>
+            </Dropdown>
+          ) : (
+            <button
+              className="
+    px-4 py-2 
+    bg-blue-600 hover:bg-blue-700 
+    text-white font-medium rounded-lg 
+    transition-colors duration-200 
+    dark:bg-blue-500 dark:hover:bg-blue-600
+    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+    dark:focus:ring-offset-gray-800
+    text-sm sm:text-base
+  "
+            >
+              Login
+            </button>
+          )}
         </div>
         <NavbarToggle />
       </div>
-      <NavbarCollapse >
+      <NavbarCollapse>
         <div className="flex gap-3 lg:gap-6 md:flex-row flex-col lg:text-base items-center flex-nowrap p-3">
           <NavbarLink href="#" active>
             Home
