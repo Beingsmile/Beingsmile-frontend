@@ -16,7 +16,7 @@ import { AuthContext } from "../contexts/AuthProvider";
 
 export function NavComponent({ setAuth }) {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-  const { user } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -63,7 +63,7 @@ export function NavComponent({ setAuth }) {
           )}
         </button>
         <div className="mr-4">
-          {!user ? (
+          {user ? (
             <Dropdown
               arrowIcon={false}
               inline
@@ -85,7 +85,7 @@ export function NavComponent({ setAuth }) {
               <DropdownItem>Settings</DropdownItem>
               <DropdownItem>Earnings</DropdownItem>
               <DropdownDivider />
-              <DropdownItem>Sign out</DropdownItem>
+              <DropdownItem onClick={() => logout()}>Sign out</DropdownItem>
             </Dropdown>
           ) : (
             <button

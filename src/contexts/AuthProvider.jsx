@@ -3,6 +3,7 @@ import auth from "../../firebase.init";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  signOut,
 } from "firebase/auth";
 import { toast } from "react-toastify";
 
@@ -55,10 +56,15 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = () => {
+    return signOut(auth);
+  };
+
   const authinfo = {
     user,
     setUser,
     createWithEmail,
+    logout,
   };
 
   return (

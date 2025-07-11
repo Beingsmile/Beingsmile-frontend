@@ -53,6 +53,7 @@ const Register = ({ setAuth }) => {
           bio: "",
           donatedCampaigns: [],
         });
+
         setUser(res.user); // Update user state
         toast.success("Registration successful!");
       } catch (error) {
