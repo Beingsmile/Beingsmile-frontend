@@ -2,18 +2,21 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useRegister } from "../hooks/useAuth";
+import { deleteUser } from "firebase/auth";
 
 const Register = ({ setAuth }) => {
   const [showPassword, setShowPassword] = useState(false);
   //const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
-  const { createWithEmail } = useContext(AuthContext);
+  const { setUser, createWithEmail } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
+  const { mutateAsync } = useRegister();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -38,7 +41,27 @@ const Register = ({ setAuth }) => {
     }
 
     // Call the createWithEmail function from AuthContext
-    await createWithEmail(email, password);
+    const res = await createWithEmail(email, password);
+
+    if (res.success) {
+      try {
+        await mutateAsync({
+          uid: res.user.uid,
+          email: email,
+          name: name,
+          avatar: res.user.photoURL || "",
+          bio: "",
+          donatedCampaigns: [],
+        });
+        setUser(res.user); // Update user state
+        toast.success("Registration successful!");
+      } catch (error) {
+        await deleteUser(res.user); // Rollback Firebase
+        setUser(null); // Clear user state
+        toast.error(`Registration failed: ${error.message}`);
+      }
+    }
+
     handleClose();
   };
 
@@ -154,7 +177,11 @@ const Register = ({ setAuth }) => {
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder:text-gray-500 placeholder:dark:text-gray-400"
               placeholder={showPassword ? "your password" : "••••••••"}
             />
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -170,12 +197,17 @@ const Register = ({ setAuth }) => {
               name="confirmPassword"
               {...register("confirmPassword", {
                 required: "Please confirm your password",
-                validate: (value) => value === password || "Passwords do not match",
+                validate: (value) =>
+                  value === password || "Passwords do not match",
               })}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder:text-gray-500 placeholder:dark:text-gray-400"
               placeholder={showPassword ? "confirm password" : "••••••••"}
             />
-            {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
 
           <div className="flex items-center justify-between">

@@ -25,30 +25,34 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const createWithEmail = async (email, password) => {
-    return await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed up
-        setUser(userCredential.user);
-        toast.success("Registration Successful!");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      
+      return { success: true, user: userCredential.user };
+    } catch (error) {
+      let errorMessage = "Registration failed";
 
-        // Custom messages based on error code
-        switch (errorCode) {
-          case "auth/email-already-in-use":
-            toast.error("Email is already in use");
-            break;
-          case "auth/invalid-email":
-            toast.error("Invalid email address");
-            break;
-          case "auth/weak-password":
-            toast.error("Password is too weak (must be at least 6 characters)");
-            break;
-          default:
-            toast.error("Registration failed: " + error.message);
-        }
-      });
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          errorMessage = "Email is already in use";
+          break;
+        case "auth/invalid-email":
+          errorMessage = "Invalid email address";
+          break;
+        case "auth/weak-password":
+          errorMessage = "Password is too weak (must be at least 6 characters)";
+          break;
+        default:
+          errorMessage = error.message;
+      }
+
+      toast.error(errorMessage);
+      return { success: false, error: errorMessage };
+    }
   };
 
   const authinfo = {
