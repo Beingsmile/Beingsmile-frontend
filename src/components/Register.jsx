@@ -1,8 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AuthContext } from "../contexts/AuthProvider";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const Register = ({ setAuth }) => {
   const [showPassword, setShowPassword] = useState(false);
+  //const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
+  const { createWithEmail } = useContext(AuthContext);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -18,16 +29,34 @@ const Register = ({ setAuth }) => {
     setAuth(null);
   };
 
+  const onSubmit = async (data) => {
+    const { name, email, password, confirmPassword } = data;
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    // Call the createWithEmail function from AuthContext
+    await createWithEmail(email, password);
+    handleClose();
+  };
+
+  const password = watch("password");
+
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md relative" ref={modalRef}>
+      <div
+        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-md relative"
+        ref={modalRef}
+      >
         {/* Close Button */}
         <button
           onClick={handleClose}
@@ -54,7 +83,7 @@ const Register = ({ setAuth }) => {
           Create Account
         </h2>
 
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label
               htmlFor="name"
@@ -65,9 +94,14 @@ const Register = ({ setAuth }) => {
             <input
               type="text"
               id="name"
+              name="name"
+              {...register("name", { required: "Name is required" })}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder:text-gray-500 placeholder:dark:text-gray-400"
               placeholder="John Doe"
             />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
           </div>
 
           <div>
@@ -80,9 +114,22 @@ const Register = ({ setAuth }) => {
             <input
               type="email"
               id="email"
+              name="email"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email address",
+                },
+              })}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder:text-gray-500 placeholder:dark:text-gray-400"
               placeholder="your@email.com"
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div>
@@ -95,9 +142,19 @@ const Register = ({ setAuth }) => {
             <input
               type={showPassword ? "text" : "password"}
               id="password"
+              name="password"
+              {...register("password", {
+                required: "Password is required",
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/,
+                  message:
+                    "Password must be at least 8 characters and include uppercase, lowercase, number, and special character",
+                },
+              })}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder:text-gray-500 placeholder:dark:text-gray-400"
               placeholder={showPassword ? "your password" : "••••••••"}
             />
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
           </div>
 
           <div>
@@ -110,9 +167,15 @@ const Register = ({ setAuth }) => {
             <input
               type={showPassword ? "text" : "password"}
               id="confirmPassword"
+              name="confirmPassword"
+              {...register("confirmPassword", {
+                required: "Please confirm your password",
+                validate: (value) => value === password || "Passwords do not match",
+              })}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder:text-gray-500 placeholder:dark:text-gray-400"
               placeholder={showPassword ? "confirm password" : "••••••••"}
             />
+            {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>}
           </div>
 
           <div className="flex items-center justify-between">
@@ -121,6 +184,7 @@ const Register = ({ setAuth }) => {
                 <input
                   id="show-password"
                   type="checkbox"
+                  name="show-password"
                   checked={showPassword}
                   onChange={togglePasswordVisibility}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
@@ -137,6 +201,7 @@ const Register = ({ setAuth }) => {
 
           <button
             type="submit"
+            name="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition duration-200 dark:bg-blue-500 dark:hover:bg-blue-600"
           >
             Create Account

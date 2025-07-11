@@ -63,7 +63,7 @@ export function NavComponent({ setAuth }) {
           )}
         </button>
         <div className="mr-4">
-          {user ? (
+          {!user ? (
             <Dropdown
               arrowIcon={false}
               inline
