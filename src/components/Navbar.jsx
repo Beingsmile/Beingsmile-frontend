@@ -13,10 +13,20 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { AuthContext } from "../contexts/AuthProvider";
+import { toast } from "react-toastify";
 
 export function NavComponent({ setAuth }) {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const { user, logout } = useContext(AuthContext);
+
+  const handleLogout = async () => {
+    await logout()
+    .then(() => {
+      toast.success("Logged out successfully");
+    }).catch((error) => {
+      toast.error(`Logout failed: ${error.message}`);
+    });
+  }
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -85,7 +95,7 @@ export function NavComponent({ setAuth }) {
               <DropdownItem>Settings</DropdownItem>
               <DropdownItem>Earnings</DropdownItem>
               <DropdownDivider />
-              <DropdownItem onClick={() => logout()}>Sign out</DropdownItem>
+              <DropdownItem onClick={async () => await handleLogout()}>Sign out</DropdownItem>
             </Dropdown>
           ) : (
             <button

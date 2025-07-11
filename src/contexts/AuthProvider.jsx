@@ -6,6 +6,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { toast } from "react-toastify";
+import axioInstance from "../api/axiosInstance";
 
 export const AuthContext = createContext();
 
@@ -56,7 +57,8 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await axioInstance.post("/auth/logout")
     return signOut(auth);
   };
 
