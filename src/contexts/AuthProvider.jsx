@@ -59,6 +59,9 @@ const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await axioInstance.post("/auth/logout")
+    .catch((error) => {
+      return error;
+    });
     return signOut(auth);
   };
 
