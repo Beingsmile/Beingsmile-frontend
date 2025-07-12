@@ -3,6 +3,7 @@ import auth from "../../firebase.init";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import { toast } from "react-toastify";
@@ -12,6 +13,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -28,12 +30,12 @@ const AuthProvider = ({ children }) => {
 
   const createWithEmail = async (email, password) => {
     try {
+      setLoading(true);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      
       return { success: true, user: userCredential.user };
     } catch (error) {
       let errorMessage = "Registration failed";
@@ -51,17 +53,52 @@ const AuthProvider = ({ children }) => {
         default:
           errorMessage = error.message;
       }
+      toast.error(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loginWithEmail = async (email, password) => {
+    try {
+      setLoading(true);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      return { success: true, user: userCredential.user };
+    } catch (error) {
+      let errorMessage = "Login failed";
+
+      switch (error.code) {
+        case "auth/user-not-found":
+          errorMessage = "No user found with this email";
+          break;
+        case "auth/wrong-password":
+          errorMessage = "Incorrect password";
+          break;
+        case "auth/invalid-email":
+          errorMessage = "Invalid email address";
+          break;
+        default:
+          errorMessage = error.message;
+      }
 
       toast.error(errorMessage);
       return { success: false, error: errorMessage };
+    } finally {
+      setLoading(false);
     }
   };
 
   const logout = async () => {
-    await axioInstance.post("/auth/logout")
-    .catch((error) => {
+    setLoading(true);
+    await axioInstance.post("/auth/logout").catch((error) => {
       return error;
     });
+    setLoading(false);
     return signOut(auth);
   };
 
@@ -69,7 +106,9 @@ const AuthProvider = ({ children }) => {
     user,
     setUser,
     createWithEmail,
+    loginWithEmail,
     logout,
+    loading,
   };
 
   return (
