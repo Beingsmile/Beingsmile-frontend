@@ -45,7 +45,7 @@ const Register = ({ setAuth }) => {
 
     if (res.success) {
       try {
-          await mutateAsync({
+          const serverRes = await mutateAsync({
           uid: res.user.uid,
           email: email,
           name: name,
@@ -53,6 +53,7 @@ const Register = ({ setAuth }) => {
           bio: "",
           donatedCampaigns: [],
         });
+        res.user.data = serverRes.user;
         setUser(res.user); // Update user state
         handleClose();
         toast.success("Registration successful!");

@@ -39,7 +39,7 @@ const Login = ({ setAuth }) => {
     if (res.success) {
       try {
         const serverRes = await mutateAsync({ email });
-        console.log("Login response:", serverRes);
+        res.user.data = serverRes.user;
         setUser(res.user); // Update user state
         setAuth(null); // Close the modal on successful login
         toast.success("Login successful!");

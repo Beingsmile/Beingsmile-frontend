@@ -82,13 +82,14 @@ export function NavComponent({ setAuth }) {
                   alt="User settings"
                   img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
                   rounded
+                  className="cursor-pointer"
                 />
               }
             >
               <DropdownHeader>
-                <span className="block text-sm">Bonnie Green</span>
-                <span className="block truncate text-sm font-medium">
-                  name@flowbite.com
+                <span className="block text-sm font-bold">{ user.data?.name }</span>
+                <span className="block truncate text-sm font-medium text-blue-400">
+                  {user.data?.email}
                 </span>
               </DropdownHeader>
               <DropdownItem>Dashboard</DropdownItem>
@@ -123,7 +124,7 @@ export function NavComponent({ setAuth }) {
           <NavbarLink href="#" active>
             Home
           </NavbarLink>
-          <NavbarLink href="#">Campaigns</NavbarLink>
+          <NavbarLink href="/browse-campaigns">Campaigns</NavbarLink>
           <NavbarLink href="#">Start Fundraising</NavbarLink>
           <NavbarLink href="#">Contact</NavbarLink>
           <div className="relative w-40 lg:w-64">
