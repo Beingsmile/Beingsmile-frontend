@@ -5,6 +5,7 @@ import Home from "../pages/Home.jsx";
 import Dashboard from "../layouts/Dashboard.jsx";
 import MainLayout from "../layouts/MainLayout.jsx";
 import BrowseCampaigns from "../pages/BrowseCampaigns.jsx";
+import StartCampaign from "../pages/StartCampaign.jsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "browse-campaigns",
         element: <BrowseCampaigns />
+      },
+      {
+        path: "start-campaign",
+        element: <StartCampaign />
       }
     ]
   },

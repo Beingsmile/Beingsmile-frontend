@@ -125,7 +125,7 @@ export function NavComponent({ setAuth }) {
             Home
           </NavbarLink>
           <NavbarLink href="/browse-campaigns">Campaigns</NavbarLink>
-          <NavbarLink href="#">Start Fundraising</NavbarLink>
+          <NavbarLink href="/start-campaign">Start Fundraising</NavbarLink>
           <NavbarLink href="#">Contact</NavbarLink>
           <div className="relative w-40 lg:w-64">
             {" "}
