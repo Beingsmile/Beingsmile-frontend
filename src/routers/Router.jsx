@@ -31,6 +31,10 @@ const router = createBrowserRouter([
     element: <Dashboard />,
     children: [
       {
+        path: "",
+        element: <div>Dashboard Home</div>
+      },
+      {
         path: "profile",
         element: <div>Profile Page</div>
       },

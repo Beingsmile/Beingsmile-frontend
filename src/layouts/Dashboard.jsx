@@ -8,12 +8,12 @@ import {
   FiBriefcase, 
   FiUsers, 
   FiCreditCard, 
-  FiBarChart2, 
   FiPieChart, 
   FiCheckCircle,
   FiSun,
   FiMoon,
-  FiLogOut
+  FiLogOut,
+  FiFlag
 } from 'react-icons/fi';
 import { useTheme } from '../hooks/useTheme'; // Custom hook for theme management
 
@@ -28,7 +28,7 @@ const Dashboard = () => {
     { path: 'manage-campaigns', name: 'Campaigns', icon: <FiBriefcase /> },
     { path: 'manage-users', name: 'Users', icon: <FiUsers /> },
     { path: 'transactions', name: 'Transactions', icon: <FiCreditCard /> },
-    { path: 'reports', name: 'Reports', icon: <FiBarChart2 /> },
+    { path: 'reports', name: 'Reports', icon: <FiFlag /> },
     { path: 'analytics', name: 'Analytics', icon: <FiPieChart /> },
     { path: 'verify-requests', name: 'Verify Requests', icon: <FiCheckCircle /> },
   ];
@@ -59,7 +59,7 @@ const Dashboard = () => {
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-            <h1 className="text-xl font-semibold text-gray-800 dark:text-white"><a href="/">Beingsmile</a></h1>
+            <h1 className="text-xl font-semibold text-gray-800 dark:text-white"><Link to="/">Beingsmile</Link></h1>
             <button
               onClick={toggleSidebar}
               className="p-1 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 lg:hidden"

@@ -49,7 +49,7 @@ export function NavComponent({ setAuth }) {
   );
 
   return (
-    <Navbar fluid rounded>
+    <Navbar fluid >
       <NavbarBrand as={Link} to="/">
         <span className="max-w-screen-xl self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           BeingSmile
