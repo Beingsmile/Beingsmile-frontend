@@ -9,7 +9,7 @@ const Home = () => {
   return (
     <div>
       
-      <main className="min-h-screen mt-14">
+      <main className="min-h-screen -mt-4">
         <Hero />
         <FeaturedCampaigns />
         <HowItWorks />

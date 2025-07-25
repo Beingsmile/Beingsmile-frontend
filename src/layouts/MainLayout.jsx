@@ -26,7 +26,7 @@ const MainLayout = () => {
         <NavComponent setAuth={setAuth} />
       </nav>
 
-      <div className="lg:pt-18 md:pt-14 pt-9 min-h-screen lg:max-w-[90%] mx-auto">
+      <div className="lg:pt-18 md:pt-14 pt-9 min-h-screen">
         <Outlet />
       </div>
 

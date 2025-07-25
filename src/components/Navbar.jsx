@@ -10,52 +10,47 @@ import {
   NavbarLink,
   NavbarToggle,
 } from "flowbite-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { AuthContext } from "../contexts/AuthProvider";
 import { toast } from "react-toastify";
+import { useTheme } from "../hooks/useTheme";
+import { Link, NavLink } from "react-router";
 
 export function NavComponent({ setAuth }) {
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const { theme, toggleTheme } = useTheme();
   const { user, logout } = useContext(AuthContext);
 
   const handleLogout = async () => {
     await logout()
-    .then(() => {
-      toast.success("Logged out successfully");
-    }).catch((error) => {
-      toast.error(`Logout failed: ${error.message}`);
-    });
-  }
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    } else {
-      setTheme(systemPrefersDark ? "dark" : "light");
-    }
-  }, []);
-
-  useEffect(() => {
-    const html = document.documentElement;
-    html.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-    localStorage.getItem("theme") === "light"
-      ? localStorage.setItem("theme", "dark")
-      : localStorage.setItem("theme", "light");
+      .then(() => {
+        toast.success("Logged out successfully");
+      })
+      .catch((error) => {
+        toast.error(`Logout failed: ${error.message}`);
+      });
   };
+
+  // Custom NavLink component to work with Flowbite
+  const FlowbiteNavLink = ({ to, children, ...props }) => (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        `block py-2 px-3 md:p-0 rounded md:border-0 ${
+          isActive
+            ? "text-blue-700 bg-blue-50 md:bg-transparent md:text-blue-700 dark:text-blue-400 md:dark:text-blue-400"
+            : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white dark:hover:bg-gray-700 md:dark:hover:bg-transparent dark:hover:text-white md:dark:hover:text-blue-400"
+        }`
+      }
+      {...props}
+    >
+      {children}
+    </NavLink>
+  );
+
   return (
-    <Navbar fluid>
-      <NavbarBrand href="https://beingsmile.com">
-        {/* <img src="/favicon.svg" className="mr-3 h-6 sm:h-9" alt="Flowbite React Logo" /> */}
+    <Navbar fluid rounded>
+      <NavbarBrand as={Link} to="/">
         <span className="max-w-screen-xl self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           BeingSmile
         </span>
@@ -87,30 +82,20 @@ export function NavComponent({ setAuth }) {
               }
             >
               <DropdownHeader>
-                <span className="block text-sm font-bold">{ user.data?.name }</span>
+                <span className="block text-sm font-bold">{user.data?.name}</span>
                 <span className="block truncate text-sm font-medium text-blue-400">
                   {user.data?.email}
                 </span>
               </DropdownHeader>
-              <DropdownItem>Dashboard</DropdownItem>
-              <DropdownItem>Settings</DropdownItem>
-              <DropdownItem>Earnings</DropdownItem>
+              <DropdownItem as={Link} to="/dashboard">Dashboard</DropdownItem>
+              <DropdownItem as={Link} to="/settings">Settings</DropdownItem>
+              <DropdownItem as={Link} to="/earnings">Earnings</DropdownItem>
               <DropdownDivider />
-              <DropdownItem onClick={async () => await handleLogout()}>Sign out</DropdownItem>
+              <DropdownItem onClick={handleLogout}>Sign out</DropdownItem>
             </Dropdown>
           ) : (
             <button
-              className="
-    px-4 py-2 
-    bg-blue-600 hover:bg-blue-700 
-    text-white font-medium rounded-lg 
-    transition-colors duration-200 
-    dark:bg-blue-500 dark:hover:bg-blue-600
-    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-    dark:focus:ring-offset-gray-800
-    text-sm sm:text-base
-    cursor-pointer
-  "
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 dark:bg-blue-500 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm sm:text-base cursor-pointer"
               onClick={() => setAuth("login")}
             >
               Login
@@ -121,15 +106,11 @@ export function NavComponent({ setAuth }) {
       </div>
       <NavbarCollapse>
         <div className="flex gap-3 lg:gap-6 md:flex-row flex-col lg:text-base items-center flex-nowrap p-3">
-          <NavbarLink href="#" active>
-            Home
-          </NavbarLink>
-          <NavbarLink href="/browse-campaigns">Campaigns</NavbarLink>
-          <NavbarLink href="/start-campaign">Start Fundraising</NavbarLink>
-          <NavbarLink href="#">Contact</NavbarLink>
+          <FlowbiteNavLink to="/">Home</FlowbiteNavLink>
+          <FlowbiteNavLink to="/browse-campaigns">Campaigns</FlowbiteNavLink>
+          <FlowbiteNavLink to="/start-campaign">Start Fundraising</FlowbiteNavLink>
+          <FlowbiteNavLink to="/contact">Contact</FlowbiteNavLink>
           <div className="relative w-40 lg:w-64">
-            {" "}
-            {/* Fixed width */}
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"

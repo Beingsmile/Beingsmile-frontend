@@ -118,7 +118,7 @@ const BrowseCampaigns = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 lg:max-w-[90%] mx-auto">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm py-1">
         <div className="container mx-auto px-4 py-2 flex md:flex-row flex-col items-center gap-3">
