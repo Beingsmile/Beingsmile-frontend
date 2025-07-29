@@ -24,11 +24,16 @@ export default function BrowseCampaigns() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data, isLoading, error } = useBrowseCampaigns({
-    category: selectedCategory === 1 ? null : categories.find((c) => c.id === selectedCategory)?.name,
+    category:
+      selectedCategory === 1
+        ? null
+        : categories.find((c) => c.id === selectedCategory)?.name,
     search: searchQuery,
     page: currentPage,
     limit: 6,
   });
+
+  // console.log("BrowseCampaigns data:", data.page, data.totalPages);
 
   const handleCategoryChange = (id) => {
     setSelectedCategory(id);
@@ -69,9 +74,12 @@ export default function BrowseCampaigns() {
 
           <div className="mt-10">
             <Pagination
-              currentPage={data.page}
-              totalPages={data.totalPages}
-              onPageChange={(page) => setCurrentPage(page)}
+              page={data?.page}
+              totalPages={data?.totalPages || 1}
+              onPageChange={(newPage) => {
+                setCurrentPage(newPage);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
             />
           </div>
         </>

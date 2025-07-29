@@ -85,10 +85,10 @@ const Campaign = ({ campaign }) => {
         </div>
 
         <div className="flex items-center gap-2 mt-auto">
-          <button className="flex-1 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg font-medium hover:bg-blue-50 transition">
-            Share
+          <button className="cursor-pointer flex-1 px-4 py-2 font-bold border-2  border-blue-600 text-blue-600 rounded-lg dark:hover:bg-blue-600 hover:bg-blue-100 dark:hover:text-white transition">
+            Details
           </button>
-          <button className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition">
+          <button className="cursor-pointer flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition">
             Contribute
           </button>
         </div>
