@@ -7,15 +7,15 @@ import SearchBar from "../components/SearchBar";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const categories = [
-  { id: 1, name: "All" },
-  { id: 2, name: "Education" },
-  { id: 3, name: "Health" },
-  { id: 4, name: "Art" },
-  { id: 5, name: "Environment" },
-  { id: 6, name: "Technology" },
-  { id: 7, name: "Community" },
-  { id: 8, name: "Animals" },
-  { id: 9, name: "Others" },
+  { id: 1, name: "all" },
+  { id: 2, name: "education" },
+  { id: 3, name: "health" },
+  { id: 4, name: "art" },
+  { id: 5, name: "environment" },
+  { id: 6, name: "technology" },
+  { id: 7, name: "community" },
+  { id: 8, name: "animals" },
+  { id: 9, name: "others" },
 ];
 
 export default function BrowseCampaigns() {
@@ -30,7 +30,6 @@ export default function BrowseCampaigns() {
     limit: 6,
   });
 
-  console.log("BrowseCampaigns data:", data);
   const handleCategoryChange = (id) => {
     setSelectedCategory(id);
     setCurrentPage(1);
