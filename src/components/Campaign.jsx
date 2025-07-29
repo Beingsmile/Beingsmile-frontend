@@ -1,28 +1,70 @@
-const Campaign = ({ image, title, author, initials, raised, goal, daysLeft, supporters }) => {
-  const percentage = (raised / goal) * 100;
+import campaign1 from "../assets/hero.jpg";
+import dayjs from "dayjs";
+
+const Campaign = ({ campaign }) => {
+  const {
+    title,
+    image,
+    goalAmount,
+    currentAmount,
+    startDate,
+    endDate,
+    creator,
+    supporters = [],
+  } = campaign;
+
+  const initials = creator?.name
+    ? creator.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "NA";
+
+  const percentage = (currentAmount / goalAmount) * 100;
+  const daysLeft = dayjs(endDate).diff(dayjs(), "day");
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden w-full max-w-sm mx-auto flex flex-col h-full">
-      <img src={image} alt={title} className="w-full h-48 object-cover" />
+      <img
+        src={image || campaign1}
+        alt={title}
+        className="w-full h-48 object-cover"
+      />
 
       <div className="p-4 flex flex-col h-full">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          {title}
+        </h3>
 
         <div className="flex items-center mt-2">
           <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
             {initials}
           </div>
-          <p className="ml-2 text-sm text-gray-600 dark:text-gray-300">by {author}</p>
+          <p className="ml-2 text-sm text-gray-600 dark:text-gray-300">
+            by {creator?.name || "Unknown"}
+          </p>
         </div>
 
         <div className="mt-4">
-          <p className="text-lg font-bold text-gray-900 dark:text-white">
-            ${raised?.toLocaleString()}
-            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-              {" "}
-              raised out of ${goal?.toLocaleString()}
+          <div className="flex items-center gap-4">
+            <div>
+            <p className="text-lg font-bold text-gray-900 dark:text-white">
+              ${currentAmount?.toLocaleString()}
+              <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                {" "}
+                raised out of ${goalAmount?.toLocaleString()}
+              </span>
+            </p>
+          </div>
+
+          {campaign.category && (
+            <span className="inline-block bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
+              {campaign.category}
             </span>
-          </p>
+          )}
+          </div>
           <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-2">
             <div
               className="bg-blue-500 h-2 rounded-full transition-all duration-300"
@@ -34,11 +76,11 @@ const Campaign = ({ image, title, author, initials, raised, goal, daysLeft, supp
         <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300 mt-4 mb-4">
           <div className="flex items-center gap-1">
             <span>🗓️</span>
-            <span>{daysLeft} Days Left</span>
+            <span>{daysLeft > 0 ? `${daysLeft} Days Left` : "Ended"}</span>
           </div>
           <div className="flex items-center gap-1">
             <span>❤️</span>
-            <span>{supporters} Supporters</span>
+            <span>{supporters.length} Supporters</span>
           </div>
         </div>
 

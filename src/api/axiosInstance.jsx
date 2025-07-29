@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const axioInstance = axios.create(
+const axiosInstance = axios.create(
     {
         baseURL: import.meta.env.REACT_APP_API_URL || "http://localhost:5000/api",
         withCredentials: true,
@@ -11,4 +11,4 @@ const axioInstance = axios.create(
     }
 )
 
-export default axioInstance;
+export default axiosInstance;
