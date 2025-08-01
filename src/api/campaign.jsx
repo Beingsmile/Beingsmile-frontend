@@ -10,3 +10,9 @@ export const getCampaigns = async (params = {}) => {
   const response = await axiosInstance.get("/campaigns/search", { params });
   return response.data;
 };
+
+// get specific campaign by id
+export const getCampaignById = async (id) => {
+  const response = await axiosInstance.get(`/campaigns/${id}`);
+  return response.data;
+};

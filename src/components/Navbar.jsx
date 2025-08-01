@@ -88,8 +88,8 @@ export function NavComponent({ setAuth }) {
                 </span>
               </DropdownHeader>
               <DropdownItem as={Link} to="/dashboard">Dashboard</DropdownItem>
-              <DropdownItem as={Link} to="/settings">Settings</DropdownItem>
-              <DropdownItem as={Link} to="/earnings">Earnings</DropdownItem>
+              {/* <DropdownItem as={Link} to="/settings">Settings</DropdownItem>
+              <DropdownItem as={Link} to="/earnings">Earnings</DropdownItem> */}
               <DropdownDivider />
               <DropdownItem onClick={handleLogout}>Sign out</DropdownItem>
             </Dropdown>
@@ -107,9 +107,9 @@ export function NavComponent({ setAuth }) {
       <NavbarCollapse>
         <div className="flex gap-3 lg:gap-6 md:flex-row flex-col lg:text-base items-center flex-nowrap p-3">
           <FlowbiteNavLink to="/">Home</FlowbiteNavLink>
-          <FlowbiteNavLink to="/browse-campaigns">Campaigns</FlowbiteNavLink>
-          <FlowbiteNavLink to="/start-campaign">Start Fundraising</FlowbiteNavLink>
-          <FlowbiteNavLink to="/contact">Contact</FlowbiteNavLink>
+          <FlowbiteNavLink to="/campaigns/browse">Campaigns</FlowbiteNavLink>
+          <FlowbiteNavLink to="/campaigns/create">Start Fundraising</FlowbiteNavLink>
+          {/* <FlowbiteNavLink to="/contact">Contact</FlowbiteNavLink> */}
           <div className="relative w-40 lg:w-64">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
