@@ -27,7 +27,7 @@ const MainLayout = () => {
       </nav>
 
       <div className="lg:pt-18 md:pt-14 pt-9 min-h-screen">
-        <Outlet />
+        <Outlet  context={{ setAuth }}  />
       </div>
 
       {auth === "login" ? (

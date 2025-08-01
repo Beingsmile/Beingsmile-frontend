@@ -1,7 +1,13 @@
-import { Link } from "react-router";
+import { Link, useOutletContext } from "react-router";
 import heroImage from "../assets/hero.jpg";
+import { AuthContext } from "../contexts/AuthProvider";
+import { useContext } from "react";
+// import { Login } from "./Login";
 
 const Hero = () => {
+  const { user } = useContext(AuthContext);
+    const { setAuth } = useOutletContext();
+
   return (
     <section className="relative min-h-[80vh] md:min-h-[90vh] flex items-end md:items-center md:justify-start justify-center">
       {/* Background Image */}
@@ -29,12 +35,25 @@ const Hero = () => {
           </p>
 
           <div className="mt-6 flex flex-col sm:flex-row gap-4">
-            <Link
+            {
+              user ? (
+                <Link
               to="/campaigns/create"
               className="px-6 py-3 text-base font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition focus:ring-4 focus:ring-blue-400"
             >
               🚀 Start a Campaign
             </Link>
+              ) :
+              (
+                <button
+              className="px-6 py-3 text-base font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition focus:ring-4 focus:ring-blue-400 cursor-pointer"
+              onClick={() => setAuth("login")}
+            >
+              🚀 Start a Campaign
+            </button>
+              )
+            }
+            
             <Link
               to="/campaigns/browse"
               className="px-6 py-3 text-base font-semibold rounded-lg bg-white text-gray-800 hover:bg-gray-100 transition focus:ring-4 focus:ring-gray-300"

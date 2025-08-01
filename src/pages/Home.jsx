@@ -7,9 +7,9 @@ import Testimonial from "../components/Testimonial";
 import WhyBeingSmile from "../components/WhyBeingSmile";
 
 const Home = () => {
+
   return (
     <div>
-      
       <main className="min-h-screen -mt-4">
         <Hero />
         {/* <FeaturedCampaigns /> */}
