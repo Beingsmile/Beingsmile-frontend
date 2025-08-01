@@ -14,7 +14,7 @@ const Campaign = ({ campaign }) => {
     supporters = [],
   } = campaign;
 
-  console.log("Campaign data:", campaign.creatorUsername);
+  // console.log("Campaign data:", campaign.creatorUsername);
 
   const navigate = useNavigate();
 

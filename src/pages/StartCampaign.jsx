@@ -2,6 +2,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
 import axioInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 // import { useContext } from "react";
 // import { AuthContext } from "../contexts/AuthProvider";
 // import Login from "../components/Login";
@@ -15,6 +17,9 @@ const StartCampaign = () => {
     setValue,
     formState: { errors },
   } = useForm({});
+
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // const watchImages = watch("images");
 
@@ -43,12 +48,18 @@ const StartCampaign = () => {
       ...data,
       endDate: new Date(data.endDate).toISOString(), // Convert to ISO format
     };
+    setLoading(true);
     await mutateAsync(formattedData)
-      .then(() => {
+      .then((response) => {
+        const campaignId = response?.data?.campaign?._id;
         toast.success("Campaign created successfully!");
+        navigate(`/campaigns/${campaignId}`); // Redirect after successful creation
       })
       .catch((error) => {
         toast.error("Failed to create campaign: " + error.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -143,6 +154,7 @@ const StartCampaign = () => {
                 {...register("category", { required: true })}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               >
+                <option value="other">Others</option>
                 <option value="education">Education</option>
                 <option value="health">Health</option>
                 <option value="environment">Environment</option>
@@ -150,7 +162,6 @@ const StartCampaign = () => {
                 <option value="community">Community</option>
                 <option value="art">Art</option>
                 <option value="technology">Technology</option>
-                <option value="other">Other</option>
               </select>
             </div>
 
@@ -333,9 +344,36 @@ const StartCampaign = () => {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full px-4 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                className="cursor-pointer w-full px-4 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
               >
-                Create Campaign
+                {(loading) ? (
+              <div className="flex items-center justify-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+                Loading...
+              </div>
+            ) : (
+              "Create Campaign"
+            )}
+                
               </button>
             </div>
           </form>
