@@ -109,6 +109,7 @@ const AuthProvider = ({ children }) => {
     loginWithEmail,
     logout,
     loading,
+    setLoading
   };
 
   return (

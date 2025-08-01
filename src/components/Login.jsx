@@ -13,7 +13,9 @@ const Login = ({ setAuth }) => {
     formState: { errors },
   } = useForm();
   const { mutateAsync, isPending } = useLogin();
-  const { setUser, loginWithEmail, logout, loading } = useContext(AuthContext);
+  const { setUser, loginWithEmail, logout } = useContext(AuthContext);
+  // setLoading(false); // Ensure loading is false initially
+  const [loading, setLoading] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword); // Toggle the visibility of the password
@@ -31,6 +33,7 @@ const Login = ({ setAuth }) => {
 
   const onSubmit = async (data) => {
     const { email, password } = data;
+    setLoading(true);
 
     const res = await loginWithEmail(email, password).catch((error) => {
       toast.error(`Login failed: ${error.message}`);
@@ -47,6 +50,8 @@ const Login = ({ setAuth }) => {
         await logout(); // Ensure user is logged out if server response fails
         setUser(null); // Reset user state
         toast.error(`Login failed. ${error.message}`);
+      } finally {
+        setLoading(false); // Reset loading state
       }
     }
   };

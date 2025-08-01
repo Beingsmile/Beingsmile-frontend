@@ -20,6 +20,7 @@ import { Link, NavLink } from "react-router";
 export function NavComponent({ setAuth }) {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useContext(AuthContext);
+  
 
   const handleLogout = async () => {
     await logout()
@@ -108,7 +109,11 @@ export function NavComponent({ setAuth }) {
         <div className="flex gap-3 lg:gap-6 md:flex-row flex-col lg:text-base items-center flex-nowrap p-3">
           <FlowbiteNavLink to="/">Home</FlowbiteNavLink>
           <FlowbiteNavLink to="/campaigns/browse">Campaigns</FlowbiteNavLink>
-          <FlowbiteNavLink to="/campaigns/create">Start Fundraising</FlowbiteNavLink>
+          {
+            user && (
+              <FlowbiteNavLink to="/campaigns/create">Start Fundraising</FlowbiteNavLink>
+            )
+          }
           {/* <FlowbiteNavLink to="/contact">Contact</FlowbiteNavLink> */}
           <div className="relative w-40 lg:w-64">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">

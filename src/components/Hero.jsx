@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import heroImage from "../assets/hero.jpg";
 
 const Hero = () => {
@@ -28,18 +29,18 @@ const Hero = () => {
           </p>
 
           <div className="mt-6 flex flex-col sm:flex-row gap-4">
-            <a
-              href="#"
+            <Link
+              to="/campaigns/create"
               className="px-6 py-3 text-base font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition focus:ring-4 focus:ring-blue-400"
             >
               🚀 Start a Campaign
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/campaigns/browse"
               className="px-6 py-3 text-base font-semibold rounded-lg bg-white text-gray-800 hover:bg-gray-100 transition focus:ring-4 focus:ring-gray-300"
             >
               🔍 Browse Campaigns
-            </a>
+            </Link>
           </div>
         </div>
       </div>

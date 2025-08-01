@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useCampaignDetails } from '../hooks/useCampaign'
+import Payment from '../components/Payment';
 import { FiHeart, FiShare2, FiClock, FiDollarSign, FiUser } from 'react-icons/fi';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -218,6 +219,7 @@ const CampaignDetails = () => {
                 onChange={(e) => setDonationAmount(Math.max(1, parseInt(e.target.value) || 1))}
                 className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
+              <Payment />
             </div>
 
             {/* Donate Button */}
