@@ -20,6 +20,7 @@ import { Link, NavLink } from "react-router";
 export function NavComponent({ setAuth }) {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useContext(AuthContext);
+  console.log("User in NavComponent:", user);
   
 
   const handleLogout = async () => {
@@ -83,9 +84,9 @@ export function NavComponent({ setAuth }) {
               }
             >
               <DropdownHeader>
-                <span className="block text-sm font-bold">{user.data?.name}</span>
+                <span className="block text-sm font-bold">{user.data?.name || user?.displayName || "User"}</span>
                 <span className="block truncate text-sm font-medium text-blue-400">
-                  {user.data?.email}
+                  {user.data?.email || user?.email || "No email provided"}
                 </span>
               </DropdownHeader>
               <DropdownItem as={Link} to="/dashboard">Dashboard</DropdownItem>

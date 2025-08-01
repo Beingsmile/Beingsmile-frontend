@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import axioInstance from "../api/axiosInstance";
+import axiosInstance from "../api/axiosInstance";
 
 export const AuthContext = createContext();
 
@@ -18,9 +19,18 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
-        setUser(firebaseUser);
+        axiosInstance.get(`/auth/me/firebase/${firebaseUser.uid}`)
+          .then(response => {
+            setUser({ ...firebaseUser, data: response.data.user });
+            setLoading(false);
+          })
+          .catch(error => {
+            console.error("Error fetching user data:", error);
+            setLoading(false);
+          });
       } else {
         setUser(null);
+        setLoading(false);
       }
     });
 
