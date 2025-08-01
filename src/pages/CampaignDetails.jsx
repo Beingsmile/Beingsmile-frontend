@@ -6,11 +6,22 @@ import { FiHeart, FiShare2, FiClock, FiDollarSign, FiUser } from 'react-icons/fi
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+// import axiosInstance from '../api/axiosInstance';
 
 const CampaignDetails = () => {
   const { id } = useParams();
   const [donationAmount, setDonationAmount] = useState(50);
   const [newComment, setNewComment] = useState('');
+
+  // useEffect(() => {
+  //   axiosInstance.get("/transactions") // Update the path to your backend route
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error fetching transactions", err);
+  //     });
+  // }, []);
 
   const {
     data: data,

@@ -33,7 +33,7 @@ export default function BrowseCampaigns() {
     limit: 6,
   });
 
-  // console.log("BrowseCampaigns data:", data.page, data.totalPages);
+  // console.log("BrowseCampaigns data:", data);
 
   const handleCategoryChange = (id) => {
     setSelectedCategory(id);

@@ -1,5 +1,6 @@
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useContext, useState } from "react";
+import { AuthContext } from "../../contexts/AuthProvider";
 // import { AuthContext } from "../contexts/AuthProvider";
 // import PropTypes from "prop-types";
 // import axios from "axios";
@@ -14,6 +15,7 @@ const CheckoutForm = ({ clientSecret }) => {
 //   const API = useContext(LocationContext);
 //   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -46,8 +48,8 @@ const CheckoutForm = ({ clientSecret }) => {
           payment_method: {
             card: card,
             billing_details: {
-              email: "user?.email",
-              name: "user?.displayName",
+              email: user?.email,
+              name: user?.displayName,
             },
           },
         });

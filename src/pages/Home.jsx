@@ -13,7 +13,6 @@ const Home = () => {
       <main className="min-h-screen -mt-4">
         <Hero />
         {/* <FeaturedCampaigns /> */}
-        {/* <Payment /> */}
         <HowItWorks />
         <WhyBeingSmile />
         <Testimonial />

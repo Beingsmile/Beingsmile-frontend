@@ -5,19 +5,21 @@ import dayjs from "dayjs";
 const Campaign = ({ campaign }) => {
   const {
     title,
-    image,
+    coverImage,
     goalAmount,
     currentAmount,
     startDate,
     endDate,
-    creator,
+    creatorUsername,
     supporters = [],
   } = campaign;
 
+  console.log("Campaign data:", campaign.creatorUsername);
+
   const navigate = useNavigate();
 
-  const initials = creator?.name
-    ? creator.name
+  const initials = creatorUsername
+    ? creatorUsername
         .split(" ")
         .map((n) => n[0])
         .join("")
@@ -31,7 +33,7 @@ const Campaign = ({ campaign }) => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden w-full max-w-sm mx-auto flex flex-col h-full">
       <img
-        src={image || campaign1}
+        src={coverImage || campaign1}
         alt={title}
         className="w-full h-48 object-cover"
       />
@@ -46,7 +48,7 @@ const Campaign = ({ campaign }) => {
             {initials}
           </div>
           <p className="ml-2 text-sm text-gray-600 dark:text-gray-300">
-            by {creator?.name || "Unknown"}
+            by {creatorUsername || "Unknown"}
           </p>
         </div>
 
