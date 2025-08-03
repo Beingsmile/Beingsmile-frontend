@@ -66,6 +66,23 @@ const StartCampaign = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+  Start a Campaign
+</h1>
+<p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+  Share your story and raise funds for your cause. Fill out the form below with accurate information to get started.
+</p>
+<div className="p-4 bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-lg shadow mb-6">
+  <h2 className="text-sm font-semibold mb-1">Before You Begin:</h2>
+  <ul className="list-disc pl-5 text-sm space-y-1">
+    <li>Choose a clear and meaningful campaign title.</li>
+    <li>Add a compelling image that represents your cause.</li>
+    <li>Set a realistic funding goal.</li>
+    <li>Be honest and transparent in the story section.</li>
+    <li>Double-check your details before submitting.</li>
+  </ul>
+</div>
+
         <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             Create Campaign
