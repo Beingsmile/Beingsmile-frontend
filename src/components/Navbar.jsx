@@ -16,6 +16,7 @@ import { AuthContext } from "../contexts/AuthProvider";
 import { toast } from "react-toastify";
 import { useTheme } from "../hooks/useTheme";
 import { Link, NavLink } from "react-router";
+import profile from "../assets/user.png";
 
 export function NavComponent({ setAuth }) {
   const { theme, toggleTheme } = useTheme();
@@ -75,7 +76,7 @@ export function NavComponent({ setAuth }) {
               label={
                 <Avatar
                   alt="User settings"
-                  img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                  img={user.data?.avatar || user?.photoURL || profile}
                   rounded
                   className="cursor-pointer"
                 />
