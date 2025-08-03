@@ -64,24 +64,25 @@ const StartCampaign = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 pb-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
-  Start a Campaign
-</h1>
-<p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-  Share your story and raise funds for your cause. Fill out the form below with accurate information to get started.
-</p>
-<div className="p-4 bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-lg shadow mb-6">
-  <h2 className="text-sm font-semibold mb-1">Before You Begin:</h2>
-  <ul className="list-disc pl-5 text-sm space-y-1">
-    <li>Choose a clear and meaningful campaign title.</li>
-    <li>Add a compelling image that represents your cause.</li>
-    <li>Set a realistic funding goal.</li>
-    <li>Be honest and transparent in the story section.</li>
-    <li>Double-check your details before submitting.</li>
-  </ul>
-</div>
+          Start a Campaign
+        </h1>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+          Share your story and raise funds for your cause. Fill out the form
+          below with accurate information to get started.
+        </p>
+        <div className="p-4 bg-blue-50 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-lg shadow mb-6">
+          <h2 className="text-sm font-semibold mb-1">Before You Begin:</h2>
+          <ul className="list-disc pl-5 text-sm space-y-1">
+            <li>Choose a clear and meaningful campaign title.</li>
+            <li>Add a compelling image that represents your cause.</li>
+            <li>Set a realistic funding goal.</li>
+            <li>Be honest and transparent in the story section.</li>
+            <li>Double-check your details before submitting.</li>
+          </ul>
+        </div>
 
         <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
@@ -252,10 +253,10 @@ const StartCampaign = () => {
                   reader.readAsDataURL(file);
                 }}
                 className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.coverImage
-                      ? "border-red-500"
-                      : "border-gray-300 dark:border-gray-600"
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
+                  errors.coverImage
+                    ? "border-red-500"
+                    : "border-gray-300 dark:border-gray-600"
+                } bg-white dark:bg-gray-700 text-gray-900 dark:text-white`}
               />
 
               {watch("coverImage") && (
@@ -363,34 +364,33 @@ const StartCampaign = () => {
                 type="submit"
                 className="cursor-pointer w-full px-4 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
               >
-                {(loading) ? (
-              <div className="flex items-center justify-center gap-2">
-                <svg
-                  className="animate-spin h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                  ></path>
-                </svg>
-                Loading...
-              </div>
-            ) : (
-              "Create Campaign"
-            )}
-                
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      ></path>
+                    </svg>
+                    Loading...
+                  </div>
+                ) : (
+                  "Create Campaign"
+                )}
               </button>
             </div>
           </form>

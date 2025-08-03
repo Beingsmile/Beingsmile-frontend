@@ -6,6 +6,7 @@ import BrowseCampaigns from "../pages/BrowseCampaigns.jsx";
 import StartCampaign from "../pages/StartCampaign.jsx";
 import CampaignDetails from "../pages/CampaignDetails.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
+import ContactUs from "../pages/ContactUs.jsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
         path: "campaigns/:id",
         element: <CampaignDetails />,
       },
+      {
+        path: "contact-us",
+        element: <ContactUs />,
+      }
     ],
   },
   {
