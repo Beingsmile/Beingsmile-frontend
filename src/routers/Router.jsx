@@ -7,6 +7,7 @@ import StartCampaign from "../pages/StartCampaign.jsx";
 import CampaignDetails from "../pages/CampaignDetails.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import ContactUs from "../pages/ContactUs.jsx";
+import Profile from "../pages/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -45,11 +46,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <div>Dashboard Home</div>,
+        element: <Profile />,
       },
       {
         path: "profile",
-        element: <div>Profile Page</div>,
+        element: <Profile />,
       },
       {
         path: "manage-campaigns",

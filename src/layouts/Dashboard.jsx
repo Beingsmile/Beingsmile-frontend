@@ -26,11 +26,11 @@ const Dashboard = () => {
   const menuItems = [
     { path: 'profile', name: 'Profile', icon: <FiUser /> },
     { path: 'manage-campaigns', name: 'Campaigns', icon: <FiBriefcase /> },
-    { path: 'manage-users', name: 'Users', icon: <FiUsers /> },
+    // { path: 'manage-users', name: 'Users', icon: <FiUsers /> },
     { path: 'transactions', name: 'Transactions', icon: <FiCreditCard /> },
-    { path: 'reports', name: 'Reports', icon: <FiFlag /> },
+    // { path: 'reports', name: 'Reports', icon: <FiFlag /> },
     { path: 'analytics', name: 'Analytics', icon: <FiPieChart /> },
-    { path: 'verify-requests', name: 'Verify Requests', icon: <FiCheckCircle /> },
+    // { path: 'verify-requests', name: 'Verify Requests', icon: <FiCheckCircle /> },
   ];
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -38,7 +38,7 @@ const Dashboard = () => {
   const handleLogout = () => {
     // Add your logout logic here
     console.log('Logging out...');
-    navigate('/login');
+    navigate('/');
   };
 
   return (
