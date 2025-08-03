@@ -5,6 +5,7 @@ import CategoryTabs from "../components/CategoryTabs";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useSearchParams } from "react-router";
 
 const categories = [
   { id: 1, name: "all" },
@@ -20,8 +21,15 @@ const categories = [
 
 export default function BrowseCampaigns() {
   const [selectedCategory, setSelectedCategory] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams] = useSearchParams();
+const page = parseInt(searchParams.get("page")) || 1;
+  const [currentPage, setCurrentPage] = useState(page);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
 
   const { data, isLoading, error } = useBrowseCampaigns({
     category:
@@ -32,10 +40,6 @@ export default function BrowseCampaigns() {
     page: currentPage,
     limit: 6,
   });
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [])
 
   // console.log("BrowseCampaigns data:", data);
 
