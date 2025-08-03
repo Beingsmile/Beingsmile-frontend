@@ -4,7 +4,6 @@ import { FiUser, FiMail, FiCalendar, FiCheckCircle, FiXCircle } from "react-icon
 
 const Profile = () => {
     const { user } = useContext(AuthContext);
-    console.log(user);
     return (
         <div className="max-w-6xl min-h-[92vh] mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md mt-2 md:mt-4">
             <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">Profile Information</h1>
