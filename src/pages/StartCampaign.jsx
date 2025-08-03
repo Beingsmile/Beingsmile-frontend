@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
 import axioInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 // import { useContext } from "react";
 // import { AuthContext } from "../contexts/AuthProvider";
@@ -37,6 +37,12 @@ const StartCampaign = () => {
   //     watchImages.filter((_, i) => i !== index)
   //   );
   // };
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [])
 
   const { mutateAsync } = useMutation({
     mutationFn: (campaignData) =>

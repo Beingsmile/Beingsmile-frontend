@@ -91,7 +91,10 @@ const Campaign = ({ campaign }) => {
 
         <div className="flex items-center gap-2 mt-auto">
           <button className="cursor-pointer flex-1 px-4 py-2 font-bold border-2  border-blue-600 text-blue-600 rounded-lg dark:hover:bg-blue-600 hover:bg-blue-100 dark:hover:text-white transition"
-          onClick={() => navigate(`/campaigns/${campaign._id}`)}>
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigate(`/campaigns/${campaign._id}`);
+          }}>
             Details
           </button>
           <button className="cursor-pointer flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useBrowseCampaigns } from "../hooks/useCampaign";
 import CampaignCard from "../components/Campaign";
 import CategoryTabs from "../components/CategoryTabs";
@@ -32,6 +32,10 @@ export default function BrowseCampaigns() {
     page: currentPage,
     limit: 6,
   });
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [])
 
   // console.log("BrowseCampaigns data:", data);
 

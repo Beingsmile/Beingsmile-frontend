@@ -5,8 +5,13 @@ import HowItWorks from "../components/HowItWorks";
 import Payment from "../components/Payment";
 import Testimonial from "../components/Testimonial";
 import WhyBeingSmile from "../components/WhyBeingSmile";
+import { useEffect } from 'react';
 
 const Home = () => {
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [])
 
   return (
     <div>
