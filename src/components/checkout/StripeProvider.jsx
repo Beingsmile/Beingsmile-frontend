@@ -17,7 +17,7 @@ const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5000/create-payment-intent`, {
+    fetch(`https://api.beingsmile.org/create-payment-intent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ amount: 2500 }),

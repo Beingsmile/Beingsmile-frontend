@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useOutletContext, useParams } from "react-router";
 import { useCampaignDetails } from "../hooks/useCampaign";
 import Payment from "../components/Payment";
@@ -27,6 +27,10 @@ const CampaignDetails = () => {
   const [newComment, setNewComment] = useState("");
   const { user } = useContext(AuthContext);
   const { setAuth } = useOutletContext();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const { data: data, isLoading, isError, error } = useCampaignDetails(id);
 
@@ -354,10 +358,10 @@ const CampaignDetails = () => {
             </div>
 
             {daysLeft > 0 && (
-            <div className="flex justify-center items-center bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6 px-3 md:px-6">
-              <CountdownRenderer endDate={campaign.endDate} />
-            </div>
-          )}
+              <div className="flex justify-center items-center bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6 px-3 md:px-6">
+                <CountdownRenderer endDate={campaign.endDate} />
+              </div>
+            )}
 
             {/* Donation Section */}
             <div className="p-6 border-b border-gray-200 dark:border-gray-700">
