@@ -109,7 +109,7 @@ const CheckoutForm = ({ clientSecret }) => {
       <button
         type="submit"
         disabled={!stripe}
-        className={`py-1 mt-4 px-4 rounded-lg font-bold transition-all duration-300 hover:bg-white hover:text-primary ${loading ? 'bg-gray-500' : "bg-tertiary "}`}
+        className={`py-1 mt-4 px-4 rounded-lg font-bold transition-all duration-300 text-blue-600 cursor-pointer ${loading ? 'bg-gray-500' : "bg-tertiary "}`}
       >
         Pay
       </button>

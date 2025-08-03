@@ -23,5 +23,6 @@ export const useCampaignDetails = (id) => {
     queryKey: ["campaign", id],
     queryFn: async () => getCampaignById(id),
     keepPreviousData: true,
+    enabled: !!id,
   });
 };

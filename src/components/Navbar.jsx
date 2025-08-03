@@ -78,7 +78,7 @@ export function NavComponent({ setAuth }) {
                   alt="User settings"
                   img={user.data?.avatar || user?.photoURL || profile}
                   rounded
-                  className="cursor-pointer md:w-10 md:h-10 w-6 h-6"
+                  className="cursor-pointer md:w-10 md:h-10 w-10 h-8"
                 />
               }
             >
