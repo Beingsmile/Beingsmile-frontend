@@ -19,9 +19,7 @@ import { Link, NavLink } from "react-router";
 
 export function NavComponent({ setAuth }) {
   const { theme, toggleTheme } = useTheme();
-  const { user, logout } = useContext(AuthContext);
-  console.log("User in NavComponent:", user);
-  
+  const { user, logout } = useContext(AuthContext);  
 
   const handleLogout = async () => {
     await logout()

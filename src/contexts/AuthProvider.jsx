@@ -2,8 +2,10 @@ import { createContext, useEffect, useState } from "react";
 import auth from "../../firebase.init";
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
   signOut,
 } from "firebase/auth";
 import { toast } from "react-toastify";
@@ -37,6 +39,17 @@ const AuthProvider = ({ children }) => {
     // Clean up the listener on unmount
     return () => unsubscribe();
   }, []);
+
+  const googleProvider = new GoogleAuthProvider();
+
+  const createWithGoogle = async () => {
+    googleProvider.setCustomParameters({
+      prompt: "select_account",
+    });
+
+    const result = await signInWithPopup(auth, googleProvider);
+    return result;
+  };
 
   const createWithEmail = async (email, password) => {
     try {
@@ -117,6 +130,7 @@ const AuthProvider = ({ children }) => {
     setUser,
     createWithEmail,
     loginWithEmail,
+    createWithGoogle,
     logout,
     loading,
     setLoading
