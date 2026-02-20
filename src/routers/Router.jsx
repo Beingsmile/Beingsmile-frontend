@@ -8,6 +8,9 @@ import CampaignDetails from "../pages/CampaignDetails.jsx";
 import PrivateRoute from "./PrivateRoute.jsx";
 import ContactUs from "../pages/ContactUs.jsx";
 import Profile from "../pages/Profile.jsx";
+import PaymentSuccess from "../pages/PaymentSuccess.jsx";
+import PaymentFailure from "../pages/PaymentFailure.jsx";
+import PaymentCancelled from "../pages/PaymentCancelled.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +40,19 @@ const router = createBrowserRouter([
       {
         path: "contact-us",
         element: <ContactUs />,
-      }
+      },
+      {
+        path: "payment-success",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "payment-failure",
+        element: <PaymentFailure />,
+      },
+      {
+        path: "payment-cancelled",
+        element: <PaymentCancelled />,
+      },
     ],
   },
   {
