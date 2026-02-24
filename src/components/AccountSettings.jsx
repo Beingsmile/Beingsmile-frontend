@@ -5,10 +5,15 @@ import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 
 const AccountSettings = () => {
-    const { user, setUser, forgotPassword } = useContext(AuthContext);
+    const { user, setUser, forgotPassword, sendVerificationEmail } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
+    const [verifyingEmail, setVerifyingEmail] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState(user?.data?.avatar || "");
     const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
+
+    // Identify auth provider
+    const isGoogleUser = user?.providerData?.some(p => p.providerId === "google.com");
+    const isEmailUser = user?.providerData?.some(p => p.providerId === "password");
 
     const handleUpdateAvatar = async (e) => {
         e.preventDefault();
@@ -42,8 +47,48 @@ const AccountSettings = () => {
         setLoading(false);
     };
 
+    const handleEmailVerification = async () => {
+        setVerifyingEmail(true);
+        await sendVerificationEmail();
+        setVerifyingEmail(false);
+    };
+
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
+            {/* Account Information */}
+            <section className="bg-white dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
+                <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-lg">
+                        <FiCheck size={20} />
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white">Account Information</h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Manage your registration details</p>
+                    </div>
+                </div>
+
+                <div className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700 gap-4 mb-4">
+                    <div>
+                        <p className="text-sm font-bold text-gray-700 dark:text-gray-300">Email Address</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{user?.email}</p>
+                    </div>
+                    {!user?.emailVerified ? (
+                        <button
+                            onClick={handleEmailVerification}
+                            disabled={verifyingEmail}
+                            className="px-5 py-2.5 bg-tertiary text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center justify-center whitespace-nowrap"
+                        >
+                            {verifyingEmail ? <FiLoader className="animate-spin mr-2" /> : null}
+                            Verify Email
+                        </button>
+                    ) : (
+                        <span className="flex items-center text-green-600 text-sm font-bold">
+                            <FiCheck className="mr-1" /> Verified
+                        </span>
+                    )}
+                </div>
+            </section>
+
             {/* Avatar Settings */}
             <section className="bg-white dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm">
                 <div className="flex items-center gap-3 mb-6">
@@ -92,22 +137,31 @@ const AccountSettings = () => {
                 </div>
 
                 <div className="space-y-6">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700 gap-4">
-                        <div className="flex items-center gap-3">
-                            <FiAlertCircle className="text-amber-500 shrink-0" />
-                            <p className="text-sm text-gray-600 dark:text-gray-300">
-                                To ensure security, password changes require email verification.
+                    {isGoogleUser && !isEmailUser ? (
+                        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800 flex items-start gap-3">
+                            <FiAlertCircle className="text-blue-500 mt-0.5 shrink-0" />
+                            <p className="text-sm text-blue-700 dark:text-blue-300">
+                                Your account is managed via <span className="font-bold">Google Authentication</span>. Password changes should be handled through your Google Account settings.
                             </p>
                         </div>
-                        <button
-                            onClick={handlePasswordReset}
-                            disabled={loading}
-                            className="px-5 py-2.5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center justify-center shrink-0 whitespace-nowrap"
-                        >
-                            {loading ? <FiLoader className="animate-spin mr-2" /> : null}
-                            Reset via Email
-                        </button>
-                    </div>
+                    ) : (
+                        <div className="flex flex-col md:flex-row md:items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700 gap-4">
+                            <div className="flex items-center gap-3">
+                                <FiAlertCircle className="text-amber-500 shrink-0" />
+                                <p className="text-sm text-gray-600 dark:text-gray-300">
+                                    To ensure security, password changes require email verification.
+                                </p>
+                            </div>
+                            <button
+                                onClick={handlePasswordReset}
+                                disabled={loading}
+                                className="px-5 py-2.5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white text-sm font-bold rounded-lg hover:opacity-90 transition-all flex items-center justify-center shrink-0 whitespace-nowrap"
+                            >
+                                {loading ? <FiLoader className="animate-spin mr-2" /> : null}
+                                Reset via Email
+                            </button>
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

@@ -10,11 +10,13 @@ import { Link } from "react-router";
 import UserCampaigns from "../components/UserCampaigns";
 import UserDonations from "../components/UserDonations";
 import AccountSettings from "../components/AccountSettings";
+import RequestVerification from "../components/RequestVerification";
 
 const Profile = () => {
     const { user, logout } = useContext(AuthContext);
     const [activeTab, setActiveTab] = useState("info");
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
 
     if (!user) {
         return (
@@ -119,10 +121,9 @@ const Profile = () => {
                             label="Settings"
                         />
                     </div>
-
                     {/* Tab Content */}
                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        {activeTab === "info" && <PersonalInfo user={user} />}
+                        {activeTab === "info" && <PersonalInfo user={user} onVerifyClick={() => setIsVerifyModalOpen(true)} />}
                         {activeTab === "campaigns" && <UserCampaigns />}
                         {activeTab === "donations" && <UserDonations />}
                         {activeTab === "settings" && <AccountSettings />}
@@ -133,6 +134,15 @@ const Profile = () => {
             {isEditModalOpen && (
                 <EditProfile onClose={() => setIsEditModalOpen(false)} />
             )}
+
+            {isVerifyModalOpen && (
+                <RequestVerification
+                    onClose={() => setIsVerifyModalOpen(false)}
+                    onSubmitted={() => {
+                        // Optionally refresh user data
+                    }}
+                />
+            )}
         </div>
     );
 };
@@ -141,8 +151,8 @@ const TabButton = ({ active, onClick, icon, label }) => (
     <button
         onClick={onClick}
         className={`flex items-center gap-2 px-6 py-4 text-sm font-bold transition-all whitespace-nowrap border-b-2 ${active
-                ? "border-tertiary text-tertiary bg-tertiary/5"
-                : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            ? "border-tertiary text-tertiary bg-tertiary/5"
+            : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
             }`}
     >
         {icon}
@@ -150,7 +160,7 @@ const TabButton = ({ active, onClick, icon, label }) => (
     </button>
 );
 
-const PersonalInfo = ({ user }) => (
+const PersonalInfo = ({ user, onVerifyClick }) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="space-y-6">
             <h3 className="text-xl font-bold flex items-center text-gray-900 dark:text-white">
@@ -188,6 +198,14 @@ const PersonalInfo = ({ user }) => (
                     label="Verification"
                     value={user?.data?.isVerified ? "Verified" : "Not Verified"}
                     type={user?.data?.isVerified ? "success" : "warning"}
+                    action={!user?.data?.isVerified ? (
+                        <button
+                            onClick={onVerifyClick}
+                            className="text-[10px] font-black uppercase text-tertiary hover:underline mt-1 block"
+                        >
+                            Request Verification
+                        </button>
+                    ) : null}
                 />
             </div>
         </div>
@@ -205,7 +223,7 @@ const InfoItem = ({ label, value, icon, verified }) => (
     </div>
 );
 
-const StatusBadge = ({ label, value, type }) => {
+const StatusBadge = ({ label, value, type, action }) => {
     const colors = {
         success: "text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400",
         warning: "text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400",
@@ -213,10 +231,13 @@ const StatusBadge = ({ label, value, type }) => {
     };
     return (
         <div className="flex-1 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700">
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-2">{label}</label>
-            <span className={`px-3 py-1 text-xs font-bold rounded-full uppercase tracking-tighter ${colors[type] || colors.warning}`}>
-                {value}
-            </span>
+            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-1">{label}</label>
+            <div className="flex flex-col">
+                <span className={`w-fit px-3 py-1 text-xs font-bold rounded-full uppercase tracking-tighter ${colors[type] || colors.warning}`}>
+                    {value}
+                </span>
+                {action}
+            </div>
         </div>
     );
 };

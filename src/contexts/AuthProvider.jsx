@@ -8,6 +8,9 @@ import {
   signInWithPopup,
   signOut,
   sendPasswordResetEmail,
+  verifyPasswordResetCode,
+  confirmPasswordReset,
+  sendEmailVerification,
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import axioInstance from "../api/axiosInstance";
@@ -129,7 +132,12 @@ const AuthProvider = ({ children }) => {
   const forgotPassword = async (email) => {
     try {
       setLoading(true);
-      await sendPasswordResetEmail(auth, email);
+      // Construct custom link to our app
+      const actionCodeSettings = {
+        url: `${window.location.origin}/reset-password`,
+        handleCodeInApp: true,
+      };
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
       toast.success("Password reset link sent to your email!");
       return { success: true };
     } catch (error) {
@@ -144,6 +152,41 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const verifyResetCode = async (code) => {
+    try {
+      const email = await verifyPasswordResetCode(auth, code);
+      return { success: true, email };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const confirmReset = async (code, newPassword) => {
+    try {
+      await confirmPasswordReset(auth, code, newPassword);
+      toast.success("Password has been reset successfully!");
+      return { success: true };
+    } catch (error) {
+      toast.error(error.message);
+      return { success: false, error: error.message };
+    }
+  };
+
+  const sendVerificationEmail = async () => {
+    if (!auth.currentUser) return;
+    try {
+      setLoading(true);
+      await sendEmailVerification(auth.currentUser);
+      toast.success("Verification email sent!");
+      return { success: true };
+    } catch (error) {
+      toast.error(error.message);
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const authinfo = {
     user,
     setUser,
@@ -152,6 +195,9 @@ const AuthProvider = ({ children }) => {
     createWithGoogle,
     logout,
     forgotPassword,
+    verifyResetCode,
+    confirmReset,
+    sendVerificationEmail,
     loading,
     setLoading
   };

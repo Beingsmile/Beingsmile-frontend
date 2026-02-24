@@ -3,10 +3,16 @@ import axiosInstance from "../api/axiosInstance";
 import { FiPlus, FiMoreVertical, FiExternalLink, FiEdit3 } from "react-icons/fi";
 import { Link } from "react-router";
 import LoadingSpinner from "./LoadingSpinner";
+import EditCampaign from "./EditCampaign";
 
 const UserCampaigns = () => {
     const [campaigns, setCampaigns] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [editingCampaign, setEditingCampaign] = useState(null);
+
+    const handleUpdate = (updatedCampaign) => {
+        setCampaigns(prev => prev.map(c => c._id === updatedCampaign._id ? updatedCampaign : c));
+    };
 
     useEffect(() => {
         const fetchCampaigns = async () => {
@@ -92,7 +98,10 @@ const UserCampaigns = () => {
                                 >
                                     <FiExternalLink className="mr-1" /> View
                                 </Link>
-                                <button className="flex-1 flex items-center justify-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-500 hover:text-tertiary hover:bg-tertiary/10 transition-all font-bold text-xs">
+                                <button
+                                    onClick={() => setEditingCampaign(campaign)}
+                                    className="flex-1 flex items-center justify-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-500 hover:text-tertiary hover:bg-tertiary/10 transition-all font-bold text-xs"
+                                >
                                     <FiEdit3 className="mr-1" /> Edit
                                 </button>
                             </div>
@@ -100,6 +109,14 @@ const UserCampaigns = () => {
                     </div>
                 </div>
             ))}
+
+            {editingCampaign && (
+                <EditCampaign
+                    campaign={editingCampaign}
+                    onClose={() => setEditingCampaign(null)}
+                    onUpdate={handleUpdate}
+                />
+            )}
         </div>
     );
 };
