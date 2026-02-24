@@ -4,6 +4,7 @@ import { useLogin, useRegister } from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import { AuthContext } from "../contexts/AuthProvider";
 import axiosInstance from "../api/axiosInstance";
+import { Link } from "react-router";
 
 const Login = ({ setAuth }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -59,55 +60,55 @@ const Login = ({ setAuth }) => {
   };
 
   const handleRegisterWithGoogle = async () => {
+    try {
+      const userCredential = await createWithGoogle(); // Firebase Google login
+
+      const firebaseUid = userCredential.user.uid;
+
       try {
-        const userCredential = await createWithGoogle(); // Firebase Google login
-  
-        const firebaseUid = userCredential.user.uid;
-  
-        try {
-          // Attempt to get the user from your backend
-          const result = await axiosInstance.get(
-            `/auth/user/exist/${firebaseUid}`
-          );
-  
-          if (result.data?.user) {
-            // User exists -> Set state
-            setUser({ ...userCredential.user, data: result.data.user });
-            handleClose();
-            toast.success("Login successful!");
-            return;
-          }
-        } catch (fetchError) {
-          if (fetchError.response?.status !== 404) {
-            // Any error except 404 = backend/server issue — don't create user
-            console.error("Error fetching user:", fetchError);
-            toast.error("An error occurred while checking your account.");
-            return;
-          }
-          // Otherwise, 404 = user not found — OK to create
+        // Attempt to get the user from your backend
+        const result = await axiosInstance.get(
+          `/auth/user/exist/${firebaseUid}`
+        );
+
+        if (result.data?.user) {
+          // User exists -> Set state
+          setUser({ ...userCredential.user, data: result.data.user });
+          handleClose();
+          toast.success("Login successful!");
+          return;
         }
-  
-        // User doesn't exist, create in DB
-        const serverRes = await registerMutate({
-          uid: firebaseUid,
-          email: userCredential.user.email,
-          name: userCredential.user.displayName,
-          avatar: userCredential.user.photoURL || "",
-          bio: "",
-          donatedCampaigns: [],
-        });
-  
-        // Attach backend user data to Firebase user
-        userCredential.user.data = serverRes.user;
-        setUser(userCredential.user);
-        handleClose();
-        toast.success("Registration successful!");
-      } catch (error) {
-        setUser(null); // Clear state on any error
-        toast.error(`Google authentication failed: ${error.message}`);
-        console.error("Google auth error:", error);
+      } catch (fetchError) {
+        if (fetchError.response?.status !== 404) {
+          // Any error except 404 = backend/server issue — don't create user
+          console.error("Error fetching user:", fetchError);
+          toast.error("An error occurred while checking your account.");
+          return;
+        }
+        // Otherwise, 404 = user not found — OK to create
       }
-    };
+
+      // User doesn't exist, create in DB
+      const serverRes = await registerMutate({
+        uid: firebaseUid,
+        email: userCredential.user.email,
+        name: userCredential.user.displayName,
+        avatar: userCredential.user.photoURL || "",
+        bio: "",
+        donatedCampaigns: [],
+      });
+
+      // Attach backend user data to Firebase user
+      userCredential.user.data = serverRes.user;
+      setUser(userCredential.user);
+      handleClose();
+      toast.success("Registration successful!");
+    } catch (error) {
+      setUser(null); // Clear state on any error
+      toast.error(`Google authentication failed: ${error.message}`);
+      console.error("Google auth error:", error);
+    }
+  };
 
   // Add click listener when component mounts
   useEffect(() => {
@@ -220,12 +221,13 @@ const Login = ({ setAuth }) => {
               </label>
             </div>
 
-            <a
-              href="#"
+            <Link
+              to="/forgot-password"
+              onClick={handleClose}
               className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400"
             >
               Forgot password?
-            </a>
+            </Link>
           </div>
 
           <button

@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import axioInstance from "../api/axiosInstance";
@@ -125,6 +126,24 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
+  const forgotPassword = async (email) => {
+    try {
+      setLoading(true);
+      await sendPasswordResetEmail(auth, email);
+      toast.success("Password reset link sent to your email!");
+      return { success: true };
+    } catch (error) {
+      let errorMessage = "Failed to send reset email";
+      if (error.code === "auth/user-not-found") {
+        errorMessage = "No user found with this email";
+      }
+      toast.error(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const authinfo = {
     user,
     setUser,
@@ -132,6 +151,7 @@ const AuthProvider = ({ children }) => {
     loginWithEmail,
     createWithGoogle,
     logout,
+    forgotPassword,
     loading,
     setLoading
   };

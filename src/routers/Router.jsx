@@ -11,6 +11,7 @@ import Profile from "../pages/Profile.jsx";
 import PaymentSuccess from "../pages/PaymentSuccess.jsx";
 import PaymentFailure from "../pages/PaymentFailure.jsx";
 import PaymentCancelled from "../pages/PaymentCancelled.jsx";
+import ForgotPass from "../components/ForgotPass.jsx";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: "payment-cancelled",
         element: <PaymentCancelled />,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPass />,
       },
     ],
   },
