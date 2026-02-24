@@ -3,12 +3,13 @@ import { AuthContext } from "../contexts/AuthProvider";
 import {
     FiUser, FiMail, FiCalendar, FiCheckCircle,
     FiXCircle, FiPhone, FiEdit, FiLayers,
-    FiHeart, FiLogOut, FiSettings
+    FiHeart, FiLogOut, FiSettings, FiImage
 } from "react-icons/fi";
 import EditProfile from "../components/EditProfile";
 import { Link } from "react-router";
 import UserCampaigns from "../components/UserCampaigns";
 import UserDonations from "../components/UserDonations";
+import AccountSettings from "../components/AccountSettings";
 
 const Profile = () => {
     const { user, logout } = useContext(AuthContext);
@@ -37,15 +38,24 @@ const Profile = () => {
                         {/* Avatar */}
                         <div className="relative">
                             <div className="w-32 h-32 rounded-2xl bg-white dark:bg-gray-700 p-1 shadow-lg">
-                                <div className="w-full h-full rounded-xl bg-gray-100 dark:bg-gray-600 flex items-center justify-center overflow-hidden">
+                                <button
+                                    onClick={() => setActiveTab("settings")}
+                                    className="w-full h-full rounded-xl bg-gray-100 dark:bg-gray-600 flex items-center justify-center overflow-hidden group/avatar relative"
+                                >
                                     {user?.data?.avatar ? (
-                                        <img src={user.data.avatar} alt="Profile" className="w-full h-full object-cover" />
+                                        <img src={user.data.avatar} alt="Profile" className="w-full h-full object-cover group-hover/avatar:opacity-50 transition-opacity" />
                                     ) : (
                                         <FiUser className="w-16 h-16 text-gray-400" />
                                     )}
-                                </div>
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity bg-black/20">
+                                        <FiImage className="text-white" size={24} />
+                                    </div>
+                                </button>
                             </div>
-                            <button className="absolute -bottom-2 -right-2 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-md text-tertiary hover:text-tertiary/80 transition-colors border border-gray-100 dark:border-gray-700">
+                            <button
+                                onClick={() => setActiveTab("settings")}
+                                className="absolute -bottom-2 -right-2 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-md text-tertiary hover:text-tertiary/80 transition-colors border border-gray-100 dark:border-gray-700"
+                            >
                                 <FiEdit size={18} />
                             </button>
                         </div>
@@ -115,7 +125,7 @@ const Profile = () => {
                         {activeTab === "info" && <PersonalInfo user={user} />}
                         {activeTab === "campaigns" && <UserCampaigns />}
                         {activeTab === "donations" && <UserDonations />}
-                        {activeTab === "settings" && <div className="p-8 text-center text-gray-500">Account settings coming soon...</div>}
+                        {activeTab === "settings" && <AccountSettings />}
                     </div>
                 </div>
             </div>
@@ -131,8 +141,8 @@ const TabButton = ({ active, onClick, icon, label }) => (
     <button
         onClick={onClick}
         className={`flex items-center gap-2 px-6 py-4 text-sm font-bold transition-all whitespace-nowrap border-b-2 ${active
-            ? "border-tertiary text-tertiary bg-tertiary/5"
-            : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                ? "border-tertiary text-tertiary bg-tertiary/5"
+                : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
             }`}
     >
         {icon}
