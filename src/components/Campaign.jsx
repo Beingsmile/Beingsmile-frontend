@@ -36,10 +36,11 @@ const Campaign = ({ campaign }) => {
 
   return (
     <div
-      className="group bg-white rounded-[2.5rem] border-8 border-white shadow-2xl shadow-gray-200/50 hover:shadow-primary/20 transition-all duration-500 overflow-hidden flex flex-col h-[520px] relative"
+      className="group bg-white rounded-[2.5rem] border-4 border-white shadow-md shadow-gray-100/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 overflow-hidden cursor-pointer flex flex-col h-full active:scale-[0.98]"
+      onClick={handleDetails} // Added onClick to the main div for navigation
     >
       {/* Image Wrapper */}
-      <div className="relative h-56 overflow-hidden">
+      <div className="relative h-64 overflow-hidden"> {/* Changed h-56 to h-64 */}
         <img
           src={coverImage || campaign1}
           alt={title}
@@ -47,8 +48,8 @@ const Campaign = ({ campaign }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
         {category && (
-          <div className="absolute top-5 left-5">
-            <span className="px-4 py-1.5 bg-white/95 backdrop-blur-md text-primary text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">
+          <div className="absolute top-4 left-4"> {/* Changed top-5 left-5 to top-4 left-4 */}
+            <span className="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-black text-primary uppercase tracking-widest shadow-sm"> {/* Changed px-4 py-1.5, bg-white/95, shadow-lg to px-3 py-1, bg-white/90, shadow-sm */}
               {category}
             </span>
           </div>
@@ -120,17 +121,14 @@ const Campaign = ({ campaign }) => {
           </div>
         </div>
 
-        {/* CTA Overlay behavior */}
-        <div className="absolute inset-0 bg-primary/95 flex flex-col items-center justify-center p-10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 z-20">
-          <p className="text-white text-center font-black uppercase tracking-[0.2em] text-xs mb-8 leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-200">
-            Your kindness can change everything for this mission.
-          </p>
+        {/* Inline CTA — no overlay, clean hover reveal */}
+        <div className="pt-5 mt-4 border-t border-gray-50">
           <button
             onClick={handleDetails}
-            className="w-full py-5 bg-white text-primary text-xs font-black uppercase tracking-widest rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 duration-700 delay-300"
+            className="w-full py-2.5 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2"
           >
-            Start Your Impact
-            <FiArrowRight size={14} />
+            Support Mission
+            <FiArrowRight size={12} />
           </button>
         </div>
       </div>

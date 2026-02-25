@@ -4,7 +4,7 @@ import axioInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { FiPlus, FiImage, FiCalendar, FiTarget, FiInfo, FiActivity, FiArrowRight, FiShield } from "react-icons/fi";
+import { FiPlus, FiImage, FiCalendar, FiTarget, FiInfo, FiActivity, FiArrowRight, FiShield, FiHeart } from "react-icons/fi";
 
 const StartCampaign = () => {
   const {
@@ -47,63 +47,64 @@ const StartCampaign = () => {
       });
   };
 
+  const coverImage = watch("coverImage");
+
   return (
-    <div className="min-h-screen bg-neutral pt-40 pb-32 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-12">
-        {/* Header Section */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest leading-none">
-            <FiTarget />
-            Ignite Hope
+    <div className="min-h-screen bg-neutral pt-16 pb-20 px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Modern Header */}
+        <div className="text-center mb-12 space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 text-primary rounded-full text-[10px] font-black uppercase tracking-widest leading-none border border-primary/10">
+            <FiActivity size={12} className="animate-pulse" />
+            Launch Mission
           </div>
-          <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight font-sans leading-none uppercase">
-            Launch Your <br /><span className="text-primary italic">Mission</span>
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight font-sans uppercase">
+            Start Your <span className="text-primary italic">Story</span>
           </h1>
-          <p className="text-lg text-gray-500 font-medium leading-relaxed max-w-2xl mx-auto">
-            Your story has the power to change lives. Share your vision, build your community, and start creating impact today.
+          <p className="text-base text-gray-500 font-medium max-w-xl mx-auto italic">
+            "Your compassion is the spark. Fill out the mission details below and let's bring smiles to the world together."
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-12 items-start">
-          {/* Guidance Sidebar */}
-          <aside className="lg:col-span-4 space-y-8 lg:sticky lg:top-32">
-            <div className="bg-white p-8 rounded-[3rem] shadow-2xl shadow-gray-200/50 border-8 border-white space-y-6">
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-gray-900 flex items-center gap-2">
-                <FiInfo className="text-primary" /> Hero Guidelines
-              </h2>
-              <ul className="space-y-4">
-                {[
-                  { text: "Choose an emotional title", icon: <FiActivity /> },
-                  { text: "Add an authentic cover", icon: <FiImage /> },
-                  { text: "Set an achievable goal", icon: <FiTarget /> },
-                  { text: "Be honest in your story", icon: <FiHeart /> },
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-4 p-4 bg-neutral rounded-2xl border border-gray-50 group hover:border-primary/20 transition-all">
-                    <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                      {item.icon}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 animate-in fade-in slide-in-from-bottom duration-1000">
+          {/* Card Based Layout */}
+          <div className="bg-white rounded-[2rem] border-4 border-white shadow-xl shadow-gray-200/50 p-8 md:p-12 space-y-10">
+            {/* Visual Section */}
+            <div className="space-y-6">
+              <label className="flex items-center gap-3 text-sm font-black text-gray-900 uppercase tracking-widest mb-2">
+                <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+                  <FiImage size={16} />
+                </div>
+                Mission Cover
+              </label>
+              <div className="relative group">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onloadend = () => setValue("coverImage", reader.result);
+                    reader.readAsDataURL(file);
+                  }}
+                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                />
+                <div className={`w-full aspect-[16/9] border-2 border-dashed rounded-[1.5rem] flex flex-col items-center justify-center transition-all group-hover:bg-neutral ${coverImage ? "border-primary/50" : "border-gray-200"}`}>
+                  {coverImage ? (
+                    <img src={coverImage} className="w-full h-full object-cover rounded-[1.4rem]" alt="Preview" />
+                  ) : (
+                    <div className="text-center space-y-2">
+                      <FiPlus className="mx-auto text-4xl text-gray-300" />
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Add Cover Image</p>
                     </div>
-                    <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest pt-3 leading-none">{item.text}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="bg-accent p-8 rounded-[3rem] text-white space-y-6 shadow-2xl shadow-accent/20 relative overflow-hidden">
-              <FiShield className="text-4xl animate-pulse relative z-10" />
-              <div className="space-y-2 relative z-10 font-sans">
-                <h4 className="text-xl font-black uppercase tracking-tight leading-tight">Verified <br />Trust</h4>
-                <p className="text-sm font-medium opacity-80 leading-relaxed italic">"Every mission is reviewed to ensure the highest integrity of impact."</p>
-              </div>
-              <div className="absolute -bottom-10 -right-10 text-[10rem] text-white/10 rotate-12 select-none">
-                <FiShield />
+                  )}
+                </div>
               </div>
             </div>
-          </aside>
 
-          {/* Main Form */}
-          <main className="lg:col-span-8 bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 border-8 border-white p-10 md:p-16">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
-              {/* Mission Title */}
+            {/* Input Groups */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-2">
                   <FiActivity className="text-primary" /> Mission Title*
@@ -113,100 +114,44 @@ const StartCampaign = () => {
                     required: "A meaningful title is required",
                     maxLength: { value: 100, message: "Title cannot exceed 100 characters" },
                   })}
-                  placeholder="e.g. Help Build a Healthier Future for Orphans"
-                  className={`w-full px-8 py-6 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-[2rem] outline-none text-gray-900 font-bold transition-all placeholder:text-gray-300 font-sans ${errors.title ? "border-red-500" : ""}`}
+                  placeholder="e.g. Help Build a Healthier Future"
+                  className={`w-full px-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-xl outline-none text-gray-900 font-bold transition-all placeholder:text-gray-300 font-sans ${errors.title ? "border-red-500" : ""}`}
                 />
                 {errors.title && <p className="text-[10px] font-black uppercase text-red-500 ml-4">{errors.title.message}</p>}
               </div>
 
-              {/* Impact Story */}
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-2">
-                  <FiHeart className="text-primary" /> The Impact Story*
+                  <FiTarget className="text-primary" /> Goal Amount (৳)*
                 </label>
-                <textarea
-                  rows={8}
-                  {...register("description", {
-                    required: "Your story is crucial for donors",
-                    maxLength: { value: 5000, message: "Description cannot exceed 5000 characters" },
+                <input
+                  type="number"
+                  {...register("goalAmount", {
+                    required: "Goal is required",
+                    min: { value: 10, message: "Min ৳10" },
+                    valueAsNumber: true,
                   })}
-                  placeholder="Share the details of your mission, who it helps, and why it matters..."
-                  className={`w-full px-8 py-6 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-[2.5rem] outline-none text-gray-900 font-medium leading-relaxed transition-all resize-none placeholder:text-gray-300 ${errors.description ? "border-red-500" : ""}`}
+                  className={`w-full px-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-xl outline-none text-gray-900 font-black transition-all ${errors.goalAmount ? "border-red-500" : ""}`}
                 />
-                {errors.description && <p className="text-[10px] font-black uppercase text-red-500 ml-4">{errors.description.message}</p>}
+                {errors.goalAmount && <p className="text-[10px] font-black uppercase text-red-500 ml-4">{errors.goalAmount.message}</p>}
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
-                {/* Category */}
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-2">
-                    Field*
-                  </label>
-                  <select
-                    {...register("category", { required: true })}
-                    className="w-full px-8 py-6 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-[2rem] outline-none text-gray-900 font-black uppercase tracking-widest text-xs transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="education">Education</option>
-                    <option value="health">Health</option>
-                    <option value="environment">Environment</option>
-                    <option value="animals">Animals</option>
-                    <option value="community">Community</option>
-                    <option value="art">Art</option>
-                    <option value="technology">Technology</option>
-                    <option value="other">Others</option>
-                  </select>
-                </div>
-
-                {/* Goal Amount */}
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-2">
-                    Goal Amount (৳)*
-                  </label>
-                  <input
-                    type="number"
-                    {...register("goalAmount", {
-                      required: "Goal is required",
-                      min: { value: 10, message: "Min ৳10" },
-                      valueAsNumber: true,
-                    })}
-                    className={`w-full px-8 py-6 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-[2rem] outline-none text-gray-900 font-black transition-all ${errors.goalAmount ? "border-red-500" : ""}`}
-                  />
-                  {errors.goalAmount && <p className="text-[10px] font-black uppercase text-red-500 ml-4">{errors.goalAmount.message}</p>}
-                </div>
-              </div>
-
-              {/* Cover Mission Image */}
-              <div className="space-y-4">
-                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-2">
-                  <FiImage className="text-primary" /> Visual Identity*
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">
+                  Field*
                 </label>
-                <div className="relative group">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={async (e) => {
-                      const file = e.target.files[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onloadend = () => setValue("coverImage", reader.result);
-                      reader.readAsDataURL(file);
-                    }}
-                    className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                  />
-                  <div className={`w-full h-48 border-4 border-dashed rounded-[2.5rem] flex flex-col items-center justify-center transition-all group-hover:bg-neutral ${watch("coverImage") ? "border-primary/50" : "border-gray-200"}`}>
-                    {watch("coverImage") ? (
-                      <img src={watch("coverImage")} className="w-full h-full object-cover rounded-[2.2rem]" alt="Preview" />
-                    ) : (
-                      <div className="text-center space-y-2">
-                        <FiPlus className="mx-auto text-4xl text-gray-300" />
-                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Add Cover Image</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                <select
+                  {...register("category", { required: true })}
+                  className="w-full px-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-xl outline-none text-gray-900 font-black uppercase tracking-widest text-xs transition-all appearance-none cursor-pointer"
+                >
+                  <option value="education">Education</option>
+                  <option value="health">Health</option>
+                  <option value="environment">Environment</option>
+                  <option value="community">Community</option>
+                  <option value="others">Others</option>
+                </select>
               </div>
 
-              {/* End Deadline */}
               <div className="space-y-2">
                 <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-2">
                   <FiCalendar className="text-primary" /> Mission Deadline*
@@ -218,39 +163,59 @@ const StartCampaign = () => {
                     validate: (value) => new Date(value) > new Date() || "Date must be in the future",
                   })}
                   min={new Date().toISOString().slice(0, 16)}
-                  className={`w-full px-8 py-6 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-[2rem] outline-none text-gray-900 font-bold transition-all ${errors.endDate ? "border-red-500" : ""}`}
+                  className={`w-full px-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-xl outline-none text-gray-900 font-bold transition-all ${errors.endDate ? "border-red-500" : ""}`}
                 />
                 {errors.endDate && <p className="text-[10px] font-black uppercase text-red-500 ml-4">{errors.endDate.message}</p>}
               </div>
+            </div>
 
-              {/* Launch Button */}
-              <div className="pt-8">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full px-10 py-6 bg-primary text-white font-black uppercase tracking-[0.2em] text-xs rounded-2xl shadow-2xl shadow-primary/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 cursor-pointer disabled:opacity-50"
-                >
-                  {loading ? (
-                    <div className="flex items-center gap-3">
-                      <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                      </svg>
-                      Launching Mission...
-                    </div>
-                  ) : (
-                    <>
-                      Launch Humanitarian Mission
-                      <FiArrowRight />
-                    </>
-                  )}
-                </button>
-                <p className="text-center text-[9px] font-black text-gray-300 uppercase tracking-[0.3em] mt-6">
-                  By launching, you agree to our Humanitarian Trust Policy.
-                </p>
-              </div>
-            </form>
-          </main>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4 flex items-center gap-2">
+                <FiHeart className="text-primary" /> The Impact Story*
+              </label>
+              <textarea
+                rows={6}
+                {...register("description", {
+                  required: "Your story is crucial for donors",
+                })}
+                placeholder="Share the details of your mission..."
+                className={`w-full px-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none text-gray-900 font-medium leading-relaxed transition-all resize-none placeholder:text-gray-300 ${errors.description ? "border-red-500" : ""}`}
+              />
+            </div>
+
+            {/* Launch Button */}
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full px-10 py-5 bg-primary text-white font-black uppercase tracking-[0.2em] text-xs rounded-xl shadow-lg shadow-primary/10 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 cursor-pointer disabled:opacity-50"
+              >
+                {loading ? "Launching Mission..." : "Launch Humanitarian Mission"}
+                {!loading && <FiArrowRight />}
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 flex items-center gap-4">
+            <div className="w-12 h-12 bg-primary/5 text-primary rounded-xl flex items-center justify-center">
+              <FiShield size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-900">Verified Impact</p>
+              <p className="text-xs text-gray-500 font-medium italic">"Every mission is reviewed for integrity."</p>
+            </div>
+          </div>
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 flex items-center gap-4">
+            <div className="w-12 h-12 bg-accent/5 text-accent rounded-xl flex items-center justify-center">
+              <FiHeart size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-900">Zero Platform Fee</p>
+              <p className="text-xs text-gray-500 font-medium italic">"100% of donations reach the cause."</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

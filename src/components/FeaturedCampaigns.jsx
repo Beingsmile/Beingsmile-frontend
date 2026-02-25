@@ -77,7 +77,7 @@ const FeaturedCampaigns = () => {
         <div className="mt-16 text-center md:hidden">
           <a
             href="/campaigns/browse"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-md shadow-primary/10 hover:scale-105 active:scale-95 transition-all"
           >
             Explore All Causes
             <FiArrowRight size={16} />

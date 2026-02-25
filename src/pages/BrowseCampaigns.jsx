@@ -54,38 +54,27 @@ export default function BrowseCampaigns() {
   };
 
   return (
-    <div className="bg-neutral min-h-screen">
+    <div className="min-h-screen bg-neutral pt-16 pb-20">
       {/* Hero Header Section */}
-      <section className="pt-40 pb-24 px-4 bg-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 -skew-x-12 translate-x-1/2" />
+      <section className="relative py-10 px-4 bg-white border-b border-gray-100 overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
-            <div className="space-y-6 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest leading-none">
-                <FiHexagon className="animate-spin-slow" />
-                Mission Explorer
-              </div>
-              <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight font-sans leading-none uppercase">
-                Explore <br /><span className="text-primary italic">Humanity</span>
-              </h1>
-              <p className="text-xl text-gray-500 font-medium leading-relaxed">
-                Every story here is a heartbeat of hope. Find the mission that resonates with you and start your journey as a hero today.
-              </p>
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 text-primary rounded-full text-[10px] font-black uppercase tracking-widest leading-none border border-primary/10">
+              <FiHexagon size={12} className="animate-spin-slow" />
+              Impact Explorer
             </div>
-            <div className="hidden lg:block pb-4">
-              <Link
-                to="/campaigns/create"
-                className="inline-flex items-center gap-4 px-10 py-6 bg-gray-900 text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-[1.5rem] shadow-2xl hover:bg-primary transition-all group"
-              >
-                <FiPlus />
-                Launch Your Mission
-              </Link>
-            </div>
+            <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight font-sans uppercase">
+              Current <span className="text-primary italic">Missions</span>
+            </h1>
+            <p className="text-sm text-gray-500 max-w-xl mx-auto font-medium leading-relaxed italic">
+              "Every mission is a seed of hope. Explore verified fundraisers and become part of a global movement for human kindness."
+            </p>
           </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pb-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-24">
         <div className="flex flex-col lg:flex-row gap-16 items-start">
           {/* Sidebar Filters */}
           <aside className="w-full lg:w-80 space-y-12 lg:sticky lg:top-32">

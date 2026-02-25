@@ -1,154 +1,118 @@
 import { useState } from 'react';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router';
+import { Outlet, Link, NavLink, useNavigate } from 'react-router';
 import { ToastContainer } from 'react-toastify';
-import { 
-  FiMenu, 
-  FiX, 
-  FiUser, 
-  FiBriefcase, 
-  FiUsers, 
-  FiCreditCard, 
-  FiPieChart, 
-  FiCheckCircle,
-  FiSun,
-  FiMoon,
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthProvider';
+import { toast } from 'react-toastify';
+import {
+  FiUser,
+  FiBriefcase,
+  FiCreditCard,
+  FiHeart,
   FiLogOut,
-  FiFlag
+  FiSettings,
 } from 'react-icons/fi';
-import { useTheme } from '../hooks/useTheme'; // Custom hook for theme management
 
 const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const location = useLocation();
+  const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme(); // Assuming you have a theme context/hook
 
-  const menuItems = [
-    { path: 'profile', name: 'Profile', icon: <FiUser /> },
-    { path: 'manage-campaigns', name: 'Campaigns', icon: <FiBriefcase /> },
-    // { path: 'manage-users', name: 'Users', icon: <FiUsers /> },
-    { path: 'transactions', name: 'Transactions', icon: <FiCreditCard /> },
-    // { path: 'reports', name: 'Reports', icon: <FiFlag /> },
-    { path: 'analytics', name: 'Analytics', icon: <FiPieChart /> },
-    // { path: 'verify-requests', name: 'Verify Requests', icon: <FiCheckCircle /> },
-  ];
-
-  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-
-  const handleLogout = () => {
-    // Add your logout logic here
-    console.log('Logging out...');
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success('Logged out successfully');
+      navigate('/');
+    } catch (error) {
+      toast.error(`Logout failed: ${error.message}`);
+    }
   };
 
-  return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Mobile sidebar backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden"
-          onClick={toggleSidebar}
-        />
-      )}
+  const navItems = [
+    { to: 'profile', label: 'Profile', icon: <FiUser /> },
+    { to: 'manage-campaigns', label: 'My Missions', icon: <FiBriefcase /> },
+    { to: 'transactions', label: 'Donations', icon: <FiCreditCard /> },
+  ];
 
-      {/* Sidebar */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 transform bg-white dark:bg-gray-800 shadow-lg transition-transform duration-200 ease-in-out ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:relative lg:translate-x-0`}
-      >
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-            <h1 className="text-xl font-semibold text-gray-800 dark:text-white"><Link to="/">Beingsmile</Link></h1>
-            <button
-              onClick={toggleSidebar}
-              className="p-1 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 lg:hidden"
-            >
-              <FiX size={24} />
-            </button>
+  return (
+    <div className="min-h-screen bg-neutral font-sans">
+      <ToastContainer position="bottom-right" />
+
+      {/* Top Dashboard Header */}
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-14">
+            {/* Brand */}
+            <Link to="/" className="flex items-center gap-2">
+              <div className="p-1.5 bg-primary rounded-lg">
+                <FiHeart className="text-white text-sm" />
+              </div>
+              <span className="text-base font-black tracking-tight text-gray-900 uppercase font-sans">
+                Being<span className="text-primary">Smile</span>
+              </span>
+            </Link>
+
+            {/* Nav Tabs */}
+            <nav className="hidden sm:flex items-center gap-1">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wide transition-all ${isActive
+                      ? 'bg-primary/5 text-primary'
+                      : 'text-gray-400 hover:text-gray-700 hover:bg-gray-50'
+                    }`
+                  }
+                >
+                  <span className="text-base">{item.icon}</span>
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+
+            {/* User + Logout */}
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-xs font-black text-gray-900 uppercase tracking-tight leading-none">
+                  {user?.data?.name || 'Member'}
+                </span>
+                <span className="text-[10px] text-primary font-bold">{user?.email}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-2 text-xs font-black uppercase tracking-wide text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all cursor-pointer"
+              >
+                <FiLogOut />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </div>
           </div>
 
-          <nav className="flex-1 p-4 overflow-y-auto">
-            <ul className="space-y-2">
-              {menuItems.map((item) => (
-                <li key={item.path}>
-                  <Link
-                    to={item.path}
-                    className={`flex items-center p-3 rounded-lg transition-colors ${
-                      location.pathname.includes(item.path)
-                        ? 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-200'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                    onClick={() => window.innerWidth < 1024 && setSidebarOpen(false)}
-                  >
-                    <span className="mr-3">{item.icon}</span>
-                    <span>{item.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Bottom section with theme toggle and logout */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-            <button
-              onClick={toggleTheme}
-              className="flex items-center w-full p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              {theme === 'dark' ? (
-                <>
-                  <FiSun className="mr-3" />
-                  <span>Light Mode</span>
-                </>
-              ) : (
-                <>
-                  <FiMoon className="mr-3" />
-                  <span>Dark Mode</span>
-                </>
-              )}
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors mt-2"
-            >
-              <FiLogOut className="mr-3" />
-              <span>Logout</span>
-            </button>
+          {/* Mobile nav tabs */}
+          <div className="sm:hidden flex gap-1 pb-2 overflow-x-auto">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wide whitespace-nowrap transition-all ${isActive
+                    ? 'bg-primary/5 text-primary'
+                    : 'text-gray-400 hover:text-gray-700'
+                  }`
+                }
+              >
+                {item.icon}
+                {item.label}
+              </NavLink>
+            ))}
           </div>
         </div>
-      </aside>
+      </header>
 
-      {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Mobile header */}
-        <header className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 lg:hidden">
-          <button
-            onClick={toggleSidebar}
-            className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-          >
-            <FiMenu size={24} />
-          </button>
-          <h1 className="text-lg font-medium text-gray-800 dark:text-white">
-            {menuItems.find(item => location.pathname.includes(item.path))?.name || 'Dashboard'}
-          </h1>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-            >
-              {theme === 'dark' ? <FiSun size={20} /> : <FiMoon size={20} />}
-            </button>
-          </div>
-        </header>
-
-        {/* Content area */}
-        <main className="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900">
-          <Outlet />
-        </main>
-      </div>
-
-      <ToastContainer position="bottom-right" theme={theme} />
+      {/* Page Content */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <Outlet />
+      </main>
     </div>
   );
 };

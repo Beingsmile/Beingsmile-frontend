@@ -69,30 +69,30 @@ const FAQ = () => {
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {faqItems.map((item, index) => (
             <div
               key={index}
-              className={`group bg-neutral rounded-[2.5rem] border-4 transition-all duration-500 overflow-hidden ${activeIndex === index ? "bg-white border-primary shadow-2xl shadow-primary/10 -translate-y-1" : "border-transparent"
+              className={`group bg-neutral rounded-[1.5rem] border transition-all duration-500 overflow-hidden ${activeIndex === index ? "bg-white border-primary/20 shadow-md shadow-primary/5" : "border-gray-50 bg-white"
                 }`}
             >
               <button
                 onClick={() => toggleAccordion(index)}
-                className="w-full p-8 md:p-10 flex items-center justify-between text-left cursor-pointer"
+                className="w-full p-6 md:p-8 flex items-center justify-between text-left cursor-pointer transition-all"
               >
-                <div className="flex items-center gap-6">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition-all ${activeIndex === index ? "bg-primary text-white" : "bg-white text-gray-400"
+                <div className="flex items-center gap-5">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl transition-all ${activeIndex === index ? "bg-primary text-white" : "bg-primary/5 text-primary"
                     }`}>
                     {item.icon}
                   </div>
-                  <span className={`text-xl font-black tracking-tight font-sans transition-colors ${activeIndex === index ? "text-gray-900" : "text-gray-500"
+                  <span className={`text-lg font-black tracking-tight font-sans transition-colors ${activeIndex === index ? "text-primary" : "text-gray-900"
                     }`}>
                     {item.question}
                   </span>
                 </div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all ${activeIndex === index ? "border-primary text-primary rotate-180" : "border-gray-200 text-gray-300"
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${activeIndex === index ? "border-primary/30 text-primary rotate-180" : "border-gray-100 text-gray-300"
                   }`}>
-                  <FiChevronDown />
+                  <FiChevronDown size={18} />
                 </div>
               </button>
 

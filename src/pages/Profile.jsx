@@ -20,7 +20,7 @@ const Profile = () => {
 
     if (!user) {
         return (
-            <div className="bg-neutral min-h-screen flex items-center justify-center pt-20">
+            <div className="bg-neutral min-h-screen flex items-center justify-center">
                 <div className="text-center space-y-6">
                     <div className="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center text-3xl mx-auto">
                         <FiUser />
@@ -38,7 +38,7 @@ const Profile = () => {
     }
 
     return (
-        <div className="bg-neutral min-h-screen pt-32 pb-24">
+        <div className="bg-neutral min-h-screen pb-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 border-8 border-white overflow-hidden">
                     {/* Header/Cover Area */}

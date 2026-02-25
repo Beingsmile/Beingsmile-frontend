@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import LoadingSpinner from "./LoadingSpinner";
+import { FiUser, FiMail, FiPhone, FiLoader, FiShield } from "react-icons/fi";
 
 const AamarpayForm = ({ campaignId, amount }) => {
   const { user } = useAuth();
@@ -14,10 +14,7 @@ const AamarpayForm = ({ campaignId, amount }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -26,32 +23,19 @@ const AamarpayForm = ({ campaignId, amount }) => {
     setError("");
 
     try {
-      // Validate form
-      if (!formData.customerName.trim()) {
-        throw new Error("Please enter your name");
-      }
-      if (!formData.customerEmail.trim()) {
-        throw new Error("Please enter your email");
-      }
-      if (!formData.customerPhone.trim()) {
-        throw new Error("Please enter your phone number");
-      }
-      if (formData.customerPhone.length < 10) {
-        throw new Error("Please enter a valid phone number");
-      }
+      if (!formData.customerName.trim()) throw new Error("Please enter your name");
+      if (!formData.customerEmail.trim()) throw new Error("Please enter your email");
+      if (!formData.customerPhone.trim()) throw new Error("Please enter your phone number");
+      if (formData.customerPhone.length < 10) throw new Error("Please enter a valid phone number");
 
       const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
-      // Call backend to initiate payment
       const response = await fetch(`${apiUrl}/api/payment/aamarpay/initiate`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
           amount: parseFloat(amount),
-          campaignId: campaignId,
+          campaignId,
           customerName: formData.customerName,
           customerEmail: formData.customerEmail,
           customerPhone: formData.customerPhone,
@@ -64,97 +48,100 @@ const AamarpayForm = ({ campaignId, amount }) => {
       }
 
       const data = await response.json();
-
       if (data.success && data.payment_url) {
-        // Redirect to Aamarpay payment gateway
         window.location.href = data.payment_url;
       } else {
         throw new Error(data.error || "Payment initiation failed");
       }
     } catch (err) {
-      console.error("Payment error:", err);
       setError(err.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  const inputClass = "w-full bg-neutral border border-gray-100 focus:border-primary/30 focus:bg-white px-4 py-3 pl-10 rounded-xl text-sm font-medium text-gray-900 placeholder-gray-300 outline-none transition-all";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 rounded-lg">
+        <div className="p-3 bg-red-50 border border-red-100 text-red-600 text-xs font-bold rounded-xl">
           {error}
         </div>
       )}
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Full Name
-        </label>
-        <input
-          type="text"
-          name="customerName"
-          value={formData.customerName}
-          onChange={handleInputChange}
-          placeholder="Enter your full name"
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-tertiary focus:border-transparent dark:bg-gray-700 dark:text-white"
-          required
-        />
+      {/* Name */}
+      <div className="space-y-1.5">
+        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Full Name</label>
+        <div className="relative">
+          <FiUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-sm" />
+          <input
+            type="text"
+            name="customerName"
+            value={formData.customerName}
+            onChange={handleInputChange}
+            placeholder="Your full name"
+            className={inputClass}
+            required
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Email Address
-        </label>
-        <input
-          type="email"
-          name="customerEmail"
-          value={formData.customerEmail}
-          onChange={handleInputChange}
-          placeholder="Enter your email"
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-tertiary focus:border-transparent dark:bg-gray-700 dark:text-white"
-          required
-        />
+      {/* Email */}
+      <div className="space-y-1.5">
+        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Email Address</label>
+        <div className="relative">
+          <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-sm" />
+          <input
+            type="email"
+            name="customerEmail"
+            value={formData.customerEmail}
+            onChange={handleInputChange}
+            placeholder="your@email.com"
+            className={inputClass}
+            required
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          Phone Number
-        </label>
-        <input
-          type="tel"
-          name="customerPhone"
-          value={formData.customerPhone}
-          onChange={handleInputChange}
-          placeholder="Enter your phone number"
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-tertiary focus:border-transparent dark:bg-gray-700 dark:text-white"
-          required
-        />
+      {/* Phone */}
+      <div className="space-y-1.5">
+        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Phone Number</label>
+        <div className="relative">
+          <FiPhone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-sm" />
+          <input
+            type="tel"
+            name="customerPhone"
+            value={formData.customerPhone}
+            onChange={handleInputChange}
+            placeholder="+880 ..."
+            className={inputClass}
+            required
+          />
+        </div>
       </div>
 
-      <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-        <p className="text-sm text-blue-800 dark:text-blue-300">
-          <strong>Amount:</strong> {amount} BDT
-        </p>
-        <p className="text-xs text-blue-700 dark:text-blue-400 mt-2">
-          You will be redirected to Aamarpay payment gateway to complete your donation securely.
-        </p>
+      {/* Amount Summary */}
+      <div className="flex items-center justify-between px-4 py-3 bg-primary/5 rounded-xl border border-primary/10">
+        <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Total Amount</span>
+        <span className="text-lg font-black text-primary">৳{amount}</span>
       </div>
 
+      {/* Submit */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-tertiary hover:bg-tertiary/90 disabled:bg-gray-400 text-white font-semibold py-3 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+        className="w-full py-3 bg-primary text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
       >
-        {loading ? "Processing..." : `Donate ${amount} BDT`}
+        {loading ? (
+          <><FiLoader className="animate-spin" /> Processing...</>
+        ) : (
+          `Donate ৳${amount}`
+        )}
       </button>
 
-      <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-        Your donation is secure and encrypted
+      <p className="text-[10px] text-center text-gray-300 font-medium flex items-center justify-center gap-1.5">
+        <FiShield className="text-primary" /> Redirects to Aamarpay. Your payment is secure.
       </p>
     </form>
   );

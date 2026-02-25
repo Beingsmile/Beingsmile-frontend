@@ -86,12 +86,12 @@ const ResetPassword = () => {
     if (error) {
         return (
             <div className="min-h-[70vh] flex items-center justify-center px-4">
-                <div className="max-w-md w-full bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl text-center">
-                    <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-md text-center">
+                    <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
                         <FiX size={32} />
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Reset Failed</h2>
-                    <p className="text-gray-500 dark:text-gray-400 mb-8">{error}</p>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Reset Failed</h2>
+                    <p className="text-gray-500 mb-8">{error}</p>
                     <Link to="/login" className="bg-tertiary text-white px-8 py-3 rounded-xl font-bold hover:bg-tertiary/90 transition-all">
                         Back to Login
                     </Link>
@@ -102,17 +102,17 @@ const ResetPassword = () => {
 
     return (
         <div className="min-h-[70vh] flex items-center justify-center px-4 py-12">
-            <div className="max-w-md w-full bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl">
+            <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-md border border-gray-50">
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">New Password</h2>
-                    <p className="text-gray-500 dark:text-gray-400">
-                        Setting a new password for <span className="text-gray-900 dark:text-white font-semibold">{email}</span>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2">New Password</h2>
+                    <p className="text-gray-500">
+                        Setting a new password for <span className="text-gray-900 font-semibold">{email}</span>
                     </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">New Password</label>
+                        <label className="text-sm font-semibold text-gray-700">New Password</label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                 <FiLock size={18} />
@@ -122,7 +122,7 @@ const ResetPassword = () => {
                                 required
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
-                                className="w-full pl-10 pr-12 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-tertiary outline-none text-gray-900 dark:text-white transition-all"
+                                className="w-full pl-10 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-tertiary outline-none text-gray-900 transition-all"
                                 placeholder="••••••••"
                             />
                             <button
@@ -136,7 +136,7 @@ const ResetPassword = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Confirm Password</label>
+                        <label className="text-sm font-semibold text-gray-700">Confirm Password</label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                                 <FiLock size={18} />
@@ -146,14 +146,14 @@ const ResetPassword = () => {
                                 required
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-tertiary outline-none text-gray-900 dark:text-white transition-all"
+                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-tertiary outline-none text-gray-900 transition-all"
                                 placeholder="••••••••"
                             />
                         </div>
                     </div>
 
                     {/* Criteria List */}
-                    <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl space-y-2">
+                    <div className="bg-gray-50 p-4 rounded-xl space-y-2">
                         <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Requirements</p>
                         <CriteriaItem met={criteria.length} text="At least 8 characters" />
                         <CriteriaItem met={criteria.upper} text="At least 1 uppercase letter" />
@@ -172,10 +172,10 @@ const ResetPassword = () => {
                     </button>
                 </form>
 
-                <div className="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700 text-center">
+                <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                     <button
                         onClick={() => navigate("/login")}
-                        className="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-tertiary transition-colors"
+                        className="inline-flex items-center text-sm text-gray-500 hover:text-tertiary transition-colors"
                     >
                         <FiArrowLeft className="mr-2" />
                         Back to Login
@@ -187,7 +187,7 @@ const ResetPassword = () => {
 };
 
 const CriteriaItem = ({ met, text }) => (
-    <div className={`flex items-center gap-2 text-sm ${met ? "text-green-600 dark:text-green-400" : "text-gray-400"}`}>
+    <div className={`flex items-center gap-2 text-sm ${met ? "text-green-600" : "text-gray-400"}`}>
         {met ? <FiCheck className="shrink-0" /> : <FiX className="shrink-0" />}
         <span className={met ? "font-medium" : ""}>{text}</span>
     </div>

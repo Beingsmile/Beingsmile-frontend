@@ -1,131 +1,96 @@
-import { FaMapMarkerAlt, FaEnvelope, FaPhone, FaClock } from "react-icons/fa";
 import { useEffect } from "react";
+import { FiSend, FiMail, FiPhone, FiMapPin, FiMessageSquare, FiArrowRight } from "react-icons/fi";
 
 const ContactUs = () => {
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [])
+  }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 px-4 py-10">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            We’d love to hear from you! Fill out the form or reach us using the
-            details below.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <form className="space-y-6">
-            <div>
-              <label className="block mb-1 font-semibold">Name</label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Your Name"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-semibold">Email</label>
-              <input
-                type="email"
-                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="you@example.com"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-semibold">Subject</label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Subject"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-semibold">Message</label>
-              <textarea
-                rows="5"
-                className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Write your message..."
-              ></textarea>
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition"
-            >
-              Send Message
-            </button>
-          </form>
-
-          {/* Contact Info */}
-          <section className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 py-10 px-4 sm:px-10 rounded-xl shadow-md">
-      <div className="max-w-4xl mx-auto space-y-10">
-        {/* Contact Info */}
-        <div className="space-y-6 text-sm sm:text-base bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-6 rounded-lg shadow">
-          {/* Office */}
-          <div className="flex items-start gap-4 border-b border-gray-100 dark:border-gray-700 pb-4">
-            <FaMapMarkerAlt className="text-blue-600 dark:text-blue-400 mt-1 text-xl" />
-            <div>
-              <h2 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">Our Office</h2>
-              <p className="text-gray-600 dark:text-gray-300">
-                Beingsmile Office, 444/4 Kuratoli, Khilkhet, Dhaka 1229, Bangladesh
+    <div className="bg-neutral min-h-screen pt-16 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Info Side */}
+          <div className="space-y-12">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest leading-none">
+                <FiSend className="animate-pulse" />
+                Connect With Us
+              </div>
+              <h1 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight font-sans leading-none uppercase">
+                Let's Start a <br /><span className="text-primary italic">Movement</span>
+              </h1>
+              <p className="text-lg text-gray-500 font-medium leading-relaxed max-w-lg">
+                Your voice is the heartbeat of our missions. Whether you have a question about a campaign or want to partner with us, we're here to listen.
               </p>
             </div>
-          </div>
 
-          {/* Email */}
-          <div className="flex items-start gap-4 border-b border-gray-100 dark:border-gray-700 pb-4">
-            <FaEnvelope className="text-blue-600 dark:text-blue-400 mt-1 text-xl" />
-            <div>
-              <h2 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">Email</h2>
-              <a
-                href="mailto:support@example.com"
-                className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-300 transition"
-              >
-                support@example.com
-              </a>
+            <div className="grid sm:grid-cols-2 gap-8">
+              {[
+                { icon: <FiMail />, title: "Inquiry", detail: "hello@beingsmile.org", bg: "bg-blue-50 text-blue-500" },
+                { icon: <FiPhone />, title: "Support", detail: "+880 1234 567890", bg: "bg-green-50 text-green-500" },
+                { icon: <FiMapPin />, title: "Base", detail: "Dhaka, Bangladesh", bg: "bg-primary/10 text-primary" },
+                { icon: <FiMessageSquare />, title: "Social", detail: "@beingsmile_impact", bg: "bg-accent/10 text-accent" },
+              ].map((item, i) => (
+                <div key={i} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all group">
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform ${item.bg}`}>
+                    {item.icon}
+                  </div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">{item.title}</h4>
+                  <p className="text-sm font-bold text-gray-900">{item.detail}</p>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Phone */}
-          <div className="flex items-start gap-4 border-b border-gray-100 dark:border-gray-700 pb-4">
-            <FaPhone className="text-blue-600 dark:text-blue-400 mt-1 text-xl" />
-            <div>
-              <h2 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">Phone</h2>
-              <p className="text-gray-600 dark:text-gray-300">+880 1234 567 890</p>
-            </div>
-          </div>
+          {/* Form Side */}
+          <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-xl shadow-gray-200/50 border-4 border-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 
-          {/* Hours */}
-          <div className="flex items-start gap-4">
-            <FaClock className="text-blue-600 dark:text-blue-400 mt-1 text-xl" />
-            <div>
-              <h2 className="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-100">Business Hours</h2>
-              <p className="text-gray-600 dark:text-gray-300">Sunday - Thursday: 9:00 AM - 5:00 PM</p>
-              <p className="text-gray-600 dark:text-gray-300">Friday - Saturday: Closed</p>
-            </div>
-          </div>
-        </div>
+            <form className="space-y-6 relative z-10">
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">Full Name</label>
+                  <input
+                    type="text"
+                    className="w-full px-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none text-gray-900 font-bold transition-all"
+                    placeholder="Hero Name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">Email Space</label>
+                  <input
+                    type="email"
+                    className="w-full px-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none text-gray-900 font-bold transition-all"
+                    placeholder="name@email.com"
+                  />
+                </div>
+              </div>
 
-        {/* Google Map */}
-        <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 shadow-lg">
-          <iframe
-            title="Beingsmile Office Map"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.6323724468167!2d90.4240454154327!3d23.796823684561364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c7bcce3f683f%3A0x39653966f1db5157!2sKuratoli%2C%20Dhaka!5e0!3m2!1sen!2sbd!4v1692282350000!5m2!1sen!2sbd"
-            width="100%"
-            height="350"
-            allowFullScreen=""
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="w-full border-none"
-          ></iframe>
-        </div>
-      </div>
-    </section>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">Subject</label>
+                <input
+                  type="text"
+                  className="w-full px-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none text-gray-900 font-bold transition-all"
+                  placeholder="What's on your mind?"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-4">Message</label>
+                <textarea
+                  rows={4}
+                  className="w-full px-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none text-gray-900 font-medium transition-all resize-none"
+                  placeholder="Share your story or question..."
+                />
+              </div>
+
+              <button className="w-full px-10 py-5 bg-primary text-white font-black uppercase tracking-[0.2em] text-xs rounded-2xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4">
+                Send Mission Broadcast
+                <FiArrowRight size={16} />
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

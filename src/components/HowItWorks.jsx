@@ -3,6 +3,7 @@ import how1 from "../assets/how1.jpg";
 import how2 from "../assets/how2.jpg";
 import how3 from "../assets/how3.jpg";
 import { FiUserPlus, FiSearch, FiShield, FiArrowRight } from "react-icons/fi";
+import { Link } from "react-router";
 
 const steps = [
   {
@@ -35,51 +36,52 @@ const HowItWorks = () => {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <section className="py-24 px-4 bg-neutral overflow-hidden">
+    <section className="py-20 px-4 bg-neutral overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-20 space-y-4">
-          <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight font-sans">
-            How It <span className="text-primary text-outline">Works</span>
+        <div className="text-center mb-14 space-y-3">
+          <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight font-sans">
+            How It <span className="text-primary">Works</span>
           </h2>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto font-medium leading-relaxed">
+          <p className="text-base text-gray-500 max-w-xl mx-auto font-medium leading-relaxed">
             Starting a fundraiser or making a donation is a simple, 3-step process designed for impact.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
           {/* Stepper Content */}
-          <div className="space-y-4 order-2 lg:order-1">
+          <div className="space-y-3 order-2 lg:order-1">
             {steps.map((step, index) => (
               <div
                 key={index}
                 onClick={() => setActiveStep(index)}
-                className={`p-8 rounded-[2rem] cursor-pointer transition-all duration-500 border-2 ${activeStep === index
-                    ? "bg-white border-primary shadow-2xl shadow-primary/10 -translate-y-1"
-                    : "bg-transparent border-transparent grayscale opacity-50 hover:opacity-80"
+                className={`p-6 rounded-2xl cursor-pointer transition-all duration-400 border-2 ${activeStep === index
+                    ? "bg-white border-primary shadow-lg shadow-primary/10 -translate-y-0.5"
+                    : "bg-transparent border-transparent opacity-50 hover:opacity-75"
                   }`}
               >
-                <div className="flex gap-6 items-start">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition-all ${activeStep === index ? "bg-primary text-white" : "bg-gray-100 text-gray-400"
-                    }`}>
+                <div className="flex gap-5 items-start">
+                  <div
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0 transition-all ${activeStep === index ? "bg-primary text-white" : "bg-gray-100 text-gray-400"
+                      }`}
+                  >
                     {step.icon}
                   </div>
-                  <div className="space-y-2">
-                    <h3 className={`text-xl font-black uppercase tracking-tight ${activeStep === index ? "text-gray-900" : "text-gray-500"
-                      }`}>
+                  <div className="space-y-1.5">
+                    <h3 className={`text-lg font-black uppercase tracking-tight ${activeStep === index ? "text-gray-900" : "text-gray-500"}`}>
                       {step.title}
                     </h3>
                     {activeStep === index && (
-                      <div className="animate-in fade-in slide-in-from-top-2 duration-500 space-y-6">
-                        <p className="text-gray-600 font-medium leading-relaxed">
+                      <div className="space-y-4">
+                        <p className="text-sm text-gray-600 font-medium leading-relaxed">
                           {step.text}
                         </p>
-                        <a
-                          href={step.buttonLink}
+                        <Link
+                          to={step.buttonLink}
                           className="inline-flex items-center gap-2 text-primary font-black uppercase tracking-widest text-[10px] border-b-2 border-primary pb-1 group"
                         >
                           {step.buttonText}
                           <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-                        </a>
+                        </Link>
                       </div>
                     )}
                   </div>
@@ -88,19 +90,18 @@ const HowItWorks = () => {
             ))}
           </div>
 
-          {/* Image Side */}
+          {/* Image Side — smaller aspect ratio */}
           <div className="order-1 lg:order-2">
-            <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white group">
+            <div className="relative aspect-[3/2] rounded-2xl overflow-hidden shadow-xl border-4 border-white">
               <img
                 src={steps[activeStep].image}
                 alt={steps[activeStep].title}
-                className="w-full h-full object-cover transition-all duration-700 animate-in fade-in zoom-in"
+                className="w-full h-full object-cover transition-all duration-700"
                 key={activeStep}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent" />
-
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/30 to-transparent" />
               {/* Step counter */}
-              <div className="absolute top-8 right-8 w-16 h-16 bg-white/90 backdrop-blur-md rounded-2xl flex items-center justify-center text-2xl font-black text-primary shadow-xl">
+              <div className="absolute top-5 right-5 w-12 h-12 bg-white/90 backdrop-blur-md rounded-xl flex items-center justify-center text-lg font-black text-primary shadow-md">
                 0{activeStep + 1}
               </div>
             </div>

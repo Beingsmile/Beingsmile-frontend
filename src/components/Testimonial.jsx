@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { FiStar, FiChevronLeft, FiChevronRight, FiMessageCircle } from "react-icons/fi";
+import { FiStar, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import userImg from "../assets/testimonialUser.jpg";
 
 const testimonials = [
   {
     name: "Sarah Johnson",
     role: "Campaign Organizer",
-    review:
-      "BeingSmile helped me raise funds for my daughter's medical treatment when we had no hope left. The community is incredibly kind.",
+    review: "BeingSmile helped me raise funds for my daughter's medical treatment when we had no hope left. The community is incredibly kind.",
     image: userImg,
     rating: 5,
   },
@@ -21,8 +20,7 @@ const testimonials = [
   {
     name: "Emma Rodriguez",
     role: "Community Leader",
-    review:
-      "Our community center renovation was fully funded through BeingSmile. The humanitarian spirit here is truly inspiring.",
+    review: "Our community center renovation was fully funded through BeingSmile. The humanitarian spirit here is truly inspiring.",
     image: userImg,
     rating: 5,
   },
@@ -41,118 +39,105 @@ const Testimonial = () => {
   }, [currentSlide]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === testimonials.length - 1 ? 0 : prev + 1
-    );
+    setCurrentSlide((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === 0 ? testimonials.length - 1 : prev - 1
-    );
+    setCurrentSlide((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
   };
 
-  const goToSlide = (index) => {
-    setCurrentSlide(index);
-  };
+  const goToSlide = (index) => setCurrentSlide(index);
 
   const handleDragStart = (e) => {
-    dragStartX.current = e.clientX || e.touches[0].clientX;
+    dragStartX.current = e.clientX || e.touches?.[0]?.clientX;
   };
 
   const handleDragEnd = (e) => {
-    const endX = e.clientX || e.changedTouches[0].clientX;
+    if (dragStartX.current == null) return;
+    const endX = e.clientX || e.changedTouches?.[0]?.clientX;
     const diff = endX - dragStartX.current;
     if (diff > dragThreshold) prevSlide();
     if (diff < -dragThreshold) nextSlide();
+    dragStartX.current = null;
   };
 
   return (
-    <section className="bg-neutral py-24 px-4 overflow-hidden">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-20 space-y-4">
-          <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight font-sans">
+    <section className="bg-neutral py-20 px-4 overflow-hidden">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-14 space-y-3">
+          <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight font-sans">
             Voices of <span className="text-primary">Gratitude</span>
           </h2>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto font-medium leading-relaxed">
+          <p className="text-base text-gray-500 max-w-2xl mx-auto font-medium leading-relaxed">
             Real impact, felt by real people. Discover the humanitarian spirit that drives Beingsmile.
           </p>
         </div>
 
-        <div className="relative">
-          {/* Main Slider */}
+        <div className="relative overflow-hidden">
+          {/* Slider track */}
           <div
-            className="cursor-grab active:cursor-grabbing"
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             onMouseDown={handleDragStart}
             onMouseUp={handleDragEnd}
             onTouchStart={handleDragStart}
             onTouchEnd={handleDragEnd}
           >
-            <div
-              className="flex transition-transform duration-700 cubic-bezier(0.4, 0, 0.2, 1)"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {testimonials.map((testimonial, index) => (
-                <div key={index} className="w-full flex-shrink-0 px-4 md:px-8">
-                  <div className="bg-white rounded-[3rem] border-8 border-white shadow-2xl shadow-gray-200/50 p-10 md:p-16 relative overflow-hidden group">
-                    {/* Background Decoration */}
-                    <div className="absolute -top-10 -right-10 text-[15rem] text-primary/5 -rotate-12 select-none group-hover:rotate-0 transition-transform duration-1000">
-                      <FiMessageCircle />
-                    </div>
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="w-full shrink-0 px-1"
+              >
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 md:p-12 text-center select-none cursor-grab active:cursor-grabbing">
+                  <div className="w-16 h-16 mx-auto mb-5 rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm">
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
 
-                    <div className="relative z-10 flex flex-col items-center text-center">
-                      <div className="w-24 h-24 mb-8 relative">
-                        <div className="absolute inset-0 bg-primary/20 rounded-[2rem] rotate-6 animate-pulse"></div>
-                        <img
-                          src={testimonial.image}
-                          alt={testimonial.name}
-                          className="w-full h-full rounded-[2rem] object-cover relative z-10 border-4 border-white shadow-xl"
-                        />
-                      </div>
+                  <div className="flex justify-center gap-1 mb-5">
+                    {[...Array(5)].map((_, i) => (
+                      <FiStar
+                        key={i}
+                        className={`text-lg ${i < testimonial.rating ? "text-accent fill-accent" : "text-gray-200"}`}
+                      />
+                    ))}
+                  </div>
 
-                      <div className="flex justify-center gap-1 mb-6">
-                        {[...Array(5)].map((_, i) => (
-                          <FiStar
-                            key={i}
-                            className={`text-xl ${i < testimonial.rating ? "text-accent fill-accent" : "text-gray-200"}`}
-                          />
-                        ))}
-                      </div>
+                  <blockquote className="text-lg md:text-2xl font-black text-gray-900 tracking-tight leading-snug max-w-2xl mx-auto mb-8 font-sans">
+                    "{testimonial.review}"
+                  </blockquote>
 
-                      <blockquote className="text-xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight max-w-3xl mb-10 font-sans">
-                        "{testimonial.review}"
-                      </blockquote>
-
-                      <div>
-                        <h4 className="text-lg font-black text-gray-900 uppercase tracking-widest leading-none mb-2">
-                          {testimonial.name}
-                        </h4>
-                        <p className="text-xs font-black text-primary uppercase tracking-[0.3em]">
-                          {testimonial.role}
-                        </p>
-                      </div>
-                    </div>
+                  <div>
+                    <h4 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-1">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">
+                      {testimonial.role}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
 
           {/* Navigation Controls */}
-          <div className="flex justify-center items-center gap-8 mt-12">
+          <div className="flex justify-center items-center gap-6 mt-8">
             <button
               onClick={prevSlide}
-              className="w-14 h-14 rounded-2xl bg-white shadow-xl shadow-gray-200 flex items-center justify-center text-gray-400 hover:text-primary hover:scale-110 transition-all cursor-pointer"
+              className="w-10 h-10 rounded-xl bg-white shadow-md border border-gray-100 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary/30 transition-all cursor-pointer"
             >
-              <FiChevronLeft className="text-2xl" />
+              <FiChevronLeft className="text-xl" />
             </button>
 
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               {testimonials.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`h-2 rounded-full transition-all duration-500 ${currentSlide === index ? "w-10 bg-primary shadow-lg shadow-primary/20" : "w-2 bg-gray-200"
+                  className={`h-2 rounded-full transition-all duration-400 ${currentSlide === index ? "w-8 bg-primary" : "w-2 bg-gray-200"
                     }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -161,9 +146,9 @@ const Testimonial = () => {
 
             <button
               onClick={nextSlide}
-              className="w-14 h-14 rounded-2xl bg-white shadow-xl shadow-gray-200 flex items-center justify-center text-gray-400 hover:text-primary hover:scale-110 transition-all cursor-pointer"
+              className="w-10 h-10 rounded-xl bg-white shadow-md border border-gray-100 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary/30 transition-all cursor-pointer"
             >
-              <FiChevronRight className="text-2xl" />
+              <FiChevronRight className="text-xl" />
             </button>
           </div>
         </div>
