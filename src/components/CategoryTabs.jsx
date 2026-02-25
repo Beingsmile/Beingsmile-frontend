@@ -1,6 +1,6 @@
 
 const categories = [
-  { id: 1, name: "All" },
+  { id: 1, name: "All Missions" },
   { id: 2, name: "Education" },
   { id: 3, name: "Health" },
   { id: 4, name: "Art" },
@@ -13,19 +13,20 @@ const categories = [
 
 const CategoryTabs = ({ selectedCategory, onSelect }) => {
   return (
-    <div className="flex flex-wrap gap-2 mb-4">
+    <div className="flex flex-col gap-3">
       {categories.map((category) => (
         <button
           key={category.id}
-          className={`px-4 py-2 rounded-full border transition-all duration-200 text-sm font-medium
-            ${
-              selectedCategory === category.id
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+          className={`group flex items-center justify-between px-6 py-4 rounded-2xl transition-all duration-300 text-sm font-black uppercase tracking-widest border-2 
+            ${selectedCategory === category.id
+              ? "bg-primary text-white border-primary shadow-xl shadow-primary/20 scale-[1.02]"
+              : "bg-white text-gray-500 border-gray-50 hover:border-primary/30 hover:text-primary"
             }`}
           onClick={() => onSelect(category.id)}
         >
-          {category.name}
+          <span>{category.name}</span>
+          <div className={`w-1.5 h-1.5 rounded-full transition-all ${selectedCategory === category.id ? "bg-white scale-150" : "bg-gray-200 group-hover:bg-primary/50"
+            }`} />
         </button>
       ))}
     </div>

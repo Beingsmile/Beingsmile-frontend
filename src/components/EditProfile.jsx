@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
-import { FiX, FiUser, FiPhone, FiInfo, FiLoader } from "react-icons/fi";
+import { FiX, FiUser, FiPhone, FiInfo, FiLoader, FiShield, FiActivity } from "react-icons/fi";
 import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 
@@ -20,7 +20,7 @@ const EditProfile = ({ onClose, onUpdate }) => {
         try {
             const response = await axiosInstance.put("/users/profile/update", formData);
             if (response.data.success) {
-                toast.success("Profile updated successfully!");
+                toast.success("Identity updated successfully!");
                 // Update local auth context
                 setUser(prev => ({
                     ...prev,
@@ -34,93 +34,106 @@ const EditProfile = ({ onClose, onUpdate }) => {
             }
         } catch (error) {
             console.error("Error updating profile:", error);
-            toast.error(error.response?.data?.error || "Failed to update profile");
+            toast.error(error.response?.data?.error || "Failed to update identity");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
-            <div className="bg-white dark:bg-gray-800 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-                <div className="relative p-6 border-b border-gray-100 dark:border-gray-700">
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Edit Profile</h2>
-                    <button
-                        onClick={onClose}
-                        className="absolute right-6 top-6 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-                    >
-                        <FiX size={24} />
-                    </button>
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+            <div className="bg-white w-full max-w-lg rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border-8 border-white relative">
+                {/* Close Button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-8 right-8 w-10 h-10 bg-neutral rounded-2xl flex items-center justify-center text-gray-400 hover:text-primary transition-all cursor-pointer group z-10"
+                    aria-label="Close"
+                >
+                    <FiX className="group-hover:rotate-90 transition-transform" />
+                </button>
+
+                <div className="p-10">
+                    <div className="text-center mb-10 space-y-2">
+                        <div className="w-16 h-16 bg-primary/10 text-primary rounded-[1.5rem] flex items-center justify-center text-2xl mx-auto mb-4">
+                            <FiActivity />
+                        </div>
+                        <h2 className="text-4xl font-black text-gray-900 tracking-tight uppercase font-sans">
+                            Edit <span className="text-primary">Identity</span>
+                        </h2>
+                        <p className="text-sm font-medium text-gray-500 uppercase tracking-widest">Refine your humanitarian presence.</p>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-2">Legal Name</label>
+                            <div className="relative group">
+                                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors text-xl">
+                                    <FiUser />
+                                </div>
+                                <input
+                                    type="text"
+                                    required
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                    className="w-full pl-16 pr-8 py-5 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none text-gray-900 font-bold transition-all placeholder:text-gray-300"
+                                    placeholder="Your real name"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                            <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-2">Phone Connection</label>
+                                <div className="relative group">
+                                    <div className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors text-xl">
+                                        <FiPhone />
+                                    </div>
+                                    <input
+                                        type="tel"
+                                        value={formData.phoneNumber}
+                                        onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                                        className="w-full pl-16 pr-8 py-5 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-2xl outline-none text-gray-900 font-bold transition-all placeholder:text-gray-300"
+                                        placeholder="+880 1XXX-XXXXXX"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-2">Mission Statement (Bio)</label>
+                            <div className="relative group">
+                                <div className="absolute left-6 top-6 text-gray-400 group-focus-within:text-primary transition-colors text-xl">
+                                    <FiInfo />
+                                </div>
+                                <textarea
+                                    value={formData.bio}
+                                    onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                                    rows="4"
+                                    className="w-full pl-16 pr-8 py-6 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-[2rem] outline-none text-gray-900 font-bold transition-all resize-none placeholder:text-gray-300"
+                                    placeholder="Tell us what drives your kindness..."
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                            <button
+                                type="button"
+                                onClick={onClose}
+                                className="flex-1 px-8 py-5 bg-neutral text-gray-500 font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl border border-gray-100 hover:bg-gray-200 transition-all cursor-pointer"
+                            >
+                                Discard Changes
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="flex-2 px-10 py-5 bg-primary text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all disabled:opacity-50 flex items-center justify-center gap-3 cursor-pointer"
+                            >
+                                {loading ? <FiLoader className="animate-spin" /> : <FiShield />}
+                                Save Identity
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <form onSubmit={handleSubmit} className="p-6 space-y-5">
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Full Name</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                <FiUser size={18} />
-                            </div>
-                            <input
-                                type="text"
-                                required
-                                value={formData.name}
-                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-tertiary focus:border-transparent outline-none text-gray-900 dark:text-white transition-all"
-                                placeholder="Enter your full name"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Phone Number</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                <FiPhone size={18} />
-                            </div>
-                            <input
-                                type="tel"
-                                value={formData.phoneNumber}
-                                onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-tertiary focus:border-transparent outline-none text-gray-900 dark:text-white transition-all"
-                                placeholder="+880 1XXX-XXXXXX"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Bio</label>
-                        <div className="relative">
-                            <div className="absolute top-3 left-3 pointer-events-none text-gray-400">
-                                <FiInfo size={18} />
-                            </div>
-                            <textarea
-                                value={formData.bio}
-                                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                                rows="3"
-                                className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-tertiary focus:border-transparent outline-none text-gray-900 dark:text-white transition-all resize-none"
-                                placeholder="Tell us a bit about yourself..."
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex gap-3 pt-2">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="flex-1 px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-bold rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="flex-1 px-4 py-3 bg-tertiary text-white font-bold rounded-xl hover:bg-tertiary/90 transition-colors disabled:opacity-50 flex items-center justify-center"
-                        >
-                            {loading && <FiLoader className="animate-spin mr-2" />}
-                            Save Changes
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     );

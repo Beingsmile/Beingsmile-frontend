@@ -1,43 +1,42 @@
 import { useEffect, useRef, useState } from "react";
-import user from "../assets/testimonialUser.jpg";
+import { FiStar, FiChevronLeft, FiChevronRight, FiMessageCircle } from "react-icons/fi";
+import userImg from "../assets/testimonialUser.jpg";
 
 const testimonials = [
   {
     name: "Sarah Johnson",
     role: "Campaign Organizer",
     review:
-      "BeingSmile helped me raise funds for my daughter's medical treatment...",
-    image: user,
+      "BeingSmile helped me raise funds for my daughter's medical treatment when we had no hope left. The community is incredibly kind.",
+    image: userImg,
     rating: 5,
   },
   {
     name: "Michael Chen",
     role: "Donor",
-    review: "I love that I can support causes directly through BeingSmile...",
-    image: user,
-    rating: 4,
+    review: "I love that I can support causes directly. The transparency and real-time updates make it the most trustworthy platform.",
+    image: userImg,
+    rating: 5,
   },
   {
     name: "Emma Rodriguez",
     role: "Community Leader",
     review:
-      "Our community center renovation was fully funded through BeingSmile...",
-    image: user,
+      "Our community center renovation was fully funded through BeingSmile. The humanitarian spirit here is truly inspiring.",
+    image: userImg,
     rating: 5,
   },
 ];
 
 const Testimonial = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const slideRef = useRef();
   const dragStartX = useRef(null);
   const dragThreshold = 50;
 
-  // Autoscroll
   useEffect(() => {
     const interval = setInterval(() => {
       nextSlide();
-    }, 6000); // every 6 seconds
+    }, 8000);
     return () => clearInterval(interval);
   }, [currentSlide]);
 
@@ -57,7 +56,6 @@ const Testimonial = () => {
     setCurrentSlide(index);
   };
 
-  // Drag handlers
   const handleDragStart = (e) => {
     dragStartX.current = e.clientX || e.touches[0].clientX;
   };
@@ -70,134 +68,104 @@ const Testimonial = () => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 py-8 md:py-16">
-      <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-center text-gray-900 dark:text-white mb-4">
-          What People Say About{" "}
-          <span className="text-blue-600 dark:text-blue-400">BeingSmile</span>
-        </h2>
-        <p className="text-center text-sm sm:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-4 sm:mb-6 md:mb-8">
-          Real voices. Real stories. Discover how BeingSmile is changing lives
-          through impactful campaigns.
-        </p>
+    <section className="bg-neutral py-24 px-4 overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-20 space-y-4">
+          <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight font-sans">
+            Voices of <span className="text-primary">Gratitude</span>
+          </h2>
+          <p className="text-lg text-gray-500 max-w-2xl mx-auto font-medium leading-relaxed">
+            Real impact, felt by real people. Discover the humanitarian spirit that drives Beingsmile.
+          </p>
+        </div>
 
-        <div className="relative overflow-hidden">
-          {/* Testimonial Slider */}
+        <div className="relative">
+          {/* Main Slider */}
           <div
-            className="pt-12"
-            ref={slideRef}
+            className="cursor-grab active:cursor-grabbing"
             onMouseDown={handleDragStart}
             onMouseUp={handleDragEnd}
             onTouchStart={handleDragStart}
             onTouchEnd={handleDragEnd}
           >
             <div
-              className="flex transition-transform duration-500 ease-in-out"
+              className="flex transition-transform duration-700 cubic-bezier(0.4, 0, 0.2, 1)"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {testimonials.map((testimonial, index) => (
-                <div key={index} className="w-full flex-shrink-0 px-1 md:px-4">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-8 text-center">
-                    <div className="flex justify-center -mt-16 mb-6">
-                      <img
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-md"
-                      />
+                <div key={index} className="w-full flex-shrink-0 px-4 md:px-8">
+                  <div className="bg-white rounded-[3rem] border-8 border-white shadow-2xl shadow-gray-200/50 p-10 md:p-16 relative overflow-hidden group">
+                    {/* Background Decoration */}
+                    <div className="absolute -top-10 -right-10 text-[15rem] text-primary/5 -rotate-12 select-none group-hover:rotate-0 transition-transform duration-1000">
+                      <FiMessageCircle />
                     </div>
-                    <div className="flex justify-center mb-4">
-                      {[...Array(5)].map((_, i) => (
-                        <svg
-                          key={i}
-                          className={`w-6 h-6 ${
-                            i < testimonial.rating
-                              ? "text-yellow-400"
-                              : "text-gray-300 dark:text-gray-600"
-                          }`}
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            d="M9.049 2.927a1 1 0 011.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 
-  1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 
-  3.292c.3.921-.755 1.688-1.54 1.118L10 13.347l-2.8 
-  2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 
-  1 0 00-.364-1.118L3.568 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 
-  1 0 00.951-.69l1.07-3.292z"
+
+                    <div className="relative z-10 flex flex-col items-center text-center">
+                      <div className="w-24 h-24 mb-8 relative">
+                        <div className="absolute inset-0 bg-primary/20 rounded-[2rem] rotate-6 animate-pulse"></div>
+                        <img
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          className="w-full h-full rounded-[2rem] object-cover relative z-10 border-4 border-white shadow-xl"
+                        />
+                      </div>
+
+                      <div className="flex justify-center gap-1 mb-6">
+                        {[...Array(5)].map((_, i) => (
+                          <FiStar
+                            key={i}
+                            className={`text-xl ${i < testimonial.rating ? "text-accent fill-accent" : "text-gray-200"}`}
                           />
-                        </svg>
-                      ))}
+                        ))}
+                      </div>
+
+                      <blockquote className="text-xl md:text-3xl font-black text-gray-900 tracking-tight leading-tight max-w-3xl mb-10 font-sans">
+                        "{testimonial.review}"
+                      </blockquote>
+
+                      <div>
+                        <h4 className="text-lg font-black text-gray-900 uppercase tracking-widest leading-none mb-2">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-xs font-black text-primary uppercase tracking-[0.3em]">
+                          {testimonial.role}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6 text-sm md:text-lg">
-                      "{testimonial.review}"
-                    </p>
-                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-blue-600 dark:text-blue-400">
-                      {testimonial.role}
-                    </p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Arrows */}
-          <button
-            onClick={prevSlide}
-            className="absolute md:block hidden top-1/2 left-6 transform -translate-y-1/2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            aria-label="Previous testimonial"
-          >
-            <svg
-              className="w-6 h-6 text-gray-800 dark:text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button
-            onClick={nextSlide}
-            className="absolute md:block hidden top-1/2 right-6 transform -translate-y-1/2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            aria-label="Next testimonial"
-          >
-            <svg
-              className="w-6 h-6 text-gray-800 dark:text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
-
-        {/* Indicators */}
-        <div className="flex justify-center mt-4 md:mt-8 space-x-2">
-          {testimonials.map((_, index) => (
+          {/* Navigation Controls */}
+          <div className="flex justify-center items-center gap-8 mt-12">
             <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full ${
-                currentSlide === index
-                  ? "bg-blue-600 dark:bg-blue-400"
-                  : "bg-gray-300 dark:bg-gray-600"
-              }`}
-              aria-label={`Go to testimonial ${index + 1}`}
-            />
-          ))}
+              onClick={prevSlide}
+              className="w-14 h-14 rounded-2xl bg-white shadow-xl shadow-gray-200 flex items-center justify-center text-gray-400 hover:text-primary hover:scale-110 transition-all cursor-pointer"
+            >
+              <FiChevronLeft className="text-2xl" />
+            </button>
+
+            <div className="flex gap-3">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`h-2 rounded-full transition-all duration-500 ${currentSlide === index ? "w-10 bg-primary shadow-lg shadow-primary/20" : "w-2 bg-gray-200"
+                    }`}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={nextSlide}
+              className="w-14 h-14 rounded-2xl bg-white shadow-xl shadow-gray-200 flex items-center justify-center text-gray-400 hover:text-primary hover:scale-110 transition-all cursor-pointer"
+            >
+              <FiChevronRight className="text-2xl" />
+            </button>
+          </div>
         </div>
       </div>
     </section>

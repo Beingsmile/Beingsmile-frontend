@@ -3,7 +3,7 @@ import { AuthContext } from "../contexts/AuthProvider";
 import {
     FiUser, FiMail, FiCalendar, FiCheckCircle,
     FiXCircle, FiPhone, FiEdit, FiLayers,
-    FiHeart, FiLogOut, FiSettings, FiImage
+    FiHeart, FiLogOut, FiSettings, FiImage, FiActivity, FiShield, FiChevronRight
 } from "react-icons/fi";
 import EditProfile from "../components/EditProfile";
 import { Link } from "react-router";
@@ -20,113 +20,131 @@ const Profile = () => {
 
     if (!user) {
         return (
-            <div className="min-h-[70vh] flex items-center justify-center">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-4">Please login to view your profile</h2>
-                    <Link to="/login" className="bg-tertiary text-white px-6 py-2 rounded-lg">Login</Link>
+            <div className="bg-neutral min-h-screen flex items-center justify-center pt-20">
+                <div className="text-center space-y-6">
+                    <div className="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center text-3xl mx-auto">
+                        <FiUser />
+                    </div>
+                    <div>
+                        <h2 className="text-4xl font-black text-gray-900 tracking-tight uppercase">Access <span className="text-primary">Denied</span></h2>
+                        <p className="text-gray-500 font-medium mt-2">Please login to view your humanitarian dashboard.</p>
+                    </div>
+                    <Link to="/login" className="inline-block bg-primary text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
+                        Secure Login
+                    </Link>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-8">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-                {/* Header/Cover Area */}
-                <div className="h-32 bg-gradient-to-r from-tertiary to-tertiary/60"></div>
+        <div className="bg-neutral min-h-screen pt-32 pb-24">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 border-8 border-white overflow-hidden">
+                    {/* Header/Cover Area */}
+                    <div className="h-48 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent relative overflow-hidden">
+                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent"></div>
+                    </div>
 
-                <div className="px-8 pb-8">
-                    <div className="relative flex flex-col md:flex-row md:items-end -mt-12 mb-8 gap-6">
-                        {/* Avatar */}
-                        <div className="relative">
-                            <div className="w-32 h-32 rounded-2xl bg-white dark:bg-gray-700 p-1 shadow-lg">
-                                <button
-                                    onClick={() => setActiveTab("settings")}
-                                    className="w-full h-full rounded-xl bg-gray-100 dark:bg-gray-600 flex items-center justify-center overflow-hidden group/avatar relative"
-                                >
-                                    {user?.data?.avatar ? (
-                                        <img src={user.data.avatar} alt="Profile" className="w-full h-full object-cover group-hover/avatar:opacity-50 transition-opacity" />
-                                    ) : (
-                                        <FiUser className="w-16 h-16 text-gray-400" />
-                                    )}
-                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity bg-black/20">
-                                        <FiImage className="text-white" size={24} />
+                    <div className="px-12 pb-12">
+                        <div className="relative flex flex-col lg:flex-row lg:items-end -mt-20 mb-12 gap-10">
+                            {/* Avatar */}
+                            <div className="relative">
+                                <div className="w-44 h-44 rounded-[2.5rem] bg-white p-2 shadow-2xl shadow-gray-300 overflow-hidden group">
+                                    <div className="w-full h-full rounded-[2rem] bg-neutral overflow-hidden relative">
+                                        {user?.data?.avatar ? (
+                                            <img src={user.data.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                                <FiUser className="text-5xl" />
+                                            </div>
+                                        )}
+                                        <button
+                                            onClick={() => setIsEditModalOpen(true)}
+                                            className="absolute inset-0 bg-primary/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm"
+                                        >
+                                            <FiImage className="text-2xl" />
+                                        </button>
                                     </div>
+                                </div>
+                                <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-accent rounded-2xl flex items-center justify-center text-white shadow-xl shadow-accent/20 border-4 border-white">
+                                    <FiActivity />
+                                </div>
+                            </div>
+
+                            {/* Name & Basic Info */}
+                            <div className="flex-1 space-y-4">
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-4 flex-wrap">
+                                        <h1 className="text-5xl font-black text-gray-900 tracking-tight uppercase font-sans">
+                                            {user?.data?.name || user?.displayName}
+                                        </h1>
+                                        {user?.data?.isVerified && (
+                                            <span className="flex items-center gap-1.5 px-4 py-1.5 bg-green-50 text-green-600 text-[10px] font-black uppercase rounded-full tracking-widest border border-green-100">
+                                                <FiCheckCircle /> Verified
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-lg font-medium text-gray-500 flex items-center gap-2">
+                                        <FiMail className="text-primary" /> {user?.email}
+                                    </p>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    <span className="px-5 py-2 bg-neutral text-gray-600 text-xs font-black uppercase tracking-widest rounded-xl border border-gray-50">
+                                        Role: {user?.data?.role || "Supporter"}
+                                    </span>
+                                    <span className="px-5 py-2 bg-primary/5 text-primary text-xs font-black uppercase tracking-widest rounded-xl border border-primary/10">
+                                        Member Since {new Date(user?.data?.createdAt).getFullYear()}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="flex flex-col sm:flex-row gap-4">
+                                <button
+                                    onClick={() => setIsEditModalOpen(true)}
+                                    className="px-8 py-4 bg-primary text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all flex items-center justify-center gap-3 cursor-pointer"
+                                >
+                                    <FiEdit /> Edit Identity
+                                </button>
+                                <button
+                                    onClick={logout}
+                                    className="px-8 py-4 bg-neutral text-gray-500 font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl border border-gray-100 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-3 cursor-pointer"
+                                >
+                                    <FiLogOut /> Logout
                                 </button>
                             </div>
-                            <button
-                                onClick={() => setActiveTab("settings")}
-                                className="absolute -bottom-2 -right-2 p-2 bg-white dark:bg-gray-800 rounded-lg shadow-md text-tertiary hover:text-tertiary/80 transition-colors border border-gray-100 dark:border-gray-700"
-                            >
-                                <FiEdit size={18} />
-                            </button>
                         </div>
 
-                        {/* Name & Basic Info */}
-                        <div className="flex-1 space-y-1">
-                            <div className="flex items-center gap-3">
-                                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                                    {user?.data?.name || user?.displayName}
-                                </h1>
-                                <span className="px-3 py-1 bg-tertiary/10 text-tertiary text-xs font-bold rounded-full uppercase tracking-wider">
-                                    {user?.data?.role}
-                                </span>
-                            </div>
-                            <p className="text-gray-500 dark:text-gray-400 flex items-center">
-                                <FiMail className="mr-2" /> {user?.email}
-                            </p>
+                        {/* Tabs Navigation */}
+                        <div className="flex items-center gap-2 border-b border-gray-100 mb-12 overflow-x-auto no-scrollbar pb-1">
+                            {[
+                                { id: "info", icon: <FiUser />, label: "Information" },
+                                { id: "campaigns", icon: <FiLayers />, label: "My Missions" },
+                                { id: "donations", icon: <FiHeart />, label: "My Gifts" },
+                                { id: "settings", icon: <FiSettings />, label: "Security" }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={`flex items-center gap-3 px-8 py-5 text-xs font-black uppercase tracking-widest transition-all relative group whitespace-nowrap cursor-pointer ${activeTab === tab.id ? "text-primary" : "text-gray-400 hover:text-gray-600"
+                                        }`}
+                                >
+                                    {tab.icon} {tab.label}
+                                    {activeTab === tab.id && (
+                                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full shadow-lg shadow-primary/50 animate-in fade-in zoom-in duration-300"></div>
+                                    )}
+                                </button>
+                            ))}
                         </div>
 
-                        {/* Actions */}
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setIsEditModalOpen(true)}
-                                className="flex items-center px-4 py-2 bg-tertiary text-white font-semibold rounded-xl hover:bg-tertiary/90 transition-all shadow-lg shadow-tertiary/20"
-                            >
-                                <FiEdit className="mr-2" /> Edit Profile
-                            </button>
-                            <button
-                                onClick={logout}
-                                className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-all"
-                            >
-                                <FiLogOut className="mr-2" /> Logout
-                            </button>
+                        {/* Tab Content */}
+                        <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
+                            {activeTab === "info" && <PersonalInfo user={user} onVerifyClick={() => setIsVerifyModalOpen(true)} />}
+                            {activeTab === "campaigns" && <UserCampaigns />}
+                            {activeTab === "donations" && <UserDonations />}
+                            {activeTab === "settings" && <AccountSettings />}
                         </div>
-                    </div>
-
-                    {/* Tabs Navigation */}
-                    <div className="flex border-b border-gray-100 dark:border-gray-700 mb-8 overflow-x-auto scrollbar-hide">
-                        <TabButton
-                            active={activeTab === "info"}
-                            onClick={() => setActiveTab("info")}
-                            icon={<FiUser />}
-                            label="Information"
-                        />
-                        <TabButton
-                            active={activeTab === "campaigns"}
-                            onClick={() => setActiveTab("campaigns")}
-                            icon={<FiLayers />}
-                            label="My Campaigns"
-                        />
-                        <TabButton
-                            active={activeTab === "donations"}
-                            onClick={() => setActiveTab("donations")}
-                            icon={<FiHeart />}
-                            label="My Donations"
-                        />
-                        <TabButton
-                            active={activeTab === "settings"}
-                            onClick={() => setActiveTab("settings")}
-                            icon={<FiSettings />}
-                            label="Settings"
-                        />
-                    </div>
-                    {/* Tab Content */}
-                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        {activeTab === "info" && <PersonalInfo user={user} onVerifyClick={() => setIsVerifyModalOpen(true)} />}
-                        {activeTab === "campaigns" && <UserCampaigns />}
-                        {activeTab === "donations" && <UserDonations />}
-                        {activeTab === "settings" && <AccountSettings />}
                     </div>
                 </div>
             </div>
@@ -138,106 +156,115 @@ const Profile = () => {
             {isVerifyModalOpen && (
                 <RequestVerification
                     onClose={() => setIsVerifyModalOpen(false)}
-                    onSubmitted={() => {
-                        // Optionally refresh user data
-                    }}
+                    onSubmitted={() => { }}
                 />
             )}
         </div>
     );
 };
 
-const TabButton = ({ active, onClick, icon, label }) => (
-    <button
-        onClick={onClick}
-        className={`flex items-center gap-2 px-6 py-4 text-sm font-bold transition-all whitespace-nowrap border-b-2 ${active
-            ? "border-tertiary text-tertiary bg-tertiary/5"
-            : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-            }`}
-    >
-        {icon}
-        {label}
-    </button>
-);
-
 const PersonalInfo = ({ user, onVerifyClick }) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="space-y-6">
-            <h3 className="text-xl font-bold flex items-center text-gray-900 dark:text-white">
-                <span className="w-1 h-6 bg-tertiary mr-3 rounded-full"></span>
-                Basic Details
-            </h3>
-            <div className="grid gap-4">
-                <InfoItem label="Full Name" value={user?.data?.name} icon={<FiUser />} />
-                <InfoItem label="Email" value={user?.email} icon={<FiMail />} verified={user?.emailVerified} />
-                <InfoItem label="Phone Number" value={user?.data?.phoneNumber || "Not set"} icon={<FiPhone />} />
-                <InfoItem label="Member Since" value={new Date(user?.data?.createdAt).toLocaleDateString()} icon={<FiCalendar />} />
-            </div>
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div className="lg:col-span-7 space-y-12">
+            <section>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-3">
+                    <FiShield className="text-lg" /> Identity Breakdown
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <InfoItem label="Legal Name" value={user?.data?.name} icon={<FiUser />} />
+                    <InfoItem label="Email Identity" value={user?.email} icon={<FiMail />} verified={user?.emailVerified} />
+                    <InfoItem label="Phone Connection" value={user?.data?.phoneNumber || "Not Connected"} icon={<FiPhone />} />
+                    <InfoItem label="Impact Joined" value={new Date(user?.data?.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })} icon={<FiCalendar />} />
+                </div>
+            </section>
+
+            <section>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-3">
+                    <FiActivity className="text-lg" /> Mission Statement
+                </h3>
+                <div className="p-10 bg-neutral rounded-[2.5rem] border border-gray-100 min-h-[200px] relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-8 text-6xl text-gray-100 group-hover:text-primary/10 transition-colors">
+                        <FiEdit />
+                    </div>
+                    {user?.data?.bio ? (
+                        <p className="text-xl font-medium text-gray-700 leading-relaxed whitespace-pre-wrap relative z-10">{user.data.bio}</p>
+                    ) : (
+                        <p className="text-gray-400 italic relative z-10">You haven't added a mission statement yet. Share your story with the world!</p>
+                    )}
+                </div>
+            </section>
         </div>
 
-        <div className="space-y-6">
-            <h3 className="text-xl font-bold flex items-center text-gray-900 dark:text-white">
-                <span className="w-1 h-6 bg-tertiary mr-3 rounded-full"></span>
-                About Me
-            </h3>
-            <div className="p-6 bg-gray-50 dark:bg-gray-700/50 rounded-2xl border border-gray-100 dark:border-gray-700 min-h-[150px]">
-                {user?.data?.bio ? (
-                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">{user.data.bio}</p>
-                ) : (
-                    <p className="text-gray-400 italic">No bio provided yet. Click "Edit Profile" to add one!</p>
-                )}
-            </div>
+        <div className="lg:col-span-5 space-y-8">
+            <div className="bg-primary/5 rounded-[2.5rem] p-10 border border-primary/10 space-y-8">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Security & Trust</h4>
 
-            <div className="flex gap-4">
-                <StatusBadge
-                    label="Account Status"
-                    value={user?.data?.status}
-                    type={user?.data?.status === "active" ? "success" : "danger"}
-                />
-                <StatusBadge
-                    label="Verification"
-                    value={user?.data?.isVerified ? "Verified" : "Not Verified"}
-                    type={user?.data?.isVerified ? "success" : "warning"}
-                    action={!user?.data?.isVerified ? (
-                        <button
-                            onClick={onVerifyClick}
-                            className="text-[10px] font-black uppercase text-tertiary hover:underline mt-1 block"
-                        >
-                            Request Verification
-                        </button>
-                    ) : null}
-                />
+                <div className="space-y-4">
+                    <StatusBadge
+                        label="Account Integrity"
+                        value={user?.data?.status}
+                        type={user?.data?.status === "active" ? "success" : "danger"}
+                        icon={<FiCheckCircle />}
+                    />
+                    <StatusBadge
+                        label="Verification Level"
+                        value={user?.data?.isVerified ? "Trusted Mission Hero" : "Standard Participant"}
+                        type={user?.data?.isVerified ? "success" : "warning"}
+                        icon={<FiShield />}
+                        description={user?.data?.isVerified ? "Your identity is officially verified." : "Verify your account to gain higher trust."}
+                        action={!user?.data?.isVerified ? (
+                            <button
+                                onClick={onVerifyClick}
+                                className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline group cursor-pointer"
+                            >
+                                Request Trust Stamp <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
+                            </button>
+                        ) : null}
+                    />
+                </div>
+
+                <div className="pt-8 border-t border-primary/10">
+                    <p className="text-[10px] font-bold text-gray-500 leading-relaxed">
+                        Verification helps ensure 100% transparency. Verified users have higher campaign success rates.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 );
 
 const InfoItem = ({ label, value, icon, verified }) => (
-    <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700 hover:shadow-sm transition-all">
-        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-1">{label}</label>
-        <div className="flex items-center text-gray-900 dark:text-white font-semibold">
-            <span className="text-tertiary mr-2">{icon}</span>
-            {value}
-            {verified && <FiCheckCircle className="ml-2 text-green-500" size={14} />}
+    <div className="p-6 bg-white rounded-3xl border border-gray-50 shadow-xl shadow-gray-200/20 hover:shadow-gray-300/40 transition-all group">
+        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-4 group-hover:text-primary transition-colors">{label}</label>
+        <div className="flex items-center text-gray-900 font-bold tracking-tight">
+            <span className="w-10 h-10 bg-neutral text-primary rounded-xl flex items-center justify-center mr-4 group-hover:bg-primary group-hover:text-white transition-all">{icon}</span>
+            <div className="flex-1 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                {value}
+                {verified && <FiCheckCircle className="inline-block ml-2 text-green-500" />}
+            </div>
         </div>
     </div>
 );
 
-const StatusBadge = ({ label, value, type, action }) => {
+const StatusBadge = ({ label, value, type, action, icon, description }) => {
     const colors = {
-        success: "text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400",
-        warning: "text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400",
-        danger: "text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400"
+        success: "text-green-600 bg-green-50 border-green-100",
+        warning: "text-amber-600 bg-amber-50 border-amber-100",
+        danger: "text-red-600 bg-red-50 border-red-100"
     };
     return (
-        <div className="flex-1 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-gray-100 dark:border-gray-700">
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest block mb-1">{label}</label>
-            <div className="flex flex-col">
-                <span className={`w-fit px-3 py-1 text-xs font-bold rounded-full uppercase tracking-tighter ${colors[type] || colors.warning}`}>
-                    {value}
-                </span>
-                {action}
+        <div className={`p-8 rounded-[2rem] border-2 ${colors[type] || colors.warning} space-y-4`}>
+            <div className="flex items-center gap-4">
+                <div className="text-2xl">{icon}</div>
+                <div>
+                    <label className="text-[10px] font-black uppercase tracking-tight opacity-60 block">{label}</label>
+                    <span className="text-sm font-black uppercase tracking-widest block mt-1">
+                        {value}
+                    </span>
+                </div>
             </div>
+            {description && <p className="text-[10px] font-medium leading-relaxed opacity-70">{description}</p>}
+            {action}
         </div>
     );
 };

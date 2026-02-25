@@ -17,13 +17,13 @@ const Home = () => {
     <div>
       <main className="min-h-screen ">
         <Hero />
-        {/* <FeaturedCampaigns /> */}
+        <FeaturedCampaigns />
         <HowItWorks />
         <WhyBeingSmile />
         <Testimonial />
         <FAQ />
       </main>
-      
+
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FiChevronDown, FiHelpCircle, FiArrowRight, FiActivity } from 'react-icons/fi';
 
 const FAQ = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -8,163 +9,104 @@ const FAQ = () => {
   };
 
   const faqItems = [
-  {
-    question: "How does BeingSmile work?",
-    answer: (
-      <>
-        <p className="mb-2 text-gray-600 dark:text-gray-300">
-          BeingSmile is a commission-free crowdfunding platform that connects people who want to help with those who need support. You can create a campaign for any legitimate cause, share your story, and receive donations directly.
-        </p>
-        <p className="text-gray-600 dark:text-gray-300">
-          Unlike other platforms, we never take a percentage of your funds. 100% of what you raise goes to your cause (minus standard payment processing fees).
-        </p>
-      </>
-    ),
-    icon: (
-      <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
-        <path d="M10 12a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z" />
-      </svg>
-    )
-  },
-  {
-    question: "Why don't you take commissions?",
-    answer: (
-      <>
-        <p className="mb-2 text-gray-600 dark:text-gray-300">
-          We believe in keeping funds where they belong - with the people who need them. Our model relies on voluntary contributions from donors who want to support both campaigns and our platform's operations.
-        </p>
-        <p className="text-gray-600 dark:text-gray-300">
-          You'll see an optional option to donate to BeingSmile when contributing to any campaign. This helps us maintain and improve the platform while keeping it free for campaigners.
-        </p>
-      </>
-    ),
-    icon: (
-      <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
-        <path d="M10 12a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z" />
-      </svg>
-    )
-  },
-  {
-    question: "How can I donate to BeingSmile?",
-    answer: (
-      <>
-        <p className="mb-2 text-gray-600 dark:text-gray-300">
-          There are two ways to support BeingSmile:
-        </p>
-        <ul className="ps-5 text-gray-600 dark:text-gray-300 list-disc mb-2">
-          <li>When donating to any campaign, you'll see an optional checkbox to add a small contribution to BeingSmile</li>
-          <li>Visit our <a href="/support-us" className="text-blue-600 dark:text-blue-400 hover:underline font-medium">Support Us</a> page to make a direct donation</li>
-        </ul>
-        <p className="text-gray-600 dark:text-gray-300">
-          These voluntary contributions help us maintain the platform, develop new features, and keep our services free for everyone.
-        </p>
-      </>
-    ),
-    icon: (
-      <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
-        <path d="M10 12a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z" />
-      </svg>
-    )
-  },
-  {
-    question: "What payment methods do you accept?",
-    answer: (
-      <>
-        <p className="mb-2 text-gray-600 dark:text-gray-300">
-          We accept all major credit and debit cards (Visa, Mastercard, American Express), PayPal, and bank transfers in select countries.
-        </p>
-        <p className="text-gray-600 dark:text-gray-300">
-          Payment processing fees (typically 2.9% + $0.30 per transaction) are the only fees deducted from contributions. These go directly to our payment partners, not to BeingSmile.
-        </p>
-      </>
-    ),
-    icon: (
-      <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
-        <path d="M10 12a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z" />
-      </svg>
-    )
-  },
-  {
-    question: "How do I know my donation reaches the right place?",
-    answer: (
-      <>
-        <p className="mb-2 text-gray-600 dark:text-gray-300">
-          We verify all campaign organizers and provide transparency tools:
-        </p>
-        <ul className="ps-5 text-gray-600 dark:text-gray-300 list-disc mb-2">
-          <li>Identity verification for campaign creators</li>
-          <li>Regular updates from campaigners</li>
-          <li>Withdrawal verification process</li>
-        </ul>
-        <p className="text-gray-600 dark:text-gray-300">
-          While we can't guarantee how funds are ultimately used, we have systems in place to help ensure funds go to legitimate needs.
-        </p>
-      </>
-    ),
-    icon: (
-      <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
-        <path d="M10 12a1 1 0 100-2 1 1 0 000 2zm0-4a1 1 0 100-2 1 1 0 000 2z" />
-      </svg>
-    )
-  }
-];
+    {
+      question: "How does Beingsmile mission architecture work?",
+      answer: (
+        <div className="space-y-4">
+          <p className="text-gray-600 font-medium leading-relaxed">
+            Beingsmile is a commission-free humanitarian sanctuary that connects compassion with legitimate needs. You can launch a mission for any verified cause, share your impactful story, and receive direct gifts from our global community.
+          </p>
+          <p className="text-gray-600 font-medium leading-relaxed">
+            Unique to our mission, we never take a percentage of your raised gifts. 100% of the impact goes directly to the cause (excluding standard secure payment gateway fees).
+          </p>
+        </div>
+      ),
+      icon: <FiHelpCircle />
+    },
+    {
+      question: "Why zero commissions on impact?",
+      answer: (
+        <div className="space-y-4">
+          <p className="text-gray-600 font-medium leading-relaxed">
+            We believe human kindness shouldn't be taxed. Our ecosystem flourishes on voluntary contributions from donors who choose to support Beingsmile's growth while funding specific missions.
+          </p>
+          <p className="text-gray-600 font-medium leading-relaxed">
+            You'll find an optional choice to contribute to Beingsmile during the donation process, helping us maintain this sanctuary for everyone.
+          </p>
+        </div>
+      ),
+      icon: <FiActivity />
+    },
+    {
+      question: "How can I fuel the Beingsmile platform?",
+      answer: (
+        <div className="space-y-4">
+          <p className="text-gray-600 font-medium leading-relaxed">
+            There are multiple ways to support this sanctuary:
+          </p>
+          <ul className="ps-5 text-gray-600 font-medium space-y-2 list-disc">
+            <li>Include an optional platform gift when supporting any specific mission.</li>
+            <li>Directly support our architecture via the <span className="text-primary font-black uppercase tracking-widest text-[10px] border-b border-primary cursor-pointer pb-0.5 ml-1">Support Sanctuary</span> link.</li>
+          </ul>
+          <p className="text-gray-600 font-medium leading-relaxed">
+            These voluntary gifts allow us to innovate and keep the platform accessible for all humanitarian creators.
+          </p>
+        </div>
+      ),
+      icon: <FiArrowRight />
+    }
+  ];
 
   return (
-    <div className="max-w-4xl mx-4 md:mx-auto my-16">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-        Frequently Asked Questions
-      </h2>
-      <div className="space-y-4">
-        {faqItems.map((item, index) => (
-          <div 
-            key={index}
-            className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-300"
-          >
-            <button
-              type="button"
-              className={`flex items-center justify-between w-full p-5 font-medium text-left transition-all duration-300 ${
-                activeIndex === index 
-                  ? 'bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white' 
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
-              }`}
-              onClick={() => toggleAccordion(index)}
-              aria-expanded={activeIndex === index}
-              aria-controls={`faq-${index}`}
-            >
-              <div className="flex items-center gap-3">
-                {item.icon}
-                <span>{item.question}</span>
-              </div>
-              <svg
-                className={`w-4 h-4 shrink-0 transition-transform duration-300 ${
-                  activeIndex === index ? 'rotate-180' : ''
-                }`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+    <section className="bg-white py-24 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-16 space-y-4">
+          <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight font-sans">
+            Humanitarian <span className="text-primary">Intelligence</span>
+          </h2>
+          <p className="text-lg text-gray-500 font-medium leading-relaxed">
+            Clear answers for your journey of kindness. Understanding how we protect and amplify impact.
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          {faqItems.map((item, index) => (
             <div
-              id={`faq-${index}`}
-              className={`transition-all duration-300 overflow-hidden ${
-                activeIndex === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-              }`}
+              key={index}
+              className={`group bg-neutral rounded-[2.5rem] border-4 transition-all duration-500 overflow-hidden ${activeIndex === index ? "bg-white border-primary shadow-2xl shadow-primary/10 -translate-y-1" : "border-transparent"
+                }`}
             >
-              <div className="p-5 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-                {item.answer}
+              <button
+                onClick={() => toggleAccordion(index)}
+                className="w-full p-8 md:p-10 flex items-center justify-between text-left cursor-pointer"
+              >
+                <div className="flex items-center gap-6">
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition-all ${activeIndex === index ? "bg-primary text-white" : "bg-white text-gray-400"
+                    }`}>
+                    {item.icon}
+                  </div>
+                  <span className={`text-xl font-black tracking-tight font-sans transition-colors ${activeIndex === index ? "text-gray-900" : "text-gray-500"
+                    }`}>
+                    {item.question}
+                  </span>
+                </div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all ${activeIndex === index ? "border-primary text-primary rotate-180" : "border-gray-200 text-gray-300"
+                  }`}>
+                  <FiChevronDown />
+                </div>
+              </button>
+
+              <div className={`transition-all duration-700 ease-in-out px-8 md:px-10 overflow-hidden ${activeIndex === index ? "max-h-[800px] pb-10 opacity-100" : "max-h-0 opacity-0"
+                }`}>
+                <div className="md:pl-20 border-t border-gray-100 pt-8">
+                  {item.answer}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 

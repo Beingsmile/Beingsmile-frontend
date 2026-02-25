@@ -7,37 +7,33 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
-  --color-primary: oklch(0.99 0 0);
-  /* animation: var(--fade-in); */
-
-  @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+  --color-primary: #0284c7; /* Sky 600 - Main Brand */
+  --color-primary-light: #e0f2fe; /* Sky 100 - Soft Backgrounds */
+  --color-accent: #f59e0b; /* Amber 500 - Warm Humanity */
+  --color-accent-light: #fef3c7; /* Amber 100 - Notification/Warmth */
+  --color-neutral: #f8fafc; /* Slate 50 - Bright Background */
   
-  @keyframes slide-up {
-    from { 
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to { 
-      opacity: 1;
-      transform: translateY(0);
-    }
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+
+  /* Humanitarian Transitions */
+  --transition-impact: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
   }
 }
 
 @layer base {
   html {
-    @apply bg-white dark:bg-gray-900;
-    @apply text-gray-900 dark:text-white;
-    @apply transition-colors duration-300;
+    @apply bg-neutral text-slate-900;
+    @apply transition-colors duration-500;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   body {
-    @apply bg-white dark:bg-gray-900;
-    @apply text-gray-900 dark:text-white;
-    @apply transition-colors duration-300;
+    @apply bg-neutral text-slate-900 antialiased;
+    font-family: var(--font-sans);
   }
 }
 
