@@ -1,9 +1,10 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
+import axiosInstance from "../api/axiosInstance";
 import {
     FiUser, FiMail, FiCalendar, FiCheckCircle,
     FiXCircle, FiPhone, FiEdit, FiLayers,
-    FiHeart, FiLogOut, FiSettings, FiImage, FiActivity, FiShield, FiChevronRight
+    FiHeart, FiLogOut, FiSettings, FiImage, FiActivity, FiShield, FiChevronRight, FiClock
 } from "react-icons/fi";
 import EditProfile from "../components/EditProfile";
 import { Link } from "react-router";
@@ -17,6 +18,28 @@ const Profile = () => {
     const [activeTab, setActiveTab] = useState("info");
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
+    const [verificationRequests, setVerificationRequests] = useState([]);
+    const [isStatusLoading, setIsStatusLoading] = useState(true);
+
+    const fetchVerificationStatus = async () => {
+        try {
+            setIsStatusLoading(true);
+            const res = await axiosInstance.get("/verification/my-requests");
+            setVerificationRequests(res.data.requests);
+        } catch (err) {
+            console.error("Failed to fetch verification status");
+        } finally {
+            setIsStatusLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (user) {
+            fetchVerificationStatus();
+        }
+    }, [user]);
+
+    const pendingRequest = verificationRequests.find(r => r.status === 'pending');
 
     if (!user) {
         return (
@@ -140,7 +163,14 @@ const Profile = () => {
 
                         {/* Tab Content */}
                         <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
-                            {activeTab === "info" && <PersonalInfo user={user} onVerifyClick={() => setIsVerifyModalOpen(true)} />}
+                            {activeTab === "info" && (
+                                <PersonalInfo 
+                                    user={user} 
+                                    pendingRequest={pendingRequest}
+                                    isStatusLoading={isStatusLoading}
+                                    onVerifyClick={() => setIsVerifyModalOpen(true)} 
+                                />
+                            )}
                             {activeTab === "campaigns" && <UserCampaigns />}
                             {activeTab === "donations" && <UserDonations />}
                             {activeTab === "settings" && <AccountSettings />}
@@ -156,14 +186,17 @@ const Profile = () => {
             {isVerifyModalOpen && (
                 <RequestVerification
                     onClose={() => setIsVerifyModalOpen(false)}
-                    onSubmitted={() => { }}
+                    onSubmitted={() => {
+                        setIsVerifyModalOpen(false);
+                        fetchVerificationStatus();
+                    }}
                 />
             )}
         </div>
     );
 };
 
-const PersonalInfo = ({ user, onVerifyClick }) => (
+const PersonalInfo = ({ user, onVerifyClick, pendingRequest, isStatusLoading }) => (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-7 space-y-12">
             <section>
@@ -208,18 +241,46 @@ const PersonalInfo = ({ user, onVerifyClick }) => (
                     />
                     <StatusBadge
                         label="Verification Level"
-                        value={user?.data?.isVerified ? "Trusted Mission Hero" : "Standard Participant"}
-                        type={user?.data?.isVerified ? "success" : "warning"}
+                        value={user?.data?.identity?.isVerified ? "Trusted Mission Hero" : "Standard Participant"}
+                        type={user?.data?.identity?.isVerified ? "success" : "warning"}
                         icon={<FiShield />}
-                        description={user?.data?.isVerified ? "Your identity is officially verified." : "Verify your account to gain higher trust."}
-                        action={!user?.data?.isVerified ? (
-                            <button
-                                onClick={onVerifyClick}
-                                className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline group cursor-pointer"
-                            >
-                                Request Trust Stamp <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-                            </button>
-                        ) : null}
+                        description={
+                            user?.data?.identity?.isVerified 
+                                ? "Your identity is officially verified. You have full access to platform features." 
+                                : pendingRequest 
+                                    ? "Your request is being reviewed by our team."
+                                    : "Verify your account to gain higher trust and unlock features."
+                        }
+                        action={
+                            !user?.data?.identity?.isVerified ? (
+                                isStatusLoading ? (
+                                    <div className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
+                                        <FiClock className="animate-spin" /> Verifying Status...
+                                    </div>
+                                ) : pendingRequest ? (
+                                    <Link
+                                        to="/dashboard/verification-status"
+                                        className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-700 text-[10px] font-black uppercase rounded-lg border border-amber-200"
+                                    >
+                                        <FiClock /> Application Under Review
+                                    </Link>
+                                ) : (
+                                    <button
+                                        onClick={onVerifyClick}
+                                        className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline group cursor-pointer"
+                                    >
+                                        Request Trust Stamp <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
+                                    </button>
+                                )
+                            ) : (
+                                <Link 
+                                    to="/dashboard/verification-status"
+                                    className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline group cursor-pointer"
+                                >
+                                    View Verification Record <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                            )
+                        }
                     />
                 </div>
 

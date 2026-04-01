@@ -1,86 +1,80 @@
 import Campaign from "./Campaign";
-import campaign1 from "../assets/hero.jpg";
-import { FiArrowRight, FiTarget } from "react-icons/fi";
-
-const campaignData = [
-  {
-    coverImage: campaign1,
-    title: "Help Build a School in Rural Bangladesh",
-    creatorUsername: "Fatima Noor",
-    currentAmount: 18450,
-    goalAmount: 25000,
-    endDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
-    supporters: Array(1214).fill({}),
-    category: "Education"
-  },
-  {
-    coverImage: campaign1,
-    title: "Urgent Surgery Needed for Baby Anan",
-    creatorUsername: "Rahman Tuhin",
-    currentAmount: 31400,
-    goalAmount: 40000,
-    endDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-    supporters: Array(2290).fill({}),
-    category: "Medical"
-  },
-  {
-    coverImage: campaign1,
-    title: "Support Relief for Families in Sylhet",
-    creatorUsername: "Hasina Ahmed",
-    currentAmount: 12200,
-    goalAmount: 20000,
-    endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    supporters: Array(874).fill({}),
-    category: "Disaster"
-  },
-];
+import { FiArrowRight, FiTarget, FiActivity } from "react-icons/fi";
+import { useFeaturedCampaigns } from "../hooks/useCampaign";
+import LoadingSpinner from "./LoadingSpinner";
+import { useTranslation } from "react-i18next";
 
 const FeaturedCampaigns = () => {
+  const { t } = useTranslation();
+  const { data, isLoading, error } = useFeaturedCampaigns();
+  const campaigns = data?.campaigns || [];
+
   return (
-    <section className="py-24 px-4 bg-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-100 to-transparent" />
-
+    <section className="py-20 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-          <div className="space-y-4 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest leading-none">
-              <FiTarget />
-              Top Missions
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight font-sans uppercase">
-              Featured <span className="text-primary italic">Impacts</span>
-            </h2>
-            <p className="text-lg text-gray-500 max-w-xl font-medium leading-relaxed">
-              Discover verified missions that are changing lives right now. Your kindness can create a lasting smile.
-            </p>
-          </div>
-          <div className="hidden md:block">
-            <a
-              href="/campaigns/browse"
-              className="flex items-center gap-2 text-primary font-black uppercase tracking-widest text-xs border-b-2 border-primary pb-1 hover:text-primary/70 hover:border-primary/50 transition-all"
-            >
-              See All Missions
-              <FiArrowRight size={14} />
-            </a>
-          </div>
+        {/* Section header — centered like reference */}
+        <div className="text-center mb-12 space-y-3">
+          <p className="text-xs font-bold text-[#2D6A4F] uppercase tracking-widest">
+            {t("featured.top_missions", { defaultValue: "Top Missions" })}
+          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            {t("featured.featured", { defaultValue: "Featured" })}{" "}
+            <em className="not-italic text-[#2D6A4F]">{t("featured.impacts", { defaultValue: "Impacts" })}</em>
+          </h2>
+          <p className="text-sm text-gray-500 max-w-lg mx-auto leading-relaxed">
+            {t("featured.description", { defaultValue: "Discover verified missions that are changing lives right now. Your kindness can create a lasting smile." })}
+          </p>
         </div>
 
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {campaignData.map((campaign, idx) => (
-            <div key={idx} className="animate-in fade-in slide-in-from-bottom-8 duration-700" style={{ animationDelay: `${idx * 150}ms` }}>
-              <Campaign campaign={campaign} />
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <LoadingSpinner />
+          </div>
+        ) : error ? (
+          <div className="text-center py-16 text-gray-400 bg-[#F0FBF4] rounded-xl border border-[#D1EAD9]">
+            <FiActivity size={32} className="mx-auto mb-3 opacity-30" />
+            <p className="text-sm font-semibold">{t("featured.error", { defaultValue: "Unable to load featured missions" })}</p>
+          </div>
+        ) : campaigns.length === 0 ? (
+          <div className="text-center py-16 text-gray-400 bg-[#F0FBF4] rounded-xl border border-[#D1EAD9]">
+            <p className="text-sm font-semibold">{t("featured.no_campaigns", { defaultValue: "No featured missions at the moment" })}</p>
+          </div>
+        ) : (
+          <>
+            {/* Campaign grid — 3 columns with middle highlighted, matching reference carousel */}
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {campaigns.slice(0, 3).map((campaign, idx) => (
+                <div
+                  key={campaign._id}
+                  className={idx === 1 ? "card-featured rounded-xl" : ""}
+                >
+                  <Campaign campaign={campaign} isFeatured={idx === 1} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div className="mt-16 text-center md:hidden">
+            {/* Pagination dots like reference */}
+            <div className="flex justify-center items-center gap-2 mt-8">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className={`rounded-full transition-all ${
+                    i === 1 ? "w-6 h-2 bg-[#2D6A4F]" : "w-2 h-2 bg-gray-200"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* See all link */}
+        <div className="text-center mt-8">
           <a
             href="/campaigns/browse"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-md shadow-primary/10 hover:scale-105 active:scale-95 transition-all"
+            className="inline-flex items-center gap-2 text-[#2D6A4F] text-sm font-bold hover:text-[#1B4332] transition-colors"
           >
-            Explore All Causes
-            <FiArrowRight size={16} />
+            {t("featured.see_all", { defaultValue: "See All Missions" })}
+            <FiArrowRight size={14} />
           </a>
         </div>
       </div>

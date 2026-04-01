@@ -2,86 +2,115 @@ import { Link, useOutletContext } from "react-router";
 import heroImage from "../assets/hero.jpg";
 import { AuthContext } from "../contexts/AuthProvider";
 import { useContext } from "react";
-import { FiArrowRight, FiCheckCircle, FiHeart } from "react-icons/fi";
+import { FiArrowRight, FiHeart, FiCheckCircle, FiCamera } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
 const Hero = () => {
+  const { t } = useTranslation();
   const { user } = useContext(AuthContext);
   const { setAuth } = useOutletContext();
 
   return (
-    <section className="relative bg-neutral overflow-hidden pt-16 pb-12 md:pt-20 md:pb-20">
-      {/* Decorative Circles */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl opacity-50" />
-      <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-64 h-64 bg-accent/5 rounded-full blur-3xl opacity-50" />
+    <section className="relative bg-[#F0FBF4] overflow-hidden pt-20 pb-16 md:pt-24 md:pb-20">
+      {/* Subtle decorative dots */}
+      <div className="absolute top-12 right-0 w-72 h-72 opacity-30"
+        style={{
+          backgroundImage: "radial-gradient(circle, #2D6A4F 1px, transparent 1px)",
+          backgroundSize: "20px 20px"
+        }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Text Content */}
-          <div className="text-center lg:text-left space-y-6 animate-in fade-in slide-in-from-left duration-700">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/5 text-primary rounded-full text-[10px] font-black tracking-widest uppercase border border-primary/10">
-              <FiCheckCircle size={12} />
-              Trusted by 5,000+ Heroes
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
-            <h1 className="text-4xl md:text-5xl xl:text-6xl font-black text-gray-900 leading-[1.1] tracking-tight font-sans uppercase">
-              Transforming <span className="text-primary">Humanity</span> <br />Through One <span className="relative inline-block mt-2 font-black italic">
-                Smile
-                <div className="absolute -bottom-1 left-0 w-full h-1 bg-accent/20 rounded-full" />
-              </span>
+          {/* Left: Text Content */}
+          <div className="space-y-6">
+            <h1 className="text-4xl md:text-5xl xl:text-[3.5rem] font-bold text-[#0f2418] leading-[1.15]">
+              {t("hero.title_healing")}{" "}
+              <span className="text-[#2D6A4F]">{t("hero.title_lives")}</span>{" "}
+              <br className="hidden md:block" />
+              {t("hero.title_starting")} {t("hero.title_your")} <em className="not-italic font-black">{t("hero.title_smile")}</em>
             </h1>
 
-            <p className="text-base md:text-lg text-gray-500 leading-relaxed max-w-xl mx-auto lg:mx-0 font-medium italic">
-              "We connect compassionate hearts with missions making a difference. Join a global community driven by the brightness of human kindness."
+            <p className="text-base text-gray-500 leading-relaxed max-w-lg font-medium">
+              {t("hero.description")}
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start pt-4">
+            <div className="flex flex-col sm:flex-row items-start gap-3 pt-2">
+              <Link
+                to="/campaigns/browse"
+                className="btn-primary text-sm"
+              >
+                <FiHeart size={15} />
+                {t("hero.be_a_donor")}
+              </Link>
+
               {user ? (
                 <Link
                   to="/campaigns/create"
-                  className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-black text-xs uppercase tracking-widest rounded-xl hover:scale-105 transition-all shadow-xl shadow-primary/10 flex items-center justify-center gap-2"
+                  className="btn-outline text-sm"
                 >
-                  Launch Mission
-                  <FiArrowRight size={16} />
+                  {t("hero.start_a_mission")}
+                  <FiArrowRight size={15} />
                 </Link>
               ) : (
                 <button
                   onClick={() => setAuth("login")}
-                  className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-black text-xs uppercase tracking-widest rounded-xl hover:scale-105 transition-all shadow-xl shadow-primary/10 flex items-center justify-center gap-2 cursor-pointer"
+                  className="btn-outline text-sm"
                 >
-                  Launch Mission
-                  <FiArrowRight size={16} />
+                  {t("hero.start_a_mission")}
+                  <FiArrowRight size={15} />
                 </button>
               )}
+            </div>
 
-              <Link
-                to="/campaigns/browse"
-                className="w-full sm:w-auto px-8 py-4 bg-white text-gray-900 border border-gray-100 font-black text-xs uppercase tracking-widest rounded-xl hover:border-primary/50 transition-all flex items-center justify-center gap-2"
-              >
-                Explore Causes
-              </Link>
+            {/* Trust indicators */}
+            <div className="flex flex-wrap items-center gap-5 pt-2">
+              {[
+                { label: "100% Transparent", icon: <FiCheckCircle size={13} /> },
+                { label: "Zero Commission", icon: <FiCheckCircle size={13} /> },
+                { label: "Verified Missions", icon: <FiCheckCircle size={13} /> },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-1.5 text-xs font-semibold text-gray-500">
+                  <span className="text-[#2D6A4F]">{item.icon}</span>
+                  {item.label}
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Visual Content */}
-          <div className="relative animate-in zoom-in duration-1000">
-            <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden border-8 border-white shadow-xl shadow-gray-200/50 group">
-              <img
-                src={heroImage}
-                alt="Humanitarian Impact"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-            </div>
+          {/* Right: Photo Card — styled like the reference */}
+          <div className="relative flex justify-center lg:justify-end">
+            {/* Main card */}
+            <div className="relative w-72 sm:w-80 lg:w-96">
+              {/* Green card frame */}
+              <div className="relative rounded-2xl overflow-hidden border-4 border-[#2D6A4F] shadow-xl">
+                <img
+                  src={heroImage}
+                  alt="Humanitarian Impact"
+                  className="w-full aspect-[3/4] object-cover"
+                />
+                {/* Bottom overlay with text */}
+                <div className="absolute bottom-0 left-0 right-0 bg-[#1B4332]/90 p-4">
+                  <p className="text-white text-xs font-semibold opacity-80">গণতন্ত্র উদ্যোগ</p>
+                  <p className="text-white text-sm font-bold mt-0.5">BeingSmile — মানুষের পাশে আছি</p>
+                </div>
+              </div>
 
-            {/* Floating Impact Card */}
-            <div className="absolute -bottom-6 -left-6 bg-white p-5 rounded-3xl shadow-lg shadow-gray-200/50 border border-gray-50 hidden sm:block">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                  <FiHeart className="text-primary text-lg" />
+              {/* Floating live-impact badge */}
+              <div className="absolute -bottom-5 -left-6 bg-white rounded-xl shadow-lg border border-gray-100 px-4 py-3 flex items-center gap-3 z-20">
+                <div className="w-9 h-9 bg-[#2D6A4F]/10 rounded-lg flex items-center justify-center">
+                  <FiHeart className="text-[#2D6A4F]" size={16} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Live Impact</p>
+                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{t("hero.live_impact")}</p>
                   <p className="text-sm font-black text-gray-900">৳14,500 for Sylhet</p>
                 </div>
+              </div>
+
+              {/* Camera badge, reference has a fun photo indicator */}
+              <div className="absolute -top-4 -right-4 w-10 h-10 bg-[#2D6A4F] rounded-xl flex items-center justify-center shadow-lg">
+                <FiCamera className="text-white" size={16} />
               </div>
             </div>
           </div>

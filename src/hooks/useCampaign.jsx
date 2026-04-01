@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createCampaign, getCampaignById, getCampaigns } from "../api/campaign";
+import { createCampaign, getCampaignById, getCampaigns, getFeaturedCampaigns } from "../api/campaign";
 
 // Create Campaign Hook
 export const useCreateCampaign = () => {
@@ -24,5 +24,13 @@ export const useCampaignDetails = (id) => {
     queryFn: async () => getCampaignById(id),
     keepPreviousData: true,
     enabled: !!id,
+  });
+};
+
+// Featured Campaigns Hook
+export const useFeaturedCampaigns = () => {
+  return useQuery({
+    queryKey: ['campaigns', 'featured'],
+    queryFn: getFeaturedCampaigns,
   });
 };

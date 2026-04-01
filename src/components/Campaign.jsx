@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router";
 import campaign1 from "../assets/hero.jpg";
 import dayjs from "dayjs";
-import { FiUsers, FiCalendar, FiArrowRight, FiActivity } from "react-icons/fi";
+import { FiCalendar, FiArrowRight, FiMapPin } from "react-icons/fi";
+import { useTranslation } from "react-i18next";
 
-const Campaign = ({ campaign }) => {
+const Campaign = ({ campaign, isFeatured = false }) => {
+  const { t } = useTranslation();
   const {
+    _id,
     title,
     coverImage,
     goalAmount,
@@ -12,124 +15,102 @@ const Campaign = ({ campaign }) => {
     endDate,
     creatorUsername,
     supporters = [],
-    category
+    category,
+    location = "Verified Cause"
   } = campaign || {};
 
   const navigate = useNavigate();
-
-  const initials = creatorUsername
-    ? creatorUsername
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase()
-    : "BS";
 
   const percentage = Math.min((currentAmount / goalAmount) * 100, 100) || 0;
   const daysLeft = dayjs(endDate).diff(dayjs(), "day");
 
   const handleDetails = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    navigate(`/campaigns/${campaign?._id}`);
+    navigate(`/campaigns/${_id}`);
   };
 
   return (
     <div
-      className="group bg-white rounded-[2.5rem] border-4 border-white shadow-md shadow-gray-100/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 overflow-hidden cursor-pointer flex flex-col h-full active:scale-[0.98]"
-      onClick={handleDetails} // Added onClick to the main div for navigation
+      onClick={handleDetails}
+      className={`group bg-white rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 flex flex-col h-full ${
+        isFeatured
+          ? "border-2 border-[#2D6A4F] shadow-md"
+          : "border border-[#E5F0EA] shadow-sm hover:shadow-md hover:border-[#B7DFC9]"
+      }`}
     >
-      {/* Image Wrapper */}
-      <div className="relative h-64 overflow-hidden"> {/* Changed h-56 to h-64 */}
+      {/* Image */}
+      <div className="relative aspect-[16/9] overflow-hidden">
         <img
           src={coverImage || campaign1}
           alt={title}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-        {category && (
-          <div className="absolute top-4 left-4"> {/* Changed top-5 left-5 to top-4 left-4 */}
-            <span className="px-3 py-1 bg-white/90 backdrop-blur-md rounded-full text-[10px] font-black text-primary uppercase tracking-widest shadow-sm"> {/* Changed px-4 py-1.5, bg-white/95, shadow-lg to px-3 py-1, bg-white/90, shadow-sm */}
-              {category}
+        {/* Category badge */}
+        <div className="absolute top-3 left-3">
+          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${
+            isFeatured
+              ? "bg-[#2D6A4F] text-white"
+              : "bg-white/90 text-gray-700"
+          }`}>
+            {category}
+          </span>
+        </div>
+        {isFeatured && (
+          <div className="absolute top-3 right-3">
+            <span className="px-2.5 py-1 bg-[#2D6A4F] text-white rounded-full text-[10px] font-black uppercase tracking-wide">
+              Featured
             </span>
           </div>
         )}
       </div>
 
-      <div className="p-8 flex flex-col flex-1">
-        {/* Title & Author */}
-        <div className="space-y-4 mb-auto">
-          <h3 className="text-xl font-black text-gray-900 leading-tight group-hover:text-primary transition-colors line-clamp-2 uppercase tracking-tight font-sans">
-            {title}
-          </h3>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-neutral text-primary flex items-center justify-center font-black text-xs border border-gray-50 uppercase shadow-sm">
-              {initials}
-            </div>
+      {/* Content */}
+      <div className="p-4 flex flex-col flex-1">
+        <div className="flex items-center gap-1 text-[10px] font-semibold text-[#2D6A4F] mb-2">
+          <FiMapPin size={10} />
+          {location}
+        </div>
+
+        <h3 className="text-sm font-bold text-gray-900 leading-snug line-clamp-2 mb-2 group-hover:text-[#2D6A4F] transition-colors">
+          {title}
+        </h3>
+
+        <p className="text-xs text-gray-400 line-clamp-1 leading-relaxed mb-4">
+          {t("campaign.support_text", { creator: creatorUsername, category: category })}
+        </p>
+
+        {/* Progress */}
+        <div className="mt-auto space-y-2">
+          <div className="w-full bg-gray-100 rounded-full h-1.5">
+            <div
+              className="h-full rounded-full bg-[#2D6A4F] transition-all duration-700"
+              style={{ width: `${percentage}%` }}
+            />
+          </div>
+
+          <div className="flex justify-between items-center">
             <div>
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Created By</p>
-              <p className="text-xs font-black text-gray-900 uppercase tracking-tight">
-                {creatorUsername || "Hero"}
-              </p>
+              <p className="text-[9px] font-bold text-gray-400 uppercase">{t("campaign.raised")}</p>
+              <p className="text-sm font-black text-gray-900">৳{currentAmount?.toLocaleString()}</p>
             </div>
-          </div>
-        </div>
-
-        {/* Progress Section */}
-        <div className="space-y-6 pt-6 border-t border-gray-50">
-          <div className="space-y-2">
-            <div className="flex justify-between items-end">
-              <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center gap-1.5">
-                <FiActivity className="text-primary" /> Impact Progress
-              </span>
-              <span className="text-xs font-black text-primary bg-primary/5 px-2 py-0.5 rounded-md">
-                {Math.round(percentage)}%
-              </span>
-            </div>
-            <div className="w-full bg-neutral rounded-full h-3 overflow-hidden">
-              <div
-                className="bg-primary h-full rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(2,132,199,0.3)]"
-                style={{ width: `${percentage}%` }}
-              />
+            <div className="text-right">
+              <p className="text-[9px] font-bold text-gray-400 uppercase">{Math.round(percentage)}%</p>
+              <p className="text-xs font-semibold text-gray-500">of ৳{goalAmount?.toLocaleString()}</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-neutral rounded-2xl border border-gray-50">
-              <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-1 leading-none">Raised</p>
-              <p className="text-sm font-black text-gray-900 tracking-tighter">৳{currentAmount?.toLocaleString()}</p>
+          {/* Footer row */}
+          <div className="flex items-center justify-between pt-3 border-t border-gray-50">
+            <div className="flex items-center gap-1 text-[10px] text-gray-400 font-semibold">
+              <FiCalendar size={10} className="text-[#2D6A4F]" />
+              {daysLeft > 0 ? `${daysLeft} ${t("campaign.days_left")}` : t("campaign.ending_soon")}
             </div>
-            <div className="p-4 bg-neutral rounded-2xl border border-gray-50">
-              <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mb-1 leading-none">Goal</p>
-              <p className="text-sm font-black text-gray-900 tracking-tighter">৳{goalAmount?.toLocaleString()}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-[0.15em]">
-            <div className="flex items-center gap-1.5 text-gray-400">
-              <FiCalendar className="text-primary text-sm" />
-              <span>
-                {daysLeft > 0 ? `${daysLeft} Days Left` : "Finalizing"}
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5 text-gray-400">
-              <FiUsers className="text-primary text-sm" />
-              <span>
-                {supporters.length} Heroes
-              </span>
+            <div className={`flex items-center gap-1 text-[10px] font-bold transition-all group-hover:gap-1.5 ${
+              isFeatured ? "text-[#2D6A4F]" : "text-gray-400 group-hover:text-[#2D6A4F]"
+            }`}>
+              {t("campaign.view")} <FiArrowRight size={10} />
             </div>
           </div>
-        </div>
-
-        {/* Inline CTA — no overlay, clean hover reveal */}
-        <div className="pt-5 mt-4 border-t border-gray-50">
-          <button
-            onClick={handleDetails}
-            className="w-full py-2.5 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all duration-300 flex items-center justify-center gap-2"
-          >
-            Support Mission
-            <FiArrowRight size={12} />
-          </button>
         </div>
       </div>
     </div>

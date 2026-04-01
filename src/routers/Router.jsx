@@ -13,6 +13,16 @@ import PaymentFailure from "../pages/PaymentFailure.jsx";
 import PaymentCancelled from "../pages/PaymentCancelled.jsx";
 import ResetPassword from "../pages/ResetPassword.jsx";
 import ForgotPass from "../components/ForgotPass.jsx";
+import AdminDashboard from "../layouts/AdminDashboard.jsx";
+import AdminOverview from "../pages/admin/AdminOverview.jsx";
+import CampaignReview from "../pages/admin/CampaignReview.jsx";
+import AdminRoute from "./AdminRoute.jsx";
+import UserManagement from "../pages/admin/UserManagement.jsx";
+import VerificationReview from "../pages/admin/VerificationReview.jsx";
+import PublicProfile from "../pages/PublicProfile.jsx";
+import AccountStatus from "../pages/Dashboard/AccountStatus.jsx";
+import VerificationStatus from "../pages/Dashboard/VerificationStatus.jsx";
+import PayoutReview from "../pages/admin/PayoutReview.jsx";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +73,10 @@ const router = createBrowserRouter([
         path: "reset-password",
         element: <ResetPassword />,
       },
+      {
+        path: "p/:slug",
+        element: <PublicProfile />,
+      },
     ],
   },
   {
@@ -98,8 +112,54 @@ const router = createBrowserRouter([
         element: <div>Analytics</div>,
       },
       {
-        path: "verify-requests",
-        element: <div>Verify Requests</div>,
+        path: "account-status",
+        element: <AccountStatus />,
+      },
+      {
+        path: "verification-status",
+        element: <VerificationStatus />,
+      },
+    ],
+  },
+  {
+    path: "/admin/",
+    element: (
+      <AdminRoute>
+        <AdminDashboard />
+      </AdminRoute>
+    ),
+    children: [
+      {
+        path: "",
+        element: <AdminOverview />,
+      },
+      {
+        path: "overview",
+        element: <AdminOverview />,
+      },
+      {
+        path: "review",
+        element: <CampaignReview />,
+      },
+      {
+        path: "campaigns",
+        element: <div>All Campaigns Management</div>,
+      },
+      {
+        path: "users",
+        element: <UserManagement />,
+      },
+      {
+        path: "verifications",
+        element: <VerificationReview />,
+      },
+      {
+        path: "payouts",
+        element: <PayoutReview />,
+      },
+      {
+        path: "transactions",
+        element: <div>Transaction Logs</div>,
       },
     ],
   },

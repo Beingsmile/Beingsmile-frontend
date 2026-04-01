@@ -1,32 +1,20 @@
-
-const categories = [
-  { id: 1, name: "All Missions" },
-  { id: 2, name: "Education" },
-  { id: 3, name: "Health" },
-  { id: 4, name: "Art" },
-  { id: 5, name: "Environment" },
-  { id: 6, name: "Technology" },
-  { id: 7, name: "Community" },
-  { id: 8, name: "Animals" },
-  { id: 9, name: "Others" },
-];
-
-const CategoryTabs = ({ selectedCategory, onSelect }) => {
+const CategoryTabs = ({ categories, selectedCategory, onSelect }) => {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-1">
       {categories.map((category) => (
         <button
           key={category.id}
-          className={`group flex items-center justify-between px-6 py-4 rounded-2xl transition-all duration-300 text-sm font-black uppercase tracking-widest border-2 
+          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 text-sm font-semibold text-left w-full
             ${selectedCategory === category.id
-              ? "bg-primary text-white border-primary shadow-xl shadow-primary/20 scale-[1.02]"
-              : "bg-white text-gray-500 border-gray-50 hover:border-primary/30 hover:text-primary"
+              ? "bg-[#2D6A4F] text-white shadow-sm"
+              : "text-gray-500 hover:bg-[#F0FBF4] hover:text-[#2D6A4F]"
             }`}
           onClick={() => onSelect(category.id)}
         >
+          <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 transition-all ${
+            selectedCategory === category.id ? "bg-white" : "bg-[#D1EAD9]"
+          }`} />
           <span>{category.name}</span>
-          <div className={`w-1.5 h-1.5 rounded-full transition-all ${selectedCategory === category.id ? "bg-white scale-150" : "bg-gray-200 group-hover:bg-primary/50"
-            }`} />
         </button>
       ))}
     </div>

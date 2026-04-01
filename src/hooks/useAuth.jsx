@@ -17,6 +17,24 @@ export const useRegister = () => {
   });
 };
 
+export const useSendOTP = () => {
+    return useMutation({
+        mutationFn: async (email) => {
+            const { data } = await axiosInstance.post("/auth/send-otp", { email });
+            return data;
+        }
+    });
+};
+
+export const useVerifyOTP = () => {
+    return useMutation({
+        mutationFn: async ({ email, otp }) => {
+            const { data } = await axiosInstance.post("/auth/verify-otp", { email, otp });
+            return data;
+        }
+    });
+};
+
 export const useLogin = () => {
   return useMutation({
     mutationFn: loginUser,

@@ -7,54 +7,163 @@
 /* @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)); */
 
 @theme {
-  --color-primary: #0284c7;
-  /* Sky 600 - Main Brand */
-  --color-primary-light: #e0f2fe;
-  /* Sky 100 - Soft Backgrounds */
-  --color-accent: #f59e0b;
-  /* Amber 500 - Warm Humanity */
-  --color-accent-light: #fef3c7;
-  /* Amber 100 - Notification/Warmth */
-  --color-neutral: #f8fafc;
-  /* Slate 50 - Bright Background */
+  --color-primary: #2D6A4F;
+  /* Forest Green – Trust & Humanity */
+  --color-primary-dark: #1B4332;
+  /* Deep Forest */
+  --color-primary-light: #52B788;
+  /* Mint Green accent */
+  --color-accent: #F59E0B;
+  /* Amber 500 */
+  --color-neutral: #F8FDFB;
+  /* Near-white with green tint */
+  --color-mint: #EDFAF3;
+  /* Light mint section bg */
+  --color-card: #ffffff;
+  --color-text-main: #0f2418;
+  /* Deep green-black */
+  --color-text-muted: #6B7280;
+  /* Cool gray */
 
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Hind Siliguri", sans-serif;
 
-  /* Humanitarian Transitions */
-  --transition-impact: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-  @keyframes float {
-
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-
-    50% {
-      transform: translateY(-5px);
-    }
-  }
+  /* Premium Utilities */
+  --shadow-premium: 0 4px 12px -2px rgba(27, 67, 50, 0.06), 0 2px 6px -2px rgba(27, 67, 50, 0.03);
+  --shadow-hover: 0 16px 32px -8px rgba(27, 67, 50, 0.12), 0 6px 12px -4px rgba(27, 67, 50, 0.06);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer base {
   html {
-    @apply bg-neutral text-slate-900;
-    @apply transition-colors duration-500;
+    @apply bg-white text-[#0f2418];
+    @apply transition-colors duration-300;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-neutral text-slate-900 antialiased;
+    @apply bg-white text-[#0f2418] antialiased;
     font-family: var(--font-sans);
   }
-}
 
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+}
 
 body {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
+}
+
+/* Section styling helper */
+.section-mint {
+  background-color: #F0FBF4;
+}
+
+.section-white {
+  background-color: #ffffff;
+}
+
+/* Card style */
+.card-clean {
+  background: white;
+  border: 1px solid #E5F0EA;
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-smooth);
+}
+
+.card-clean:hover {
+  border-color: #B7DFC9;
+  box-shadow: var(--shadow-hover);
+}
+
+/* Green bordered card highlight */
+.card-featured {
+  border: 2px solid #2D6A4F;
+}
+
+/* Step number badge */
+.step-badge {
+  width: 24px;
+  height: 24px;
+  background: #2D6A4F;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+}
+
+/* CTA Banner */
+.cta-banner {
+  background: #1B4332;
+}
+
+/* Button styles */
+.btn-primary {
+  background: #2D6A4F;
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary:hover {
+  background: #1B4332;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #2D6A4F;
+  border: 2px solid #2D6A4F;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-outline:hover {
+  background: #2D6A4F;
+  color: white;
+}
+
+.btn-outline-white {
+  background: transparent;
+  color: #ffffff;
+  border: 2px solid rgba(255,255,255,0.6);
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-white:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: white;
 }
 
 input[type="date"] {
@@ -67,7 +176,3 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(0.5);
   cursor: pointer;
 }
-
-/* .dark input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-} */

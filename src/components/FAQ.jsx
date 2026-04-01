@@ -11,95 +11,78 @@ const FAQ = () => {
   const faqItems = [
     {
       question: "How does Beingsmile mission architecture work?",
-      answer: (
-        <div className="space-y-4">
-          <p className="text-gray-600 font-medium leading-relaxed">
-            Beingsmile is a commission-free humanitarian sanctuary that connects compassion with legitimate needs. You can launch a mission for any verified cause, share your impactful story, and receive direct gifts from our global community.
-          </p>
-          <p className="text-gray-600 font-medium leading-relaxed">
-            Unique to our mission, we never take a percentage of your raised gifts. 100% of the impact goes directly to the cause (excluding standard secure payment gateway fees).
-          </p>
-        </div>
-      ),
-      icon: <FiHelpCircle />
+      answer: "Beingsmile is a commission-free humanitarian sanctuary that connects compassion with legitimate needs. You can launch a mission for any verified cause, share your impactful story, and receive direct gifts from our global community. We never take a percentage of your raised gifts.",
+      icon: <FiHelpCircle size={16} />
     },
     {
       question: "Why zero commissions on impact?",
-      answer: (
-        <div className="space-y-4">
-          <p className="text-gray-600 font-medium leading-relaxed">
-            We believe human kindness shouldn't be taxed. Our ecosystem flourishes on voluntary contributions from donors who choose to support Beingsmile's growth while funding specific missions.
-          </p>
-          <p className="text-gray-600 font-medium leading-relaxed">
-            You'll find an optional choice to contribute to Beingsmile during the donation process, helping us maintain this sanctuary for everyone.
-          </p>
-        </div>
-      ),
-      icon: <FiActivity />
+      answer: "We believe human kindness shouldn't be taxed. Our ecosystem flourishes on voluntary contributions from donors who choose to support Beingsmile's growth while funding specific missions. You'll find an optional choice to contribute to Beingsmile during the donation process.",
+      icon: <FiActivity size={16} />
     },
     {
       question: "How can I fuel the Beingsmile platform?",
-      answer: (
-        <div className="space-y-4">
-          <p className="text-gray-600 font-medium leading-relaxed">
-            There are multiple ways to support this sanctuary:
-          </p>
-          <ul className="ps-5 text-gray-600 font-medium space-y-2 list-disc">
-            <li>Include an optional platform gift when supporting any specific mission.</li>
-            <li>Directly support our architecture via the <span className="text-primary font-black uppercase tracking-widest text-[10px] border-b border-primary cursor-pointer pb-0.5 ml-1">Support Sanctuary</span> link.</li>
-          </ul>
-          <p className="text-gray-600 font-medium leading-relaxed">
-            These voluntary gifts allow us to innovate and keep the platform accessible for all humanitarian creators.
-          </p>
-        </div>
-      ),
-      icon: <FiArrowRight />
+      answer: "There are multiple ways to support this sanctuary: Include an optional platform gift when supporting any specific mission, or directly support our architecture via the Support Sanctuary link. These voluntary gifts allow us to innovate and keep the platform accessible for all humanitarian creators.",
+      icon: <FiArrowRight size={16} />
     }
   ];
 
   return (
-    <section className="bg-white py-24 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight font-sans">
-            Humanitarian <span className="text-primary">Intelligence</span>
+    <section className="py-20 px-4 bg-[#F0FBF4]">
+      <div className="max-w-3xl mx-auto">
+        {/* Section header */}
+        <div className="text-center mb-12 space-y-3">
+          <p className="text-xs font-bold text-[#2D6A4F] uppercase tracking-widest">FAQ</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            Humanitarian <em className="not-italic text-[#2D6A4F]">Intelligence</em>
           </h2>
-          <p className="text-lg text-gray-500 font-medium leading-relaxed">
-            Clear answers for your journey of kindness. Understanding how we protect and amplify impact.
+          <p className="text-sm text-gray-500 max-w-md mx-auto">
+            Clear answers for your journey of kindness.
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqItems.map((item, index) => (
             <div
               key={index}
-              className={`group bg-neutral rounded-[1.5rem] border transition-all duration-500 overflow-hidden ${activeIndex === index ? "bg-white border-primary/20 shadow-md shadow-primary/5" : "border-gray-50 bg-white"
-                }`}
+              className={`rounded-xl border overflow-hidden transition-all duration-300 ${
+                activeIndex === index
+                  ? "border-[#2D6A4F] bg-white shadow-sm"
+                  : "border-[#E5F0EA] bg-white"
+              }`}
             >
               <button
                 onClick={() => toggleAccordion(index)}
-                className="w-full p-6 md:p-8 flex items-center justify-between text-left cursor-pointer transition-all"
+                className="w-full px-5 py-4 flex items-center justify-between text-left cursor-pointer"
               >
-                <div className="flex items-center gap-5">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl transition-all ${activeIndex === index ? "bg-primary text-white" : "bg-primary/5 text-primary"
-                    }`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all ${
+                    activeIndex === index
+                      ? "bg-[#2D6A4F] text-white"
+                      : "bg-[#F0FBF4] text-[#2D6A4F]"
+                  }`}>
                     {item.icon}
                   </div>
-                  <span className={`text-lg font-black tracking-tight font-sans transition-colors ${activeIndex === index ? "text-primary" : "text-gray-900"
-                    }`}>
+                  <span className={`text-sm font-semibold transition-colors ${
+                    activeIndex === index ? "text-[#2D6A4F]" : "text-gray-800"
+                  }`}>
                     {item.question}
                   </span>
                 </div>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${activeIndex === index ? "border-primary/30 text-primary rotate-180" : "border-gray-100 text-gray-300"
-                  }`}>
-                  <FiChevronDown size={18} />
-                </div>
+                <FiChevronDown
+                  size={16}
+                  className={`text-gray-400 transition-transform duration-300 flex-shrink-0 ml-3 ${
+                    activeIndex === index ? "rotate-180 text-[#2D6A4F]" : ""
+                  }`}
+                />
               </button>
 
-              <div className={`transition-all duration-700 ease-in-out px-8 md:px-10 overflow-hidden ${activeIndex === index ? "max-h-[800px] pb-10 opacity-100" : "max-h-0 opacity-0"
-                }`}>
-                <div className="md:pl-20 border-t border-gray-100 pt-8">
-                  {item.answer}
+              <div className={`overflow-hidden transition-all duration-300 ${
+                activeIndex === index ? "max-h-96 pb-5" : "max-h-0"
+              }`}>
+                <div className="px-5 pt-1">
+                  <div className="ml-11 text-sm text-gray-500 leading-relaxed border-t border-[#E5F0EA] pt-4">
+                    {item.answer}
+                  </div>
                 </div>
               </div>
             </div>

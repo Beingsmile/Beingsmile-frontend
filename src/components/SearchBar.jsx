@@ -10,21 +10,21 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative group">
-      <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-        <FiSearch className="text-gray-400 group-focus-within:text-primary transition-colors text-xl" />
+    <form onSubmit={handleSubmit} className="relative group w-full">
+      <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+        <FiSearch className="text-gray-400 group-focus-within:text-[#2D6A4F] transition-colors" size={16} />
       </div>
       <input
         type="text"
-        placeholder="Search for a cause, name, or category..."
-        className="w-full bg-neutral border-2 border-transparent focus:border-primary/20 focus:bg-white px-16 py-6 rounded-[2rem] text-sm font-bold text-gray-900 placeholder-gray-400 transition-all outline-none"
+        placeholder="Find missions by cause, name, or location..."
+        className="w-full bg-white border border-[#E5F0EA] focus:border-[#2D6A4F] focus:ring-2 focus:ring-[#2D6A4F]/10 px-11 py-3 rounded-lg text-sm font-medium text-gray-800 placeholder-gray-400 transition-all outline-none"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
-      <div className="absolute inset-y-2 right-2">
+      <div className="absolute inset-y-1.5 right-1.5">
         <button
           type="submit"
-          className="h-full px-8 bg-primary text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 active:scale-95 cursor-pointer"
+          className="h-full px-5 bg-[#2D6A4F] text-white text-xs font-bold rounded-md hover:bg-[#1B4332] transition-all"
         >
           Search
         </button>

@@ -6,19 +6,18 @@ import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useSearchParams } from "react-router";
-import { FiSearch, FiFilter, FiHeart, FiHexagon, FiPlus } from "react-icons/fi";
+import { FiAlertCircle, FiSearch, FiLayers, FiHeart } from "react-icons/fi";
 import { Link } from "react-router";
 
 const categories = [
-  { id: 1, name: "all" },
-  { id: 2, name: "education" },
-  { id: 3, name: "health" },
-  { id: 4, name: "art" },
-  { id: 5, name: "environment" },
-  { id: 6, name: "technology" },
-  { id: 7, name: "community" },
-  { id: 8, name: "animals" },
-  { id: 9, name: "others" },
+  { id: 1, name: "All Missions" },
+  { id: 2, name: "Education" },
+  { id: 3, name: "Health" },
+  { id: 4, name: "Art" },
+  { id: 5, name: "Environment" },
+  { id: 6, name: "Technology" },
+  { id: 7, name: "Community" },
+  { id: 8, name: "Others" },
 ];
 
 export default function BrowseCampaigns() {
@@ -54,33 +53,36 @@ export default function BrowseCampaigns() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral pt-16 pb-20">
-      {/* Hero Header Section */}
-      <section className="relative py-10 px-4 bg-white border-b border-gray-100 overflow-hidden">
-        <div className="absolute top-0 right-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/5 text-primary rounded-full text-[10px] font-black uppercase tracking-widest leading-none border border-primary/10">
-              <FiHexagon size={12} className="animate-spin-slow" />
-              Impact Explorer
+    <div className="min-h-screen bg-white pb-20">
+      {/* Page header — mint green, matching reference */}
+      <section className="bg-[#F0FBF4] border-b border-[#D1EAD9] pt-20 pb-10 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+            <div>
+              <p className="text-xs font-bold text-[#2D6A4F] uppercase tracking-widest mb-2">Mission Directory</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                Explore <em className="not-italic text-[#2D6A4F]">Impact</em> Missions
+              </h1>
+              <p className="text-sm text-gray-500 mt-2 max-w-md leading-relaxed">
+                Discover verified humanitarian projects and join the global movement for kindness.
+              </p>
             </div>
-            <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight font-sans uppercase">
-              Current <span className="text-primary italic">Missions</span>
-            </h1>
-            <p className="text-sm text-gray-500 max-w-xl mx-auto font-medium leading-relaxed italic">
-              "Every mission is a seed of hope. Explore verified fundraisers and become part of a global movement for human kindness."
-            </p>
+            <div className="w-full lg:max-w-md">
+              <SearchBar onSearch={handleSearch} />
+            </div>
           </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-24">
-        <div className="flex flex-col lg:flex-row gap-16 items-start">
-          {/* Sidebar Filters */}
-          <aside className="w-full lg:w-80 space-y-12 lg:sticky lg:top-32">
-            <div>
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 mb-8 flex items-center gap-2">
-                <FiFilter /> Field of Impact
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col lg:flex-row gap-7">
+
+          {/* Sidebar */}
+          <aside className="w-full lg:w-56 flex-shrink-0 space-y-5">
+            {/* Category filter */}
+            <div className="bg-white p-5 rounded-xl border border-[#E5F0EA]">
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <FiLayers size={12} className="text-[#2D6A4F]" /> Filter by Sector
               </h3>
               <CategoryTabs
                 categories={categories}
@@ -89,76 +91,82 @@ export default function BrowseCampaigns() {
               />
             </div>
 
-            <div className="p-8 bg-accent rounded-[3rem] text-white space-y-6 shadow-2xl shadow-accent/20">
-              <FiHeart className="text-4xl animate-pulse" />
-              <h4 className="text-xl font-black uppercase tracking-tight leading-tight">Every Mission <br />Counts</h4>
-              <p className="text-sm font-medium opacity-80 leading-relaxed">Your support doesn't just fund a cause, it restores a life. Thank you for being a hero.</p>
+            {/* Sidebar CTA */}
+            <div className="bg-[#1B4332] p-5 rounded-xl text-white">
+              <div className="w-9 h-9 bg-[#2D6A4F] rounded-lg flex items-center justify-center mb-4">
+                <FiHeart size={16} className="text-white" />
+              </div>
+              <h4 className="text-sm font-bold mb-2 leading-snug">Your Contribution Changes Lives.</h4>
+              <p className="text-xs text-white/60 leading-relaxed mb-4">
+                Join 24,000+ donors making a real impact today.
+              </p>
+              <Link
+                to="/campaigns/create"
+                className="block w-full py-2.5 bg-white text-[#2D6A4F] text-xs font-bold text-center rounded-lg hover:bg-[#F0FBF4] transition-colors"
+              >
+                Start A Mission
+              </Link>
             </div>
           </aside>
 
-          {/* Main Content Area */}
-          <main className="flex-1 space-y-12">
-            <div className="bg-white p-6 rounded-[3rem] shadow-2xl shadow-gray-200/50 border-8 border-white group focus-within:border-primary/5 transition-all">
-              <SearchBar onSearch={handleSearch} />
-            </div>
-
+          {/* Main content */}
+          <main className="flex-1 min-w-0">
             {isLoading ? (
-              <div className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 border-8 border-white p-24 flex flex-col items-center justify-center text-center space-y-6 min-h-[600px]">
-                <div className="w-20 h-20 bg-primary/10 rounded-[1.5rem] flex items-center justify-center text-primary text-3xl">
-                  <LoadingSpinner />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-black text-gray-900 tracking-tight uppercase mb-2">Connecting Compassion...</h3>
-                  <p className="text-gray-400 font-medium text-sm">Our community is finding the best missions for you.</p>
-                </div>
+              <div className="w-full h-64 bg-[#F0FBF4] rounded-xl border border-[#D1EAD9] flex flex-col items-center justify-center gap-3">
+                <LoadingSpinner />
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Loading missions...</p>
               </div>
             ) : error ? (
-              <div className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 border-8 border-white p-24 flex flex-col items-center justify-center text-center space-y-6 min-h-[600px]">
-                <div className="w-20 h-20 bg-red-50 text-red-500 rounded-[1.5rem] flex items-center justify-center text-3xl">
-                  <FiHeart className="rotate-180" />
+              <div className="w-full h-64 bg-[#F0FBF4] rounded-xl border border-[#D1EAD9] flex flex-col items-center justify-center gap-3">
+                <div className="w-12 h-12 bg-red-50 text-red-400 rounded-xl flex items-center justify-center">
+                  <FiAlertCircle size={20} />
                 </div>
-                <div>
-                  <h3 className="text-2xl font-black text-gray-900 tracking-tight uppercase mb-2">Connection Lost</h3>
-                  <p className="text-gray-400 font-medium text-sm">The humanitarian bridge is temporarily down. Please try again.</p>
-                </div>
+                <h3 className="text-sm font-bold text-gray-700">Unable to load missions</h3>
+                <p className="text-xs text-gray-400 text-center max-w-xs">Please check your connection and try again.</p>
               </div>
             ) : data?.campaigns?.length === 0 ? (
-              <div className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 border-8 border-white p-24 flex flex-col items-center justify-center text-center space-y-6 min-h-[600px]">
-                <div className="w-20 h-20 bg-neutral rounded-[1.5rem] flex items-center justify-center text-gray-300 text-3xl">
-                  <FiSearch />
+              <div className="w-full h-64 bg-[#F0FBF4] rounded-xl border border-[#D1EAD9] flex flex-col items-center justify-center gap-3">
+                <div className="w-12 h-12 bg-white text-gray-300 rounded-xl flex items-center justify-center border border-[#E5F0EA]">
+                  <FiSearch size={20} />
                 </div>
-                <div>
-                  <h3 className="text-2xl font-black text-gray-900 tracking-tight uppercase mb-2">Shadows Only</h3>
-                  <p className="text-gray-400 font-medium text-sm">We couldn't find any missions matching your current search.</p>
-                </div>
+                <h3 className="text-sm font-bold text-gray-700">No Missions Found</h3>
+                <p className="text-xs text-gray-400 text-center max-w-xs">Try adjusting your filters or search terms.</p>
                 <button
-                  onClick={() => { setSearchQuery(""); setSelectedCategory(1) }}
-                  className="px-8 py-4 bg-primary text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all"
+                  onClick={() => { setSearchQuery(""); setSelectedCategory(1); }}
+                  className="px-5 py-2 bg-[#2D6A4F] text-white text-xs font-bold rounded-lg hover:bg-[#1B4332] transition-colors"
                 >
-                  Clear All Filters
+                  Reset Filters
                 </button>
               </div>
             ) : (
-              <div className="space-y-16">
-                <div className="grid md:grid-cols-2 gap-10">
+              <div className="space-y-7">
+                {/* Results count */}
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-gray-400">
+                    Showing <span className="text-gray-700 font-bold">{data?.campaigns?.length}</span> missions
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Page {data?.page} of {data?.totalPages || 1}
+                  </p>
+                </div>
+
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {data?.campaigns?.map((campaign, idx) => (
                     <div
                       key={campaign._id}
-                      className="animate-in fade-in slide-in-from-bottom-12 duration-1000"
-                      style={{ animationDelay: `${idx * 150}ms` }}
+                      style={{ animationDelay: `${idx * 80}ms` }}
+                      className="animate-in fade-in slide-in-from-bottom-3 duration-500"
                     >
                       <CampaignCard campaign={campaign} />
                     </div>
                   ))}
                 </div>
 
-                <div className="flex justify-center pt-8">
+                <div className="flex items-center justify-center pt-4 border-t border-[#E5F0EA]">
                   <Pagination
                     page={data?.page}
                     totalPages={data?.totalPages || 1}
-                    onPageChange={(newPage) => {
-                      setCurrentPage(newPage);
-                    }}
+                    onPageChange={(newPage) => setCurrentPage(newPage)}
                   />
                 </div>
               </div>

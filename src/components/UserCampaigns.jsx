@@ -4,11 +4,13 @@ import { FiPlus, FiExternalLink, FiEdit3, FiLayers, FiTrendingUp, FiDollarSign }
 import { Link } from "react-router";
 import LoadingSpinner from "./LoadingSpinner";
 import EditCampaign from "./EditCampaign";
+import WithdrawFundsModal from "./WithdrawFundsModal";
 
 const UserCampaigns = () => {
     const [campaigns, setCampaigns] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editingCampaign, setEditingCampaign] = useState(null);
+    const [withdrawingCampaign, setWithdrawingCampaign] = useState(null);
 
     const handleUpdate = (updatedCampaign) => {
         setCampaigns(prev => prev.map(c => c._id === updatedCampaign._id ? updatedCampaign : c));
@@ -116,16 +118,35 @@ const UserCampaigns = () => {
                                     <FiEdit3 className="mr-2 group-hover/edit:rotate-12 transition-transform" /> Edit
                                 </button>
                             </div>
+
+                            {/* Withdrawal Section */}
+                            <div className="pt-4">
+                                <button
+                                    onClick={() => setWithdrawingCampaign(campaign)}
+                                    disabled={campaign.currentAmount <= (campaign.withdrawnAmount || 0)}
+                                    className="w-full flex items-center justify-center p-4 rounded-xl bg-gray-900 text-white hover:bg-black transition-all text-[10px] font-black uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed group/withdraw"
+                                >
+                                    <FiDollarSign className="mr-2 group-hover/withdraw:scale-125 transition-transform" /> 
+                                    {campaign.currentAmount <= (campaign.withdrawnAmount || 0) ? "No Funds Available" : "Withdraw Funds"}
+                                </button>
+                                {campaign.withdrawnAmount > 0 && (
+                                    <p className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest mt-2 text-center">
+                                        ৳{campaign.withdrawnAmount.toLocaleString()} Withdrawn Successfully
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
             ))}
 
-            {editingCampaign && (
-                <EditCampaign
-                    campaign={editingCampaign}
-                    onClose={() => setEditingCampaign(null)}
-                    onUpdate={handleUpdate}
+            {withdrawingCampaign && (
+                <WithdrawFundsModal
+                    isOpen={!!withdrawingCampaign}
+                    onClose={() => setWithdrawingCampaign(null)}
+                    campaignId={withdrawingCampaign._id}
+                    campaignTitle={withdrawingCampaign.title}
+                    availableBalance={withdrawingCampaign.currentAmount - (withdrawingCampaign.withdrawnAmount || 0)}
                 />
             )}
         </div>

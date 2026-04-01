@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "home": "Home",
+    "browse": "Browse",
+    "contact": "Contact",
+    "start_mission": "Start Mission",
+    "login": "Login",
+    "profile": "My Profile",
+    "logout": "Log out"
+  },
+  "hero": {
+    "title_healing": "HEALING",
+    "title_lives": "LIVES",
+    "title_starting": "STARTING WITH",
+    "title_your": "YOUR",
+    "title_smile": "SMILE",
+    "description": "\"Whether you're here to lend a hand or seeking a path forward, your journey starts with a smile. Together, we build a bridge of hope and transparency.\"",
+    "be_a_donor": "Be a Donor",
+    "start_a_mission": "Start a Mission",
+    "live_impact": "LIVE IMPACT",
+    "trusted_heroes": "Trusted by 5,000+ Heroes",
+    "demo_impact_text": "৳14,500 for Sylhet"
+  },
+  "featured": {
+    "top_missions": "Top Missions",
+    "featured": "Featured",
+    "impacts": "Impacts",
+    "description": "Discover verified missions that are changing lives right now. Your kindness can create a lasting smile.",
+    "see_all": "See All Missions",
+    "error": "Unable to load featured missions",
+    "no_campaigns": "No featured missions at the moment"
+  },
+  "campaign": {
+    "raised": "Raised",
+    "goal": "Goal",
+    "days_left": "days left",
+    "ending_soon": "Ending Soon",
+    "supporters": "Supporters",
+    "view": "View",
+    "support_text": "Support {{creator}}'s mission to create lasting impact in the {{category}} sector.",
+    "withdraw": "Withdraw Funds"
+  },
+  "stats": {
+    "total_raised": "Total Raised",
+    "active_missions": "Active Missions",
+    "lives_impacted": "Lives Impacted"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "success": "Success!"
+  }
+}
