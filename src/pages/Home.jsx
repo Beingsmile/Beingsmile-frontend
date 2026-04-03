@@ -1,5 +1,7 @@
 import FAQ from "../components/FAQ";
 import FeaturedCampaigns from "../components/FeaturedCampaigns";
+import TrendingMissions from "../components/TrendingMissions";
+import NewMissions from "../components/NewMissions";
 import Hero from "../components/Hero";
 import HowItWorks from "../components/HowItWorks";
 import Payment from "../components/Payment";
@@ -18,6 +20,8 @@ const Home = () => {
       <main className="min-h-screen ">
         <Hero />
         <FeaturedCampaigns />
+        <TrendingMissions />
+        <NewMissions />
         <HowItWorks />
         <WhyBeingSmile />
         <Testimonial />

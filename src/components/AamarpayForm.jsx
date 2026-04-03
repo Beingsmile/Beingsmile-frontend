@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { FiUser, FiMail, FiPhone, FiLoader, FiShield } from "react-icons/fi";
 
-const AamarpayForm = ({ campaignId, amount }) => {
+const AamarpayForm = ({ campaignId, amount, isAnonymous = false, isAnonymousFromAll = false, donorMessage = '', platformFee = 0 }) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -39,6 +39,10 @@ const AamarpayForm = ({ campaignId, amount }) => {
           customerName: formData.customerName,
           customerEmail: formData.customerEmail,
           customerPhone: formData.customerPhone,
+          isAnonymous,
+          isAnonymousFromAll,
+          donorMessage,
+          platformFee,
         }),
       });
 
@@ -60,7 +64,7 @@ const AamarpayForm = ({ campaignId, amount }) => {
     }
   };
 
-  const inputClass = "w-full bg-neutral border border-gray-100 focus:border-primary/30 focus:bg-white px-4 py-3 pl-10 rounded-xl text-sm font-medium text-gray-900 placeholder-gray-300 outline-none transition-all";
+  const inputClass = "w-full bg-[#F8FDFB] border border-[#E5F0EA] focus:border-[#2D6A4F] px-4 py-3 pl-10 rounded-lg text-sm font-medium text-gray-900 placeholder-gray-300 outline-none transition-all";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -122,21 +126,21 @@ const AamarpayForm = ({ campaignId, amount }) => {
       </div>
 
       {/* Amount Summary */}
-      <div className="flex items-center justify-between px-4 py-3 bg-primary/5 rounded-xl border border-primary/10">
-        <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Total Amount</span>
-        <span className="text-lg font-black text-primary">৳{amount}</span>
+      <div className="flex items-center justify-between px-4 py-3 bg-[#1B4332] rounded-xl">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Total Amount</span>
+        <span className="text-lg font-bold text-white">৳{amount}</span>
       </div>
 
       {/* Submit */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3 bg-primary text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+        className="w-full py-3 bg-[#2D6A4F] text-white text-sm font-bold rounded-xl hover:bg-[#1B4332] transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
       >
         {loading ? (
-          <><FiLoader className="animate-spin" /> Processing...</>
+          <><FiLoader className="animate-spin" size={14} /> Processing...</>
         ) : (
-          `Donate ৳${amount}`
+          `Donate Now — ৳${amount}`
         )}
       </button>
 

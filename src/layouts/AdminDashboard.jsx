@@ -28,11 +28,13 @@ const AdminDashboard = () => {
   const navItems = [
     { icon: <FiGrid />, label: "Overview", path: "/admin/overview" },
     { icon: <FiCheckSquare />, label: "Campaign Review", path: "/admin/review" },
+    { icon: <FiCheckSquare />, label: "Mission Updates", path: "/admin/pending-updates" },
     { icon: <FiShield />, label: "Verification Review", path: "/admin/verifications" },
     { icon: <FiFileText />, label: "All Campaigns", path: "/admin/campaigns" },
     { icon: <FiUsers />, label: "User Management", path: "/admin/users" },
     { icon: <FiDollarSign />, label: "Payouts Control", path: "/admin/payouts" },
     { icon: <FiFileText />, label: "Transactions", path: "/admin/transactions" },
+    { icon: <FiSettings />, label: "Platform Settings", path: "/admin/settings" },
   ];
 
   return (
@@ -86,6 +88,11 @@ const AdminDashboard = () => {
               {item.label === "Verification Review" && stats?.pendingVerifications > 0 && (
                 <span className="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-red-200 animate-pulse">
                   {stats.pendingVerifications}
+                </span>
+              )}
+              {item.label === "Mission Updates" && stats?.pendingUpdates > 0 && (
+                <span className="bg-primary text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow-lg shadow-primary/20 animate-pulse">
+                  {stats.pendingUpdates}
                 </span>
               )}
               {item.label === "Payouts Control" && stats?.pendingWithdrawals > 0 && (

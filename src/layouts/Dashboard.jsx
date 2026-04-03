@@ -30,6 +30,7 @@ const Dashboard = () => {
   const navItems = [
     { to: 'profile', label: 'Profile', icon: <FiUser /> },
     { to: 'manage-campaigns', label: 'My Missions', icon: <FiBriefcase /> },
+    { to: 'saved-campaigns', label: 'Saved Missions', icon: <FiBookmark /> },
     { to: 'transactions', label: 'Donations', icon: <FiCreditCard /> },
   ];
 

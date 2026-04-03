@@ -23,6 +23,12 @@ import PublicProfile from "../pages/PublicProfile.jsx";
 import AccountStatus from "../pages/Dashboard/AccountStatus.jsx";
 import VerificationStatus from "../pages/Dashboard/VerificationStatus.jsx";
 import PayoutReview from "../pages/admin/PayoutReview.jsx";
+import AdminCampaigns from "../pages/admin/AdminCampaigns.jsx";
+import PendingUpdates from "../pages/admin/PendingUpdates.jsx";
+import PlatformSettings from "../pages/admin/PlatformSettings.jsx";
+import MyMissions from "../pages/Dashboard/MyMissions.jsx";
+import SavedCampaigns from "../pages/Dashboard/SavedCampaigns.jsx";
+import MissionSettings from "../pages/Dashboard/MissionSettings.jsx";
 
 const router = createBrowserRouter([
   {
@@ -93,7 +99,15 @@ const router = createBrowserRouter([
       },
       {
         path: "manage-campaigns",
-        element: <div>Manage Campaigns</div>,
+        element: <MyMissions />,
+      },
+      {
+        path: "saved-campaigns",
+        element: <SavedCampaigns />,
+      },
+      {
+        path: "mission-settings/:id",
+        element: <MissionSettings />,
       },
       {
         path: "manage-users",
@@ -143,7 +157,11 @@ const router = createBrowserRouter([
       },
       {
         path: "campaigns",
-        element: <div>All Campaigns Management</div>,
+        element: <AdminCampaigns />,
+      },
+      {
+        path: "pending-updates",
+        element: <PendingUpdates />,
       },
       {
         path: "users",
@@ -156,6 +174,10 @@ const router = createBrowserRouter([
       {
         path: "payouts",
         element: <PayoutReview />,
+      },
+      {
+        path: "settings",
+        element: <PlatformSettings />,
       },
       {
         path: "transactions",
