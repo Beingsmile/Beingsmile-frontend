@@ -97,18 +97,7 @@ const Hero = () => {
                 </div>
               </div>
 
-              {/* Floating live-impact badge */}
-              <div className="absolute -bottom-5 -left-6 bg-white rounded-xl shadow-lg border border-gray-100 px-4 py-3 flex items-center gap-3 z-20">
-                <div className="w-9 h-9 bg-[#2D6A4F]/10 rounded-lg flex items-center justify-center">
-                  <FiHeart className="text-[#2D6A4F]" size={16} />
-                </div>
-                <div>
-                  <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">{t("hero.live_impact")}</p>
-                  <p className="text-sm font-black text-gray-900">৳14,500 for Sylhet</p>
-                </div>
-              </div>
-
-              {/* Camera badge, reference has a fun photo indicator */}
+              {/* Camera badge */}
               <div className="absolute -top-4 -right-4 w-10 h-10 bg-[#2D6A4F] rounded-xl flex items-center justify-center shadow-lg">
                 <FiCamera className="text-white" size={16} />
               </div>

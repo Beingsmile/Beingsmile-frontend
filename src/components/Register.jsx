@@ -3,52 +3,94 @@ import { AuthContext } from "../contexts/AuthProvider";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useRegister } from "../hooks/useAuth";
-import { deleteUser } from "firebase/auth";
 import axiosInstance from "../api/axiosInstance";
-import { FiX, FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiLoader, FiCheckCircle, FiHeart, FiActivity } from "react-icons/fi";
+import {
+  FiX, FiUser, FiMail, FiLock, FiEye, FiEyeOff,
+  FiLoader, FiCheckCircle, FiHeart, FiActivity, FiArrowRight
+} from "react-icons/fi";
+
+/* ── decorative left panel ── */
+const GreenPanel = ({ step }) => (
+  <div className="hidden md:flex flex-col justify-between bg-[#1B4332] rounded-l-[2rem] p-10 text-white relative overflow-hidden w-[40%] shrink-0">
+    <span className="absolute -top-16 -left-16 w-56 h-56 bg-[#2D6A4F]/40 rounded-full blur-3xl pointer-events-none" />
+    <span className="absolute -bottom-16 -right-16 w-72 h-72 bg-[#52B788]/20 rounded-full blur-3xl pointer-events-none" />
+
+    <div className="relative z-10">
+      <div className="w-12 h-12 bg-white/10 border border-white/20 rounded-2xl flex items-center justify-center mb-8">
+        <FiHeart size={22} className="text-[#52B788]" />
+      </div>
+      <h3 className="text-2xl font-black leading-tight tracking-tight mb-3">
+        {step === 1 ? (
+          <>Join the <br /><span className="text-[#52B788]">Family.</span></>
+        ) : (
+          <>Verify Your <br /><span className="text-[#52B788]">Identity.</span></>
+        )}
+      </h3>
+      <p className="text-white/60 text-sm leading-relaxed font-medium">
+        {step === 1
+          ? "Create your account and start making a difference in the lives of people across Bangladesh."
+          : "We sent a 6-digit code to your email. Enter it below to complete your registration."}
+      </p>
+    </div>
+
+    {/* Step tracker */}
+    <div className="relative z-10">
+      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-4">Registration Steps</p>
+      <div className="space-y-3">
+        {[
+          { num: 1, label: "Account Details" },
+          { num: 2, label: "Email Verification" },
+        ].map(({ num, label }) => (
+          <div key={num} className="flex items-center gap-3">
+            <div
+              className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 transition-all duration-300 ${
+                step >= num
+                  ? "bg-[#52B788] text-[#1B4332]"
+                  : "bg-white/10 border border-white/20 text-white/40"
+              }`}
+            >
+              {step > num ? <FiCheckCircle size={12} /> : num}
+            </div>
+            <span className={`text-xs font-bold transition-colors ${step >= num ? "text-white" : "text-white/40"}`}>
+              {label}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
 const Register = ({ setAuth }) => {
   const [showPassword, setShowPassword] = useState(false);
   const modalRef = useRef(null);
   const { setUser, createWithEmail, loading } = useContext(AuthContext);
-  const [step, setStep] = useState(1); // 1: Details, 2: OTP
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(null);
   const [otpValue, setOtpValue] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const {
-    register,
-    handleSubmit,
+    register, handleSubmit,
     formState: { errors },
     watch,
   } = useForm();
   const { mutateAsync, isPending } = useRegister();
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
+  const handleClose = () => setAuth(null);
   const handleClickOutside = (e) => {
-    if (modalRef.current && !modalRef.current.contains(e.target)) {
-      setAuth(null);
-    }
-  };
-
-  const handleClose = () => {
-    setAuth(null);
+    if (modalRef.current && !modalRef.current.contains(e.target)) setAuth(null);
   };
 
   const onSubmit = async (data) => {
-    const { name, email, password, confirmPassword, userType } = data;
-
+    const { password, confirmPassword } = data;
     if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
-
     setFormData(data);
     try {
       setIsVerifying(true);
-      await axiosInstance.post("/auth/send-otp", { email });
+      await axiosInstance.post("/auth/send-otp", { email: data.email });
       setStep(2);
       toast.success("Verification code sent to your email!");
     } catch (error) {
@@ -63,20 +105,11 @@ const Register = ({ setAuth }) => {
       toast.error("Please enter a 6-digit code");
       return;
     }
-
     try {
       setIsVerifying(true);
-      // 1. Verify OTP
-      await axiosInstance.post("/auth/verify-otp", { 
-        email: formData.email, 
-        otp: otpValue 
-      });
-
-      // 2. Create in Firebase
+      await axiosInstance.post("/auth/verify-otp", { email: formData.email, otp: otpValue });
       const res = await createWithEmail(formData.email, formData.password);
-
       if (res.success) {
-        // 3. Register in MongoDB
         const serverRes = await mutateAsync({
           uid: res.user.uid,
           email: formData.email,
@@ -85,7 +118,7 @@ const Register = ({ setAuth }) => {
           bio: "",
           donatedCampaigns: [],
           userType: formData.userType,
-          isEmailVerified: true, // Mark as verified immediately
+          isEmailVerified: true,
         });
         res.user.data = serverRes.user;
         setUser(res.user);
@@ -99,197 +132,236 @@ const Register = ({ setAuth }) => {
     }
   };
 
-
   const passwordValue = watch("password");
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const isLoadingUI = loading || isPending;
 
   return (
-    <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+    <div className="fixed inset-0 bg-[#0f2418]/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4">
       <div
-        className="bg-white rounded-[2.5rem] shadow-2xl p-6 md:p-8 w-full max-w-md relative border-4 border-white animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto custom-scrollbar"
         ref={modalRef}
+        className="bg-white rounded-[2rem] shadow-[0_32px_80px_rgba(27,67,50,0.25)] w-full max-w-[860px] flex overflow-hidden relative"
+        style={{ maxHeight: "95vh" }}
       >
-        {/* Close Button */}
-        <button
-          onClick={handleClose}
-          className="absolute top-6 right-6 w-8 h-8 bg-neutral rounded-xl flex items-center justify-center text-gray-400 hover:text-primary transition-all cursor-pointer group z-10"
-          aria-label="Close"
-        >
-          <FiX className="group-hover:rotate-90 transition-transform" />
-        </button>
+        <GreenPanel step={step} />
 
-        <div className="text-center mb-6 space-y-1">
-          <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center text-xl mx-auto mb-3">
-            <FiUser />
-          </div>
-          <h2 className="text-3xl font-black text-gray-900 tracking-tight font-sans uppercase">
-            Join the <span className="text-primary">Family</span>
-          </h2>
-          <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Choose your role and start spreading smiles.</p>
-        </div>
+        {/* ── RIGHT: Form Panel ── */}
+        <div className="flex-1 p-6 md:p-8 flex flex-col justify-center overflow-y-auto">
+          {/* Close */}
+          <button
+            onClick={handleClose}
+            className="absolute top-5 right-5 w-9 h-9 rounded-xl bg-gray-50 hover:bg-red-50 text-gray-400 hover:text-red-500 flex items-center justify-center transition-all cursor-pointer group z-10"
+            aria-label="Close"
+          >
+            <FiX size={18} className="group-hover:rotate-90 transition-transform duration-200" />
+          </button>
 
-        {step === 1 ? (
-          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-            {/* Role Selection */}
-            <div className="grid grid-cols-2 gap-4 mb-2">
-              <label className="cursor-pointer group">
-                <input
-                  type="radio"
-                  value="donor"
-                  {...register("userType")}
-                  defaultChecked
-                  className="peer hidden"
-                />
-                <div className="p-4 rounded-2xl bg-neutral border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all text-center">
-                  <FiHeart className="mx-auto mb-2 text-primary text-xl" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-900">Be a Donor</p>
+          {/* ──── STEP 1: Details ──── */}
+          {step === 1 && (
+            <form
+              className="space-y-4 animate-in fade-in slide-in-from-bottom-3 duration-400"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-wider text-[#52B788] mb-1">Step 1 of 2</p>
+                <h2 className="text-2xl font-black text-[#0f2418] tracking-tight">Create your account</h2>
+              </div>
+
+              {/* Role Selection — compact inline pills */}
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wide text-gray-400">I want to</label>
+                <div className="flex gap-2">
+                  <label className="cursor-pointer flex-1">
+                    <input type="radio" value="donor" {...register("userType")} defaultChecked className="peer hidden" />
+                    <div className="px-3 py-2 rounded-lg bg-[#F8FDFB] border border-[#E5F0EA] peer-checked:border-[#2D6A4F] peer-checked:bg-[#F0FBF4] transition-all flex items-center justify-center gap-1.5">
+                      <FiHeart size={12} className="text-[#2D6A4F]" />
+                      <span className="text-[11px] font-black uppercase tracking-wide text-[#0f2418]">Donor</span>
+                    </div>
+                  </label>
+                  <label className="cursor-pointer flex-1">
+                    <input type="radio" value="fundraiser" {...register("userType")} className="peer hidden" />
+                    <div className="px-3 py-2 rounded-lg bg-[#F8FDFB] border border-[#E5F0EA] peer-checked:border-[#2D6A4F] peer-checked:bg-[#F0FBF4] transition-all flex items-center justify-center gap-1.5">
+                      <FiActivity size={12} className="text-[#2D6A4F]" />
+                      <span className="text-[11px] font-black uppercase tracking-wide text-[#0f2418]">Fundraiser</span>
+                    </div>
+                  </label>
                 </div>
-              </label>
-              <label className="cursor-pointer group">
-                <input
-                  type="radio"
-                  value="fundraiser"
-                  {...register("userType")}
-                  className="peer hidden"
-                />
-                <div className="p-4 rounded-2xl bg-neutral border-2 border-transparent peer-checked:border-primary peer-checked:bg-primary/5 transition-all text-center">
-                  <FiActivity className="mx-auto mb-2 text-primary text-xl" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-900">Need Help</p>
-                </div>
-              </label>
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-4">Full Identity</label>
-              <div className="relative group">
-                <FiUser className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
+              </div>
+
+              {/* Name */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wide text-gray-400 flex items-center gap-1.5">
+                  <FiUser size={10} className="text-[#2D6A4F]" /> Full Name
+                </label>
                 <input
                   type="text"
                   {...register("name", { required: "Name is required" })}
-                  className="w-full bg-neutral border-2 border-transparent focus:border-primary/20 focus:bg-white pl-14 pr-6 py-4 rounded-2xl text-sm font-bold text-gray-900 placeholder:text-gray-400 transition-all outline-none"
-                  placeholder="John Doe"
+                  className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#0f2418] placeholder-gray-300 transition-all outline-none"
+                  placeholder="e.g. Atik Rahman"
                 />
+                {errors.name && <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider">{errors.name.message}</p>}
               </div>
-              {errors.name && <p className="text-red-500 text-[10px] font-black uppercase ml-4">{errors.name.message}</p>}
-            </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-4">Mail Address</label>
-              <div className="relative group">
-                <FiMail className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
+              {/* Email */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wide text-gray-400 flex items-center gap-1.5">
+                  <FiMail size={10} className="text-[#2D6A4F]" /> Email Address
+                </label>
                 <input
                   type="email"
                   {...register("email", {
                     required: "Email is required",
-                    pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
+                    pattern: { value: /^\S+@\S+$/i, message: "Use a valid email" },
                   })}
-                  className="w-full bg-neutral border-2 border-transparent focus:border-primary/20 focus:bg-white pl-14 pr-6 py-4 rounded-2xl text-sm font-bold text-gray-900 placeholder:text-gray-400 transition-all outline-none"
-                  placeholder="your@email.com"
+                  className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#0f2418] placeholder-gray-300 transition-all outline-none"
+                  placeholder="name@example.com"
+                />
+                {errors.email && <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider">{errors.email.message}</p>}
+              </div>
+
+              {/* Passwords */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-wide text-gray-400 flex items-center gap-1.5">
+                    <FiLock size={10} className="text-[#2D6A4F]" /> Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      {...register("password", { required: "Password is required" })}
+                      className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#0f2418] placeholder-gray-300 transition-all outline-none pr-10"
+                      placeholder="••••••••"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300 hover:text-[#2D6A4F] transition-colors"
+                    >
+                      {showPassword ? <FiEyeOff size={15} /> : <FiEye size={15} />}
+                    </button>
+                  </div>
+                  {errors.password && <p className="text-red-500 text-[10px] font-bold uppercase">{errors.password.message}</p>}
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-wide text-gray-400">Confirm</label>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    {...register("confirmPassword", {
+                      required: "Required",
+                      validate: (val) => val === passwordValue || "Passwords must match",
+                    })}
+                    className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#0f2418] placeholder-gray-300 transition-all outline-none"
+                    placeholder="••••••••"
+                  />
+                  {errors.confirmPassword && <p className="text-red-500 text-[10px] font-bold uppercase">{errors.confirmPassword.message}</p>}
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isVerifying || isLoadingUI}
+                className="w-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white font-black uppercase tracking-wider py-3 rounded-lg transition-all shadow-lg shadow-[#2D6A4F]/20 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 text-xs flex items-center justify-center gap-2.5 group cursor-pointer"
+              >
+                {isVerifying || isLoadingUI ? (
+                  <FiLoader className="animate-spin text-lg" />
+                ) : (
+                  <>
+                    Continue to Verification
+                    <FiArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </button>
+
+              <div className="pt-3 border-t border-gray-100 text-center">
+                <p className="text-xs font-semibold text-gray-400">
+                  Already have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={() => setAuth("login")}
+                    className="text-[#2D6A4F] font-black hover:underline underline-offset-2"
+                  >
+                    Sign In
+                  </button>
+                </p>
+              </div>
+            </form>
+          )}
+
+          {/* ──── STEP 2: OTP ──── */}
+          {step === 2 && (
+            <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-400">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-wider text-[#52B788] mb-1">Step 2 of 2</p>
+                <h2 className="text-2xl font-black text-[#0f2418] tracking-tight">Verify your email</h2>
+              </div>
+
+              <div className="bg-[#F0FBF4] border border-[#D1EAD9] rounded-xl p-4 flex items-center gap-3">
+                <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-[#D1EAD9] flex items-center justify-center shrink-0">
+                  <FiMail size={18} className="text-[#2D6A4F]" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-wider text-[#2D6A4F]/60 mb-0.5">Verification code sent to</p>
+                  <p className="text-sm font-black text-[#0f2418]">{formData?.email}</p>
+                </div>
+              </div>
+
+              {/* OTP progress indicator */}
+              <div className="flex items-center gap-1.5">
+                {[1,2,3,4,5,6].map(i => (
+                  <div
+                    key={i}
+                    className={`flex-1 h-1 rounded-full transition-all duration-300 ${
+                      otpValue.length >= i ? "bg-[#2D6A4F]" : "bg-gray-100"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wide text-gray-400 text-center block">
+                  6-Digit Code
+                </label>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  value={otpValue}
+                  onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ""))}
+                  className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-4 py-4 rounded-lg text-center text-2xl font-black tracking-[0.5em] text-[#2D6A4F] transition-all outline-none placeholder:opacity-20"
+                  placeholder="000000"
                 />
               </div>
-              {errors.email && <p className="text-red-500 text-[10px] font-black uppercase ml-4">{errors.email.message}</p>}
-            </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-4">Magic Password</label>
-              <div className="relative group">
-                <FiLock className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  {...register("password", { required: "Password is required" })}
-                  className="w-full bg-neutral border-2 border-transparent focus:border-primary/20 focus:bg-white pl-14 pr-14 py-4 rounded-2xl text-sm font-bold text-gray-900 placeholder:text-gray-400 transition-all outline-none"
-                  placeholder="••••••••"
-                />
+              <div className="space-y-3">
                 <button
-                  type="button"
-                  onClick={togglePasswordVisibility}
-                  className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary"
+                  onClick={handleVerifyAndRegister}
+                  disabled={isVerifying || otpValue.length !== 6}
+                  className="w-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white font-black uppercase tracking-wider py-3 rounded-lg transition-all shadow-lg shadow-[#2D6A4F]/20 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-30 text-xs flex items-center justify-center gap-2.5 group cursor-pointer"
                 >
-                  {showPassword ? <FiEyeOff /> : <FiEye />}
+                  {isVerifying ? (
+                    <FiLoader className="animate-spin text-lg" />
+                  ) : (
+                    <>
+                      Complete Registration
+                      <FiCheckCircle size={14} />
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => setStep(1)}
+                  className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-[#2D6A4F] transition-colors py-1"
+                >
+                  ← Edit my details
                 </button>
               </div>
-              {errors.password && <p className="text-red-500 text-[10px] font-black uppercase ml-4">{errors.password.message}</p>}
             </div>
-
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-4">Repeat Magic</label>
-              <div className="relative group">
-                <FiCheckCircle className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  {...register("confirmPassword", {
-                    required: "Confirmation is required",
-                    validate: (val) => val === passwordValue || "Magic must match",
-                  })}
-                  className="w-full bg-neutral border-2 border-transparent focus:border-primary/20 focus:bg-white pl-14 pr-6 py-4 rounded-2xl text-sm font-bold text-gray-900 placeholder:text-gray-400 transition-all outline-none"
-                  placeholder="••••••••"
-                />
-              </div>
-              {errors.confirmPassword && <p className="text-red-500 text-[10px] font-black uppercase ml-4">{errors.confirmPassword.message}</p>}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isVerifying || isLoadingUI}
-              className="w-full bg-primary text-white font-black uppercase tracking-[0.2em] py-4 rounded-xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50 cursor-pointer text-[10px]"
-            >
-              {isVerifying || isLoadingUI ? <FiLoader className="animate-spin mx-auto text-xl" /> : "Verify Email & Join"}
-            </button>
-          </form>
-        ) : (
-          <div className="space-y-6 animate-in slide-in-from-right-4 duration-300">
-            <div className="p-6 bg-neutral rounded-3xl border-2 border-primary/10 text-center">
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Check your email</p>
-              <p className="text-sm font-bold text-gray-900">{formData?.email}</p>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-4">6-Digit Verification Code</label>
-              <input
-                type="text"
-                maxLength={6}
-                value={otpValue}
-                onChange={(e) => setOtpValue(e.target.value)}
-                className="w-full bg-neutral border-2 border-transparent focus:border-primary/20 focus:bg-white px-6 py-5 rounded-2xl text-center text-3xl font-black tracking-[0.5em] text-primary transition-all outline-none uppercase placeholder:text-gray-300"
-                placeholder="000000"
-              />
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={handleVerifyAndRegister}
-                disabled={isVerifying || otpValue.length !== 6}
-                className="w-full bg-primary text-white font-black uppercase tracking-[0.2em] py-4 rounded-xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-50 cursor-pointer text-[10px]"
-              >
-                {isVerifying ? <FiLoader className="animate-spin mx-auto text-xl" /> : "Finish Registration"}
-              </button>
-              <button
-                onClick={() => setStep(1)}
-                className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-primary transition-colors text-center"
-              >
-                Go back and edit info
-              </button>
-            </div>
-          </div>
-        )}
-
-        <div className="mt-6 text-center">
-          <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-            Already part of the family?{" "}
-            <button
-              onClick={() => setAuth("login")}
-              className="text-primary hover:underline ml-1"
-            >
-              Secure Login
-            </button>
-          </p>
+          )}
         </div>
       </div>
     </div>

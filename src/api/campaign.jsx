@@ -80,6 +80,11 @@ export const submitCampaignUpdate = async (id, data) => {
   return response.data;
 };
 
+export const deleteCampaignUpdate = async (id, updateId) => {
+  const response = await axiosInstance.delete(`/campaigns/${id}/updates/${updateId}`);
+  return response.data;
+};
+
 // ── Documents ─────────────────────────────────────────────────────────────────
 export const uploadAdditionalDocuments = async (id, documents) => {
   const response = await axiosInstance.post(`/campaigns/${id}/documents`, { documents });

@@ -14,7 +14,7 @@ const ContactUs = () => {
   ];
 
   return (
-    <div className="bg-white min-h-screen pt-20 pb-20">
+    <div className="bg-white min-h-screen pt-8 pb-20">
       {/* Page Header Banner */}
       <div className="bg-[#F0FBF4] border-b border-[#D1EAD9] py-12 px-4">
         <div className="max-w-7xl mx-auto">

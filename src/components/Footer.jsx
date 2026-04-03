@@ -22,7 +22,7 @@ const CTABanner = () => (
         </Link>
         <Link
           to="/campaigns/browse"
-          className="btn-outline-white text-sm w-full sm:w-auto text-center"
+          className="btn-outline-white text-sm w-full sm:w-auto text-center flex items-center justify-center gap-1 hover:gap-2 transition-all"
         >
           ক্যাম্পেইন দেখুন
           <FiArrowRight size={14} className="ml-1" />

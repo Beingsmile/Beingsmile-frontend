@@ -61,108 +61,108 @@ const Profile = () => {
     }
 
     return (
-        <div className="bg-neutral min-h-screen pb-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="bg-white rounded-[3rem] shadow-2xl shadow-gray-200/50 border-8 border-white overflow-hidden">
+        <div className="bg-[#F8FDFB] min-h-screen pb-16">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="bg-white rounded-2xl shadow-sm border border-[#E5F0EA] overflow-hidden">
                     {/* Header/Cover Area */}
-                    <div className="h-48 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent relative overflow-hidden">
-                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent"></div>
+                    <div className="h-40 bg-gradient-to-br from-[#2D6A4F]/10 via-[#F0FBF4] to-transparent relative overflow-hidden">
+                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#2D6A4F] via-transparent to-transparent"></div>
                     </div>
 
-                    <div className="px-12 pb-12">
-                        <div className="relative flex flex-col lg:flex-row lg:items-end -mt-20 mb-12 gap-10">
+                    <div className="px-6 lg:px-10 pb-10">
+                        <div className="relative flex flex-col md:flex-row md:items-end -mt-16 mb-10 gap-6 lg:gap-8">
                             {/* Avatar */}
                             <div className="relative">
-                                <div className="w-44 h-44 rounded-[2.5rem] bg-white p-2 shadow-2xl shadow-gray-300 overflow-hidden group">
-                                    <div className="w-full h-full rounded-[2rem] bg-neutral overflow-hidden relative">
+                                <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl bg-white p-1.5 shadow-xl border border-[#E5F0EA] overflow-hidden group">
+                                    <div className="w-full h-full rounded-xl bg-[#F8FDFB] overflow-hidden relative">
                                         {user?.data?.avatar ? (
                                             <img src={user.data.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                                <FiUser className="text-5xl" />
+                                            <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
+                                                <FiUser size={48} />
                                             </div>
                                         )}
                                         <button
                                             onClick={() => setIsEditModalOpen(true)}
-                                            className="absolute inset-0 bg-primary/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm"
+                                            className="absolute inset-0 bg-[#2D6A4F]/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer backdrop-blur-[2px]"
                                         >
-                                            <FiImage className="text-2xl" />
+                                            <FiImage className="text-xl" />
                                         </button>
                                     </div>
                                 </div>
-                                <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-accent rounded-2xl flex items-center justify-center text-white shadow-xl shadow-accent/20 border-4 border-white">
-                                    <FiActivity />
+                                <div className="absolute -bottom-1.5 -right-1.5 w-10 h-10 bg-[#F59E0B] rounded-xl flex items-center justify-center text-white shadow-lg border-4 border-white">
+                                    <FiActivity size={14} />
                                 </div>
                             </div>
 
                             {/* Name & Basic Info */}
-                            <div className="flex-1 space-y-4">
+                            <div className="flex-1 space-y-3">
                                 <div className="space-y-1">
-                                    <div className="flex items-center gap-4 flex-wrap">
-                                        <h1 className="text-5xl font-black text-gray-900 tracking-tight uppercase font-sans">
+                                    <div className="flex items-center gap-3 flex-wrap">
+                                        <h1 className="text-3xl font-black text-gray-900 tracking-tight uppercase">
                                             {user?.data?.name || user?.displayName}
                                         </h1>
                                         {user?.data?.isVerified && (
-                                            <span className="flex items-center gap-1.5 px-4 py-1.5 bg-green-50 text-green-600 text-[10px] font-black uppercase rounded-full tracking-widest border border-green-100">
-                                                <FiCheckCircle /> Verified
+                                            <span className="flex items-center gap-1 px-3 py-1 bg-green-50 text-green-600 text-[9px] font-black uppercase rounded-full tracking-wider border border-green-100">
+                                                <FiCheckCircle size={10} /> Verified
                                             </span>
                                         )}
                                     </div>
-                                    <p className="text-lg font-medium text-gray-500 flex items-center gap-2">
-                                        <FiMail className="text-primary" /> {user?.email}
+                                    <p className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wide">
+                                        <FiMail className="text-[#2D6A4F]" /> {user?.email}
                                     </p>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
-                                    <span className="px-5 py-2 bg-neutral text-gray-600 text-xs font-black uppercase tracking-widest rounded-xl border border-gray-50">
+                                    <span className="px-3 py-1.5 bg-[#F8FDFB] text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-lg border border-[#E5F0EA]">
                                         Role: {user?.data?.role || "Supporter"}
                                     </span>
-                                    <span className="px-5 py-2 bg-primary/5 text-primary text-xs font-black uppercase tracking-widest rounded-xl border border-primary/10">
-                                        Member Since {new Date(user?.data?.createdAt).getFullYear()}
+                                    <span className="px-3 py-1.5 bg-[#2D6A4F]/5 text-[#2D6A4F] text-[10px] font-black uppercase tracking-widest rounded-lg border border-[#2D6A4F]/10">
+                                        Since {new Date(user?.data?.createdAt).getFullYear()}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Actions */}
-                            <div className="flex flex-col sm:flex-row gap-4">
+                            <div className="flex flex-row gap-2 mt-4 md:mt-0">
                                 <button
                                     onClick={() => setIsEditModalOpen(true)}
-                                    className="px-8 py-4 bg-primary text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all flex items-center justify-center gap-3 cursor-pointer"
+                                    className="px-5 py-3 bg-[#2D6A4F] text-white font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#2D6A4F]/20 hover:bg-[#1B4332] transition-all flex items-center justify-center gap-2 cursor-pointer"
                                 >
-                                    <FiEdit /> Edit Identity
+                                    <FiEdit size={12} /> Edit Profile
                                 </button>
                                 <button
                                     onClick={logout}
-                                    className="px-8 py-4 bg-neutral text-gray-500 font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl border border-gray-100 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-3 cursor-pointer"
+                                    className="px-5 py-3 bg-white text-gray-500 font-black uppercase tracking-widest text-[10px] rounded-xl border border-gray-100 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2 cursor-pointer"
                                 >
-                                    <FiLogOut /> Logout
+                                    <FiLogOut size={12} /> Logout
                                 </button>
                             </div>
                         </div>
 
                         {/* Tabs Navigation */}
-                        <div className="flex items-center gap-2 border-b border-gray-100 mb-12 overflow-x-auto no-scrollbar pb-1">
+                        <div className="flex items-center gap-2 border-b border-[#F0FBF4] mb-8 overflow-x-auto no-scrollbar">
                             {[
                                 { id: "info", icon: <FiUser />, label: "Information" },
                                 { id: "campaigns", icon: <FiLayers />, label: "My Missions" },
-                                { id: "donations", icon: <FiHeart />, label: "My Gifts" },
+                                { id: "donations", icon: <FiHeart />, label: "Gifts" },
                                 { id: "settings", icon: <FiSettings />, label: "Security" }
                             ].map((tab) => (
                                 <button
                                     key={tab.id}
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-3 px-8 py-5 text-xs font-black uppercase tracking-widest transition-all relative group whitespace-nowrap cursor-pointer ${activeTab === tab.id ? "text-primary" : "text-gray-400 hover:text-gray-600"
+                                    className={`flex items-center gap-2 px-6 py-4 text-[11px] font-black uppercase tracking-wider transition-all relative group whitespace-nowrap cursor-pointer ${activeTab === tab.id ? "text-[#2D6A4F]" : "text-gray-400 hover:text-gray-600"
                                         }`}
                                 >
                                     {tab.icon} {tab.label}
                                     {activeTab === tab.id && (
-                                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary rounded-full shadow-lg shadow-primary/50 animate-in fade-in zoom-in duration-300"></div>
+                                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#2D6A4F] rounded-full shadow-lg animate-in fade-in zoom-in duration-300"></div>
                                     )}
                                 </button>
                             ))}
                         </div>
 
                         {/* Tab Content */}
-                        <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
+                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
                             {activeTab === "info" && (
                                 <PersonalInfo 
                                     user={user} 
@@ -197,13 +197,13 @@ const Profile = () => {
 };
 
 const PersonalInfo = ({ user, onVerifyClick, pendingRequest, isStatusLoading }) => (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        <div className="lg:col-span-7 space-y-12">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className="lg:col-span-7 space-y-10">
             <section>
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-3">
-                    <FiShield className="text-lg" /> Identity Breakdown
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2D6A4F] mb-6 flex items-center gap-2">
+                    <FiShield className="text-base" /> Identity Breakdown
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <InfoItem label="Legal Name" value={user?.data?.name} icon={<FiUser />} />
                     <InfoItem label="Email Identity" value={user?.email} icon={<FiMail />} verified={user?.emailVerified} />
                     <InfoItem label="Phone Connection" value={user?.data?.phoneNumber || "Not Connected"} icon={<FiPhone />} />
@@ -212,62 +212,62 @@ const PersonalInfo = ({ user, onVerifyClick, pendingRequest, isStatusLoading }) 
             </section>
 
             <section>
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-8 flex items-center gap-3">
-                    <FiActivity className="text-lg" /> Mission Statement
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2D6A4F] mb-6 flex items-center gap-2">
+                    <FiActivity className="text-base" /> Mission Statement
                 </h3>
-                <div className="p-10 bg-neutral rounded-[2.5rem] border border-gray-100 min-h-[200px] relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-8 text-6xl text-gray-100 group-hover:text-primary/10 transition-colors">
+                <div className="p-8 bg-[#F8FDFB] rounded-2xl border border-[#E5F0EA] min-h-[160px] relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-6 text-5xl text-[#2D6A4F]/5 group-hover:text-primary/10 transition-colors">
                         <FiEdit />
                     </div>
                     {user?.data?.bio ? (
-                        <p className="text-xl font-medium text-gray-700 leading-relaxed whitespace-pre-wrap relative z-10">{user.data.bio}</p>
+                        <p className="text-base font-semibold text-gray-700 leading-relaxed whitespace-pre-wrap relative z-10">{user.data.bio}</p>
                     ) : (
-                        <p className="text-gray-400 italic relative z-10">You haven't added a mission statement yet. Share your story with the world!</p>
+                        <p className="text-gray-400 font-bold text-sm italic relative z-10">You haven't added a mission statement yet. Share your story with the world!</p>
                     )}
                 </div>
             </section>
         </div>
 
-        <div className="lg:col-span-5 space-y-8">
-            <div className="bg-primary/5 rounded-[2.5rem] p-10 border border-primary/10 space-y-8">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Security & Trust</h4>
+        <div className="lg:col-span-5">
+            <div className="bg-[#F0FBF4]/50 rounded-2xl p-8 border border-[#E5F0EA] space-y-6">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-[#2D6A4F]">Security & Trust</h4>
 
                 <div className="space-y-4">
                     <StatusBadge
-                        label="Account Integrity"
+                        label="Account Status"
                         value={user?.data?.status}
                         type={user?.data?.status === "active" ? "success" : "danger"}
                         icon={<FiCheckCircle />}
                     />
                     <StatusBadge
                         label="Verification Level"
-                        value={user?.data?.identity?.isVerified ? "Trusted Mission Hero" : "Standard Participant"}
+                        value={user?.data?.identity?.isVerified ? "Trusted Hero" : "Standard"}
                         type={user?.data?.identity?.isVerified ? "success" : "warning"}
                         icon={<FiShield />}
                         description={
                             user?.data?.identity?.isVerified 
-                                ? "Your identity is officially verified. You have full access to platform features." 
+                                ? "Your identity is officially verified." 
                                 : pendingRequest 
-                                    ? "Your request is being reviewed by our team."
-                                    : "Verify your account to gain higher trust and unlock features."
+                                    ? "Your request is being reviewed."
+                                    : "Verify to unlock platform features."
                         }
                         action={
                             !user?.data?.identity?.isVerified ? (
                                 isStatusLoading ? (
-                                    <div className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400">
-                                        <FiClock className="animate-spin" /> Verifying Status...
+                                    <div className="mt-4 flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-gray-400">
+                                        <FiClock className="animate-spin" /> Verifying...
                                     </div>
                                 ) : pendingRequest ? (
                                     <Link
                                         to="/dashboard/verification-status"
-                                        className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-700 text-[10px] font-black uppercase rounded-lg border border-amber-200"
+                                        className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-700 text-[9px] font-black uppercase rounded-lg border border-amber-200"
                                     >
-                                        <FiClock /> Application Under Review
+                                        <FiClock /> Under Review
                                     </Link>
                                 ) : (
                                     <button
                                         onClick={onVerifyClick}
-                                        className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline group cursor-pointer"
+                                        className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#2D6A4F] hover:underline group cursor-pointer"
                                     >
                                         Request Trust Stamp <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
                                     </button>
@@ -275,18 +275,18 @@ const PersonalInfo = ({ user, onVerifyClick, pendingRequest, isStatusLoading }) 
                             ) : (
                                 <Link 
                                     to="/dashboard/verification-status"
-                                    className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:underline group cursor-pointer"
+                                    className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#2D6A4F] hover:underline group cursor-pointer"
                                 >
-                                    View Verification Record <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
+                                    View Record <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
                                 </Link>
                             )
                         }
                     />
                 </div>
 
-                <div className="pt-8 border-t border-primary/10">
-                    <p className="text-[10px] font-bold text-gray-500 leading-relaxed">
-                        Verification helps ensure 100% transparency. Verified users have higher campaign success rates.
+                <div className="pt-4 border-t border-[#E5F0EA]">
+                    <p className="text-[10px] font-bold text-gray-400 leading-relaxed uppercase tracking-wider">
+                        Transparency ensures higher campaign success.
                     </p>
                 </div>
             </div>
@@ -295,10 +295,10 @@ const PersonalInfo = ({ user, onVerifyClick, pendingRequest, isStatusLoading }) 
 );
 
 const InfoItem = ({ label, value, icon, verified }) => (
-    <div className="p-6 bg-white rounded-3xl border border-gray-50 shadow-xl shadow-gray-200/20 hover:shadow-gray-300/40 transition-all group">
-        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-4 group-hover:text-primary transition-colors">{label}</label>
-        <div className="flex items-center text-gray-900 font-bold tracking-tight">
-            <span className="w-10 h-10 bg-neutral text-primary rounded-xl flex items-center justify-center mr-4 group-hover:bg-primary group-hover:text-white transition-all">{icon}</span>
+    <div className="p-5 bg-white rounded-xl border border-[#E5F0EA] shadow-sm hover:shadow-md transition-all group">
+        <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-4 group-hover:text-[#2D6A4F] transition-colors">{label}</label>
+        <div className="flex items-center text-gray-900 font-bold tracking-tight text-sm">
+            <span className="w-9 h-9 bg-[#F8FDFB] text-[#2D6A4F] rounded-lg flex items-center justify-center mr-3 group-hover:bg-[#2D6A4F] group-hover:text-white transition-all shadow-sm">{icon}</span>
             <div className="flex-1 overflow-hidden overflow-ellipsis whitespace-nowrap">
                 {value}
                 {verified && <FiCheckCircle className="inline-block ml-2 text-green-500" />}
@@ -309,22 +309,22 @@ const InfoItem = ({ label, value, icon, verified }) => (
 
 const StatusBadge = ({ label, value, type, action, icon, description }) => {
     const colors = {
-        success: "text-green-600 bg-green-50 border-green-100",
-        warning: "text-amber-600 bg-amber-50 border-amber-100",
-        danger: "text-red-600 bg-red-50 border-red-100"
+        success: "text-green-600 bg-green-50/50 border-green-100",
+        warning: "text-amber-600 bg-amber-50/50 border-amber-100",
+        danger: "text-red-600 bg-red-50/50 border-red-100"
     };
     return (
-        <div className={`p-8 rounded-[2rem] border-2 ${colors[type] || colors.warning} space-y-4`}>
-            <div className="flex items-center gap-4">
-                <div className="text-2xl">{icon}</div>
+        <div className={`p-6 rounded-2xl border ${colors[type] || colors.warning} space-y-3`}>
+            <div className="flex items-center gap-3">
+                <div className="text-xl opacity-80">{icon}</div>
                 <div>
-                    <label className="text-[10px] font-black uppercase tracking-tight opacity-60 block">{label}</label>
-                    <span className="text-sm font-black uppercase tracking-widest block mt-1">
+                    <label className="text-[9px] font-black uppercase tracking-wider opacity-60 block">{label}</label>
+                    <span className="text-xs font-black uppercase tracking-widest block mt-0.5">
                         {value}
                     </span>
                 </div>
             </div>
-            {description && <p className="text-[10px] font-medium leading-relaxed opacity-70">{description}</p>}
+            {description && <p className="text-[10px] font-bold leading-relaxed opacity-70 uppercase tracking-wide">{description}</p>}
             {action}
         </div>
     );

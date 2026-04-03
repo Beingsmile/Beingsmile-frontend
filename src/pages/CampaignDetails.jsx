@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import { useOutletContext, useParams, useLocation, Link } from "react-router";
-import { useCampaignDetails } from "../hooks/useCampaign";
+import { useCampaignDetails, useComments } from "../hooks/useCampaign";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Payment from "../components/Payment";
 import DiscussionSection from "../components/DiscussionSection";
@@ -9,6 +9,7 @@ import ShareSection from "../components/ShareSection";
 import {
   FiUser, FiCalendar, FiCheckCircle, FiShield, FiLoader,
   FiHeart, FiBookmark, FiAlertTriangle, FiThumbsUp, FiInfo,
+  FiMessageSquare,
   FiBell, FiFlag, FiPlay,
 } from "react-icons/fi";
 import Slider from "react-slick";
@@ -108,12 +109,16 @@ export default function CampaignDetails() {
   const [showSubscribePrompt, setShowSubscribePrompt] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const [imgIdx, setImgIdx] = useState(0);
+  const [activeTab, setActiveTab] = useState("story");
 
   // Platform settings
   const { data: platformSettings } = useQuery({
     queryKey: ["platformSettings"],
     queryFn: getPlatformSettings,
   });
+
+  // Comments for badge count
+  const { data: commentData } = useComments(id, 1);
   const feeMode = platformSettings?.donationFee?.mode || "none";
   const feeType = platformSettings?.donationFee?.type || "percent";
   const feePercent = platformSettings?.donationFee?.percent || 2.5;
@@ -311,32 +316,109 @@ export default function CampaignDetails() {
               <DonorRow donations={campaign.donations} />
             </div>
 
-            {/* The Story */}
-            <div className="bg-white border border-[#E5F0EA] rounded-xl p-6 md:p-8">
-              <h2 className="text-xs font-bold text-[#2D6A4F] uppercase tracking-widest mb-4 flex items-center gap-2">
-                <FiHeart size={12} /> The Story
-              </h2>
-              <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed whitespace-pre-line text-sm">
-                {campaign.description}
-              </div>
+            {/* Tabs Navigation */}
+            <div className="flex border-b border-[#E5F0EA] sticky top-[60px] bg-white z-10 -mx-4 px-4 sm:mx-0 sm:px-0">
+              {[
+                { id: 'story', label: 'Story', icon: <FiHeart size={12} /> },
+                { id: 'updates', label: 'Updates', count: campaign.updates?.length || 0, icon: <FiBell size={12} /> },
+                { id: 'discussion', label: 'Discussion', count: commentData?.total || 0, icon: <FiMessageSquare size={12} /> }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`relative px-4 sm:px-6 py-4 text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all transition-colors ${
+                    activeTab === tab.id ? "text-[#2D6A4F]" : "text-gray-400 hover:text-gray-600"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="hidden sm:inline opacity-70">{tab.icon}</span>
+                    {tab.label}
+                    {tab.count !== undefined && (
+                      <span className={`px-1.5 py-0.5 rounded-lg text-[9px] font-black leading-none ${
+                        activeTab === tab.id ? "bg-[#2D6A4F] text-white shadow-sm" : "bg-gray-100 text-gray-400"
+                      }`}>
+                        {tab.count}
+                      </span>
+                    )}
+                  </div>
+                  {activeTab === tab.id && (
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#2D6A4F] rounded-t-full" />
+                  )}
+                </button>
+              ))}
             </div>
 
-            {/* Mission Updates */}
-            <MissionUpdates
-              updates={campaign.updates || []}
-              campaignId={id}
-              isCreator={isCreator}
-            />
+            {/* Tab Contents */}
+            <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
+              {activeTab === 'story' && (
+                <div className="bg-white border border-[#E5F0EA] rounded-2xl p-6 md:p-8 shadow-sm">
+                  <h2 className="text-[10px] font-black text-[#2D6A4F] uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                    <FiHeart size={14} /> Mission Story
+                  </h2>
+                  <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed whitespace-pre-line text-sm font-medium">
+                    {campaign.description}
+                  </div>
+                </div>
+              )}
 
-            {/* Discussion */}
-            <DiscussionSection campaignId={id} setAuth={setAuth} />
+              {activeTab === 'updates' && (
+                <div className="space-y-4">
+                   <MissionUpdates
+                    updates={campaign.updates || []}
+                    pendingUpdates={campaign.pendingUpdates || []}
+                    campaignId={id}
+                    isCreator={isCreator}
+                  />
+                </div>
+              )}
+
+              {activeTab === 'discussion' && (
+                <DiscussionSection campaignId={id} setAuth={setAuth} />
+              )}
+            </div>
           </div>
 
           {/* RIGHT: Donation Sidebar */}
           <div className="lg:col-span-1 space-y-4">
-            {/* Admin Notice (repeated for mobile) */}
             <div className="hidden lg:block">
               <AdminNoticeBanner notice={campaign.adminNotice} />
+            </div>
+
+            {/* ── Engagement Actions ──────────────────────────── */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => recommendMutation.mutate()}
+                disabled={recommendMutation.isPending}
+                className={`group flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl border transition-all duration-300 ${
+                  campaign.isRecommendedByMe
+                    ? "bg-[#2D6A4F] text-white border-[#2D6A4F] shadow-lg shadow-[#2D6A4F]/20"
+                    : "bg-white border-[#E5F0EA] text-gray-600 hover:border-[#2D6A4F] hover:text-[#2D6A4F] hover:shadow-sm"
+                }`}
+              >
+                <FiThumbsUp size={16} className={`transition-transform group-hover:scale-110 ${campaign.isRecommendedByMe ? "fill-current" : ""}`} />
+                <span className="text-[10px] font-black uppercase tracking-widest leading-none">Recommend</span>
+                <span className="text-[9px] font-bold opacity-60">
+                   {campaign.recommendations?.length || 0} voices
+                </span>
+              </button>
+
+              <button
+                onClick={() => saveMutation.mutate()}
+                disabled={saveMutation.isPending}
+                className={`group flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl border transition-all duration-300 ${
+                  campaign.isSavedByMe
+                    ? "bg-[#F0FBF4] text-[#2D6A4F] border-[#2D6A4F] shadow-inner"
+                    : "bg-white border-[#E5F0EA] text-gray-600 hover:border-[#2D6A4F] hover:text-[#2D6A4F] hover:shadow-sm"
+                }`}
+              >
+                <FiBookmark size={16} className={`transition-transform group-hover:scale-110 ${campaign.isSavedByMe ? "fill-current" : ""}`} />
+                <span className="text-[10px] font-black uppercase tracking-widest leading-none">
+                  {campaign.isSavedByMe ? "Saved" : "Save Mission"}
+                </span>
+                <span className="text-[9px] font-bold opacity-60">
+                  For later
+                </span>
+              </button>
             </div>
 
             {/* ── Donation Card ──────────────────────────────── */}
@@ -551,37 +633,7 @@ export default function CampaignDetails() {
               </div>
             )}
 
-            {/* ── Recommend & Save ──────────────────────────── */}
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => recommendMutation.mutate()}
-                disabled={recommendMutation.isPending}
-                className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border text-xs font-bold transition-all ${
-                  campaign.isRecommendedByMe
-                    ? "bg-[#2D6A4F] text-white border-[#2D6A4F]"
-                    : "border-[#E5F0EA] text-gray-600 hover:border-[#2D6A4F] hover:text-[#2D6A4F]"
-                }`}
-              >
-                <FiThumbsUp size={15} />
-                <span>Recommend</span>
-                <span className="text-[10px] font-normal opacity-70">
-                  {campaign.recommendations?.length || 0}
-                </span>
-              </button>
-              <button
-                onClick={() => saveMutation.mutate()}
-                disabled={saveMutation.isPending}
-                className={`flex flex-col items-center gap-1.5 py-3 rounded-xl border text-xs font-bold transition-all ${
-                  campaign.isSavedByMe
-                    ? "bg-[#F0FBF4] text-[#2D6A4F] border-[#2D6A4F]"
-                    : "border-[#E5F0EA] text-gray-600 hover:border-[#2D6A4F] hover:text-[#2D6A4F]"
-                }`}
-              >
-                <FiBookmark size={15} />
-                <span>{campaign.isSavedByMe ? "Saved" : "Save"}</span>
-                <span className="text-[10px] font-normal opacity-70">for later</span>
-              </button>
-            </div>
+            {/* ── Engagement Actions ──────────────────────────── (Moved up) */}
 
             {/* Subscribe (if not post-payment) */}
             {!showSubscribePrompt && user && (

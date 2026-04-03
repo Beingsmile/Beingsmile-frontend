@@ -21,32 +21,51 @@ const LanguageSwitcher = () => {
       <Dropdown
         arrowIcon={false}
         inline
+        theme={{
+          floating: {
+            base: "z-10 w-fit rounded-xl shadow-xl border border-gray-100 bg-white backdrop-blur-md focus:outline-none",
+            content: "rounded-xl py-0",
+            style: {
+                dark: "bg-white text-gray-900 border-gray-100",
+                light: "bg-white text-gray-900 border-gray-100",
+                auto: "bg-white text-gray-900 border-gray-100"
+            }
+          }
+        }}
         label={
-          <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 transition-all group">
-            <FiGlobe className="text-gray-400 group-hover:text-primary transition-colors" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-600 group-hover:text-primary">
+          <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-emerald-500 hover:bg-emerald-50/50 transition-all group">
+            <FiGlobe className="text-gray-400 group-hover:text-emerald-600 transition-colors" size={14} />
+            <span className="text-[10px] font-black uppercase tracking-widest text-gray-600 group-hover:text-emerald-700">
               {currentLanguage === "en" ? "EN" : "BN"}
             </span>
           </button>
         }
       >
-        <div className="p-2 w-40 space-y-1">
-            <p className="px-2 pb-1 text-[9px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 mb-1">Select Language</p>
+        <div className="p-2 w-44 space-y-1">
+          <p className="px-3 py-1.5 text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-100/50 mb-1">
+            Choose Language
+          </p>
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => changeLanguage(lang.code)}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-bold transition-all ${
                 currentLanguage.startsWith(lang.code)
-                  ? "bg-primary text-white shadow-lg shadow-primary/20"
+                  ? "bg-emerald-50 text-emerald-700 border border-emerald-100/50 shadow-sm"
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               }`}
             >
               <div className="flex items-center gap-3">
-                <span>{lang.flag}</span>
-                <span>{lang.name}</span>
+                <span className="text-sm grayscale-[0.2]">{lang.flag}</span>
+                <span className={currentLanguage.startsWith(lang.code) ? "text-emerald-700" : "text-gray-600"}>
+                    {lang.name}
+                </span>
               </div>
-              {currentLanguage.startsWith(lang.code) && <FiCheck size={12} />}
+              {currentLanguage.startsWith(lang.code) && (
+                <div className="w-5 h-5 flex items-center justify-center bg-emerald-100 rounded-full">
+                  <FiCheck size={10} className="text-emerald-600" />
+                </div>
+              )}
             </button>
           ))}
         </div>

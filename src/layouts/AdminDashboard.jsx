@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router";
-import { FiGrid, FiFileText, FiUsers, FiDollarSign, FiLogOut, FiHome, FiCheckSquare, FiShield } from "react-icons/fi";
+import { FiGrid, FiFileText, FiUsers, FiDollarSign, FiLogOut, FiHome, FiCheckSquare, FiShield, FiSettings } from "react-icons/fi";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useContext, useEffect, useState } from "react";

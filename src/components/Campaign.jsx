@@ -1,11 +1,18 @@
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router";
 import campaign1 from "../assets/hero.jpg";
 import dayjs from "dayjs";
-import { FiCalendar, FiArrowRight, FiMapPin } from "react-icons/fi";
+import { FiCalendar, FiArrowRight, FiMapPin, FiBookmark } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toggleSave } from "../api/campaign";
+import { AuthContext } from "../contexts/AuthProvider";
+import { toast } from "react-toastify";
 
 const Campaign = ({ campaign, isFeatured = false }) => {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
+  const qc = useQueryClient();
   const {
     _id,
     title,
@@ -16,7 +23,8 @@ const Campaign = ({ campaign, isFeatured = false }) => {
     creatorUsername,
     supporters = [],
     category,
-    location = "Verified Cause"
+    location = "Verified Cause",
+    isSavedByMe = false,
   } = campaign || {};
 
   const navigate = useNavigate();
@@ -24,9 +32,34 @@ const Campaign = ({ campaign, isFeatured = false }) => {
   const percentage = Math.min((currentAmount / goalAmount) * 100, 100) || 0;
   const daysLeft = dayjs(endDate).diff(dayjs(), "day");
 
+  const saveMutation = useMutation({
+    mutationFn: () => {
+      if (!user) throw new Error("auth");
+      return toggleSave(_id);
+    },
+    onSuccess: (res) => {
+      qc.invalidateQueries(["campaigns"]);
+      qc.invalidateQueries(["campaign", _id]);
+      qc.invalidateQueries(["savedCampaigns"]);
+      toast.success(res.saved ? "Saved for later! 🔖" : "Removed from saved");
+    },
+    onError: (err) => {
+      if (err.message === "auth") {
+        toast.info("Please login to save missions");
+      } else {
+        toast.error("Failed to save mission");
+      }
+    }
+  });
+
   const handleDetails = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     navigate(`/campaigns/${_id}`);
+  };
+
+  const handleSave = (e) => {
+    e.stopPropagation();
+    saveMutation.mutate();
   };
 
   return (
@@ -55,9 +88,30 @@ const Campaign = ({ campaign, isFeatured = false }) => {
             {category}
           </span>
         </div>
-        {isFeatured && (
-          <div className="absolute top-3 right-3">
+
+        {/* Save button */}
+        <button
+          onClick={handleSave}
+          disabled={saveMutation.isPending}
+          className={`absolute top-3 right-3 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300 shadow-sm z-20 group/save ${
+            isSavedByMe 
+              ? "bg-[#2D6A4F] text-white" 
+              : "bg-white/90 text-gray-600 hover:bg-[#2D6A4F] hover:text-white"
+          }`}
+        >
+          <FiBookmark size={14} className={`transition-colors duration-300 ${isSavedByMe ? "fill-current" : "group-hover/save:text-white"}`} />
+        </button>
+
+        {isFeatured && !isSavedByMe && (
+          <div className="absolute top-3 right-3 mr-10">
             <span className="px-2.5 py-1 bg-[#2D6A4F] text-white rounded-full text-[10px] font-black uppercase tracking-wide">
+              Featured
+            </span>
+          </div>
+        )}
+        {isFeatured && isSavedByMe && (
+           <div className="absolute top-12 right-3">
+            <span className="px-2 py-0.5 bg-[#2D6A4F] text-white rounded-md text-[8px] font-black uppercase tracking-wide">
               Featured
             </span>
           </div>

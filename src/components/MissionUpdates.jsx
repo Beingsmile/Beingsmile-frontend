@@ -1,35 +1,80 @@
 import { useState } from "react";
 import {
-  FiRss, FiChevronDown, FiChevronUp, FiLoader, FiImage, FiX, FiPlus, FiUpload,
+  FiRss, FiChevronDown, FiChevronUp, FiLoader, FiImage, FiX, FiPlus, FiUpload, FiClock, FiTrash2
 } from "react-icons/fi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { submitCampaignUpdate } from "../api/campaign";
+import { submitCampaignUpdate, deleteCampaignUpdate } from "../api/campaign";
 import { toast } from "react-toastify";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 const toBase64 = (f) =>
   new Promise((res) => { const r = new FileReader(); r.onloadend = () => res(r.result); r.readAsDataURL(f); });
 
-const timeStr = (d) => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+const timeStr = (d) => {
+  const date = d ? new Date(d) : new Date();
+  if (isNaN(date.getTime())) return "Recently posted";
+  return date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+};
 
 // ── Single Update Card ────────────────────────────────────────────────────────
-const UpdateCard = ({ update, isLatest }) => {
-  const [expanded, setExpanded] = useState(isLatest);
+const UpdateCard = ({ update, isLatest, isPending, campaignId }) => {
+  const [expanded, setExpanded] = useState(isLatest || isPending);
   const [imgIndex, setImgIndex] = useState(0);
+  const qc = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: () => {
+      const upId = update.updateId || update._id || update.id;
+      console.log("Deleting pending update:", { campaignId, updateId: upId });
+      return deleteCampaignUpdate(campaignId, upId);
+    },
+    onSuccess: () => {
+      toast.success("Pending update deleted");
+      qc.invalidateQueries(["campaign", campaignId]);
+    },
+    onError: (err) => {
+      const msg = err.response?.data?.message || err.message || "Failed to delete update";
+      toast.error(msg);
+      console.error("Delete update error:", err);
+    }
+  });
 
   return (
-    <div className={`border rounded-xl overflow-hidden transition-all ${isLatest ? "border-[#2D6A4F]" : "border-[#E5F0EA]"}`}>
+    <div className={`border rounded-xl overflow-hidden transition-all ${
+      isPending ? "border-amber-200 bg-amber-50/10" : 
+      isLatest ? "border-[#2D6A4F]" : "border-[#E5F0EA]"
+    }`}>
       <button
         onClick={() => setExpanded((p) => !p)}
-        className={`w-full flex items-center justify-between px-5 py-4 text-left ${isLatest ? "bg-[#F0FBF4]" : "bg-white"}`}
+        className={`w-full flex items-center justify-between px-5 py-4 text-left ${
+          isPending ? "bg-amber-50/30" :
+          isLatest ? "bg-[#F0FBF4]" : "bg-white"
+        }`}
       >
         <div className="flex items-center gap-3">
-          {isLatest && (
-            <span className="px-2 py-0.5 bg-[#2D6A4F] text-white text-[9px] font-bold rounded-full">LATEST</span>
-          )}
+          {isPending ? (
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[9px] font-black rounded-full flex items-center gap-1">
+                <FiClock size={10} /> PENDING REVIEW
+              </span>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if(window.confirm("Delete this pending update?")) deleteMutation.mutate();
+                }}
+                disabled={deleteMutation.isPending}
+                className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                title="Delete Pending Update"
+              >
+                {deleteMutation.isPending ? <FiLoader size={12} className="animate-spin" /> : <FiTrash2 size={12} />}
+              </button>
+            </div>
+          ) : isLatest ? (
+            <span className="px-2 py-0.5 bg-[#2D6A4F] text-white text-[9px] font-bold rounded-full uppercase tracking-widest">LATEST</span>
+          ) : null}
           <div>
             <p className="text-sm font-bold text-gray-900">{update.title}</p>
-            <p className="text-[10px] text-gray-400 mt-0.5">{timeStr(update.postedAt)}</p>
+            <p className="text-[10px] text-gray-400 mt-0.5">{timeStr(update.postedAt || update.createdAt)}</p>
           </div>
         </div>
         <span className="text-gray-400">
@@ -38,7 +83,7 @@ const UpdateCard = ({ update, isLatest }) => {
       </button>
 
       {expanded && (
-        <div className="px-5 pb-5 space-y-4 border-t border-[#E5F0EA]">
+        <div className={`px-5 pb-5 space-y-4 border-t ${isPending ? "border-amber-100" : "border-[#E5F0EA]"}`}>
           {/* Image carousel */}
           {update.images?.length > 0 && (
             <div className="mt-4">
@@ -177,14 +222,20 @@ const PostUpdateModal = ({ campaignId, onClose }) => {
 // ═════════════════════════════════════════════════════════════════
 // MAIN MISSION UPDATES COMPONENT
 // ═════════════════════════════════════════════════════════════════
-export default function MissionUpdates({ updates = [], campaignId, isCreator }) {
+export default function MissionUpdates({ updates = [], pendingUpdates = [], campaignId, isCreator }) {
   const [showModal, setShowModal] = useState(false);
+
+  // For creators, show both approved and pending
+  // For others, show only approved
+  const displayUpdates = isCreator 
+    ? [...pendingUpdates.map(u => ({ ...u, isPending: true })), ...updates]
+    : updates;
 
   return (
     <div className="bg-white rounded-xl border border-[#E5F0EA] p-6 md:p-8">
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-xs font-bold text-[#2D6A4F] uppercase tracking-widest flex items-center gap-2">
-          <FiRss size={12} /> Mission Updates ({updates.length})
+          <FiRss size={12} /> Mission Updates ({isCreator ? displayUpdates.length : updates.length})
         </h2>
         {isCreator && (
           <button
@@ -196,7 +247,7 @@ export default function MissionUpdates({ updates = [], campaignId, isCreator }) 
         )}
       </div>
 
-      {updates.length === 0 ? (
+      {displayUpdates.length === 0 ? (
         <div className="py-10 text-center">
           <div className="w-10 h-10 bg-[#F0FBF4] rounded-xl flex items-center justify-center text-[#2D6A4F] mx-auto mb-3">
             <FiRss size={18} />
@@ -210,8 +261,14 @@ export default function MissionUpdates({ updates = [], campaignId, isCreator }) 
         </div>
       ) : (
         <div className="space-y-3">
-          {updates.map((u, i) => (
-            <UpdateCard key={u._id || i} update={u} isLatest={i === 0} />
+          {displayUpdates.map((u, i) => (
+            <UpdateCard 
+              key={u._id || u.updateId || i} 
+              update={u} 
+              isLatest={i === 0 && !u.isPending} 
+              isPending={u.isPending} 
+              campaignId={campaignId}
+            />
           ))}
         </div>
       )}

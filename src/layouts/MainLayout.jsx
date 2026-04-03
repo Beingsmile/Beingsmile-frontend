@@ -12,22 +12,22 @@ const MainLayout = () => {
   return (
     <>
       <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />;
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />;
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
         <NavComponent setAuth={setAuth} />
       </nav>
 
-      <div className="pt-16 min-h-screen">
-        <Outlet  context={{ setAuth }}  />
+      <div className="min-h-screen">
+        <Outlet context={{ setAuth }} />
       </div>
 
       {auth === "login" ? (

@@ -6,6 +6,10 @@
 
 /* @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)); */
 
+:root {
+  color-scheme: light;
+}
+
 @theme {
   --color-primary: #2D6A4F;
   /* Forest Green – Trust & Humanity */

@@ -10,7 +10,7 @@ import { FaPlus } from "react-icons/fa";
 import { AuthContext } from "../contexts/AuthProvider";
 import { toast } from "react-toastify";
 import { Link, NavLink } from "react-router";
-import { FiHeart, FiUser, FiLogOut, FiMenu, FiX } from "react-icons/fi";
+import { FiHeart, FiUser, FiLogOut, FiMenu, FiX, FiBookmark } from "react-icons/fi";
 import profile from "../assets/user.png";
 import NotificationBell from "./NotificationBell";
 import { useTranslation } from "react-i18next";
@@ -98,33 +98,64 @@ export function NavComponent({ setAuth }) {
 
                 <NotificationBell />
 
+                <Link
+                  to="/dashboard/saved"
+                  className="p-2 text-gray-400 hover:text-[#2D6A4F] relative group transition-colors"
+                  title="Saved Missions"
+                >
+                  <FiBookmark size={18} />
+                </Link>
+
                 <Dropdown
                   arrowIcon={false}
                   inline
+                  theme={{
+                    floating: {
+                      base: "z-10 w-fit rounded-xl shadow-xl border border-gray-100 bg-white backdrop-blur-md focus:outline-none",
+                      content: "rounded-xl py-1 px-1",
+                      header: "px-4 py-3 border-b border-gray-100/50 mb-1",
+                      style: {
+                        dark: "bg-white text-gray-900 border-gray-100",
+                        light: "bg-white text-gray-900 border-gray-100",
+                        auto: "bg-white text-gray-900 border-gray-100"
+                      },
+                      item: {
+                        base: "flex w-full cursor-pointer items-center justify-start px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition-colors focus:outline-none",
+                        icon: "mr-3 h-4 w-4 text-gray-400 group-hover:text-emerald-600"
+                      }
+                    }
+                  }}
                   label={
-                    <div className="w-8 h-8 rounded-lg border-2 border-[#2D6A4F]/20 hover:border-[#2D6A4F] transition-colors overflow-hidden">
+                    <div className="w-9 h-9 rounded-xl border-2 border-emerald-100 hover:border-emerald-500 transition-all p-0.5 overflow-hidden bg-white shadow-sm">
                       <Avatar
                         alt="User"
                         img={user.data?.avatar || user?.photoURL || profile}
                         rounded
                         size="xs"
+                        className="object-cover"
                       />
                     </div>
                   }
                 >
-                  <DropdownHeader className="px-4 py-3">
-                    <span className="block text-sm font-bold text-gray-900">
-                      {user.data?.name || "Member"}
-                    </span>
-                    <span className="block text-xs text-[#2D6A4F] mt-0.5">
-                      {user.email}
-                    </span>
+                  <DropdownHeader>
+                    <div className="flex flex-col">
+                        <span className="block text-sm font-black text-gray-900 tracking-tight">
+                        {user.data?.name || "Member"}
+                        </span>
+                        <span className="block text-[11px] font-bold text-emerald-600 mt-0.5 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            {user.email}
+                        </span>
+                    </div>
                   </DropdownHeader>
-                  <DropdownItem as={Link} to="/dashboard" className="px-4 py-2 text-sm font-semibold">
+                  <DropdownItem as={Link} to="/dashboard">
                     <FiUser className="mr-2" /> {t("nav.profile")}
                   </DropdownItem>
-                  <DropdownDivider />
-                  <DropdownItem onClick={handleLogout} className="px-4 py-2 text-sm font-semibold text-red-500 hover:bg-red-50">
+                  <DropdownItem as={Link} to="/dashboard/settings">
+                    <FiHeart className="mr-2" /> My Contributions
+                  </DropdownItem>
+                  <DropdownDivider className="my-1 border-gray-100/50" />
+                  <DropdownItem onClick={handleLogout} className="text-red-500 hover:bg-red-50 hover:text-red-600">
                     <FiLogOut className="mr-2" /> {t("nav.logout")}
                   </DropdownItem>
                 </Dropdown>
@@ -163,6 +194,15 @@ export function NavComponent({ setAuth }) {
                 {link.label}
               </NavLink>
             ))}
+            {user && (
+              <NavLink
+                to="/dashboard/saved"
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center gap-2 px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-[#F0FBF4] hover:text-[#2D6A4F] rounded-lg"
+              >
+                <FiBookmark size={14} /> Saved Missions
+              </NavLink>
+            )}
             {user && (
               <Link
                 to="/campaigns/create"
