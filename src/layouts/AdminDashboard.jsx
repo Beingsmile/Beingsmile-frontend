@@ -33,6 +33,7 @@ const AdminDashboard = () => {
     { icon: <FiFileText />, label: "All Campaigns", path: "/admin/campaigns" },
     { icon: <FiUsers />, label: "User Management", path: "/admin/users" },
     { icon: <FiDollarSign />, label: "Payouts Control", path: "/admin/payouts" },
+    { icon: <FiFileText />, label: "Payout Logs", path: "/admin/payout-logs" },
     { icon: <FiFileText />, label: "Transactions", path: "/admin/transactions" },
     { icon: <FiSettings />, label: "Platform Settings", path: "/admin/settings" },
   ];

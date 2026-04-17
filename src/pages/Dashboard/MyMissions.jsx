@@ -1,17 +1,13 @@
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../api/axiosInstance";
-import { 
-  FiPlus, FiEdit2, FiBarChart2, FiGlobe, FiClock, 
-  FiAlertTriangle, FiCheckCircle, FiLoader, FiMoreVertical, FiRss 
+import {
+  FiPlus, FiGlobe, FiLoader, FiChevronRight,
+  FiHash, FiTrendingUp, FiUsers, FiRss
 } from "react-icons/fi";
 import { Link } from "react-router";
-import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 const MyMissions = () => {
-  const qc = useQueryClient();
-
-  // Fetch my missions
   const { data, isLoading } = useQuery({
     queryKey: ["myMissions"],
     queryFn: async () => {
@@ -23,137 +19,168 @@ const MyMissions = () => {
   const missions = data?.campaigns || [];
 
   if (isLoading) return (
-    <div className="flex items-center justify-center h-64">
-      <FiLoader className="animate-spin text-primary" size={32} />
+    <div className="flex flex-col items-center justify-center h-72 gap-3">
+      <div className="w-10 h-10 border-4 border-[#E5F0EA] border-t-[#2D6A4F] rounded-full animate-spin" />
+      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#2D6A4F]/60 animate-pulse">Loading missions...</p>
     </div>
   );
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-6">
+
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-black text-gray-900 uppercase tracking-tight">My Missions</h1>
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">
-            Manage your campaigns and track impact
+          <h1 className="text-xl font-black text-gray-900 tracking-tight">My Missions</h1>
+          <p className="text-[11px] text-gray-400 font-semibold mt-0.5">
+            {missions.length} active mission{missions.length !== 1 ? "s" : ""}
           </p>
         </div>
-        
-        <Link 
+        <Link
           to="/campaigns/create"
-          className="flex items-center justify-center gap-2 px-6 py-3 bg-[#2D6A4F] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#1B4332] transition-all shadow-lg shadow-[#2D6A4F]/20"
+          className="flex items-center gap-2 px-4 py-2.5 bg-[#2D6A4F] text-white text-[11px] font-black uppercase tracking-widest rounded-xl hover:bg-[#1B4332] transition-all shadow-sm shadow-[#2D6A4F]/20 group"
         >
-          <FiPlus size={14} />
-          Create New Mission
+          <FiPlus size={14} className="group-hover:rotate-90 transition-transform" />
+          New Mission
         </Link>
       </div>
 
+      {/* Card Grid / Empty */}
       {missions.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-[#E5F0EA] p-16 text-center space-y-4 border-dashed">
-          <div className="w-16 h-16 bg-[#F8FDFB] rounded-xl flex items-center justify-center text-gray-300 mx-auto mb-2 border border-[#E5F0EA]">
-            <FiGlobe size={28} />
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-2xl border border-dashed border-[#E5F0EA] p-16 text-center space-y-5"
+        >
+          <div className="w-16 h-16 bg-[#F8FDFB] rounded-2xl flex items-center justify-center text-[#2D6A4F]/20 mx-auto border border-[#E5F0EA]">
+            <FiGlobe size={32} />
           </div>
-          <h3 className="text-lg font-bold text-gray-900">No Missions Yet</h3>
-          <p className="text-xs text-gray-400 max-w-xs mx-auto leading-relaxed font-bold uppercase tracking-wide">
-            Start a mission today and raise funds for a cause you care about.
-          </p>
-          <Link 
+          <div className="space-y-1.5">
+            <h3 className="text-base font-black text-gray-900 uppercase tracking-tight">No Missions Yet</h3>
+            <p className="text-xs text-gray-400 max-w-xs mx-auto leading-relaxed font-medium">
+              Start your first humanitarian mission and make a difference today.
+            </p>
+          </div>
+          <Link
             to="/campaigns/create"
-            className="inline-block px-8 py-3 bg-[#2D6A4F]/10 text-[#2D6A4F] text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#2D6A4F]/20 transition-all mt-4"
+            className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#2D6A4F] text-white text-[11px] font-black uppercase tracking-widest rounded-xl shadow-sm shadow-[#2D6A4F]/20 hover:bg-[#1B4332] transition-all"
           >
-            Start First Mission
+            <FiPlus size={13} /> Create Mission
           </Link>
-        </div>
+        </motion.div>
       ) : (
-        <div className="grid gap-4 sm:gap-6">
-          {missions.map((mission) => (
-            <div key={mission._id} className="bg-white rounded-2xl border border-[#E5F0EA] shadow-sm overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-all duration-300 group">
-               {/* Cover Image */}
-               <div className="w-full md:w-52 aspect-video md:aspect-auto relative overflow-hidden flex-shrink-0">
-                  <img src={mission.coverImage} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="" />
-                  <div className={`absolute top-3 left-3 px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider border shadow-sm ${
-                    mission.status === "active" ? "bg-green-500 text-white border-green-400" :
-                    mission.status === "pending" ? "bg-amber-500 text-white border-amber-400" :
-                    mission.status === "suspended" ? "bg-red-500 text-white border-red-400" :
-                    "bg-gray-500 text-white border-gray-400"
-                  }`}>
-                    {mission.status}
-                  </div>
-               </div>
-
-               {/* Content */}
-               <div className="flex-1 p-5 lg:p-6 space-y-5">
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                     <div className="space-y-1">
-                        <h3 className="text-lg font-black text-gray-900 tracking-tight leading-tight group-hover:text-[#2D6A4F] transition-colors">{mission.title}</h3>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{mission.category} • {new Date(mission.createdAt).toLocaleDateString()}</p>
-                     </div>
-                     <div className="flex items-center gap-2">
-                        <Link 
-                           to={`/campaigns/${mission._id}`}
-                           className="p-2.5 bg-[#F8FDFB] border border-[#E5F0EA] text-gray-400 hover:text-[#2D6A4F] hover:border-[#2D6A4F]/20 rounded-xl transition-all"
-                           title="Preview Page"
-                        >
-                           <FiGlobe size={14} />
-                        </Link>
-                        <Link 
-                           to={`/dashboard/mission-settings/${mission._id}`}
-                           className="p-2.5 bg-[#F8FDFB] border border-[#E5F0EA] text-gray-400 hover:text-[#2D6A4F] hover:border-[#2D6A4F]/20 rounded-xl transition-all"
-                           title="Mission Settings"
-                        >
-                           <FiEdit2 size={14} />
-                        </Link>
-                     </div>
-                  </div>
-
-                  {/* Progress Bar */}
-                  <div className="space-y-2">
-                     <div className="flex justify-between items-end">
-                        <div className="space-y-0.5">
-                           <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none">Raised</p>
-                           <p className="text-sm font-black text-[#2D6A4F]">৳{mission.currentAmount.toLocaleString()}</p>
-                        </div>
-                        <div className="text-right space-y-0.5">
-                           <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none">Goal</p>
-                           <p className="text-sm font-black text-gray-900">৳{mission.goalAmount.toLocaleString()}</p>
-                        </div>
-                     </div>
-                     <div className="w-full bg-gray-50 rounded-full h-1.5 border border-gray-100 overflow-hidden shadow-inner">
-                        <div 
-                           className="h-full bg-[#2D6A4F] rounded-full transition-all duration-1000"
-                           style={{ width: `${Math.min((mission.currentAmount / mission.goalAmount) * 100, 100)}%` }}
-                        />
-                     </div>
-                  </div>
-
-                  {/* Actions Bar */}
-                  <div className="pt-4 flex flex-wrap items-center gap-2 border-t border-gray-50">
-                     <button 
-                       className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F8FDFB] text-gray-500 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-[#F0FBF4] hover:text-[#2D6A4F] transition-all border border-[#E5F0EA]"
-                     >
-                       <FiBarChart2 size={12} />
-                       Donations ({mission.donations?.length || 0})
-                     </button>
-                     <Link 
-                       to={`/campaigns/${mission._id}#updates`}
-                       className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F8FDFB] text-gray-500 rounded-lg text-[9px] font-black uppercase tracking-widest hover:bg-[#F0FBF4] hover:text-[#2D6A4F] transition-all border border-[#E5F0EA]"
-                     >
-                       <FiRss size={12} />
-                       Updates ({mission.updates?.length || 0})
-                     </Link>
-                     {mission.adminNotice?.isActive && (
-                       <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-amber-100">
-                          <FiAlertTriangle size={12} />
-                          Notice
-                       </div>
-                     )}
-                  </div>
-               </div>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          {missions.map((mission, index) => (
+            <MissionCard key={mission._id} mission={mission} index={index} />
           ))}
         </div>
       )}
     </div>
   );
 };
+
+const MissionCard = ({ mission, index }) => {
+  const pct = Math.min(Math.round((mission.currentAmount / mission.goalAmount) * 100), 100);
+
+  const statusColors = {
+    active: "bg-emerald-100 text-emerald-700",
+    pending: "bg-amber-100 text-amber-700",
+    suspended: "bg-red-100 text-red-600",
+    completed: "bg-blue-100 text-blue-700",
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.07 }}
+      className="bg-white rounded-2xl border border-[#E5F0EA] shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 overflow-hidden flex flex-col group"
+    >
+      {/* Cover Image */}
+      <div className="relative aspect-[16/9] overflow-hidden">
+        <img
+          src={mission.coverImage}
+          alt={mission.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/30 to-transparent" />
+
+        {/* Status badge */}
+        <div className={`absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider ${statusColors[mission.status] || "bg-gray-100 text-gray-600"} backdrop-blur-sm`}>
+          {mission.status}
+        </div>
+
+        {/* Quick actions */}
+        <div className="absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">
+          <Link
+            to={`/campaigns/${mission._id}`}
+            className="w-8 h-8 bg-white/90 backdrop-blur-sm text-gray-700 rounded-lg flex items-center justify-center hover:bg-white hover:text-[#2D6A4F] transition-all shadow-sm text-xs"
+            title="View"
+          >
+            <FiGlobe size={13} />
+          </Link>
+          <Link
+            to={`/dashboard/mission-settings/${mission._id}`}
+            className="w-8 h-8 bg-white/90 backdrop-blur-sm text-gray-700 rounded-lg flex items-center justify-center hover:bg-white hover:text-[#2D6A4F] transition-all shadow-sm text-xs"
+            title="Settings"
+          >
+            <FiHash size={13} />
+          </Link>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-4 flex-1 flex flex-col gap-3">
+        {/* Category + Title */}
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-widest text-[#2D6A4F]/60 mb-1 flex items-center gap-1">
+            <FiHash size={9} /> {mission.category}
+          </p>
+          <h3 className="text-sm font-black text-gray-900 leading-snug line-clamp-2 group-hover:text-[#2D6A4F] transition-colors">
+            {mission.title}
+          </h3>
+        </div>
+
+        {/* Progress */}
+        <div className="space-y-1.5">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-black text-[#2D6A4F]">৳{mission.currentAmount?.toLocaleString()}</span>
+            <span className="text-[10px] font-bold text-gray-400">{pct}% of ৳{mission.goalAmount?.toLocaleString()}</span>
+          </div>
+          <div className="h-1.5 bg-[#F0F9F4] rounded-full overflow-hidden">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${pct}%` }}
+              transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+              className="h-full bg-gradient-to-r from-[#2D6A4F] to-[#52B788] rounded-full"
+            />
+          </div>
+        </div>
+
+        {/* Stats Row + Link */}
+        <div className="flex items-center justify-between pt-2 border-t border-[#F0F9F4] mt-auto">
+          <div className="flex items-center gap-3">
+            <MiniStat icon={<FiUsers size={11} />} value={mission.donationCount || 0} label="Gifts" />
+            <MiniStat icon={<FiRss size={11} />} value={mission.updateCount || 0} label="Updates" />
+          </div>
+          <Link
+            to={`/dashboard/mission-settings/${mission._id}`}
+            className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-[#2D6A4F] hover:gap-2 transition-all"
+          >
+            Manage <FiChevronRight size={12} />
+          </Link>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const MiniStat = ({ icon, value, label }) => (
+  <div className="flex items-center gap-1 text-gray-400">
+    {icon}
+    <span className="text-xs font-black text-gray-900">{value}</span>
+    <span className="text-[9px] font-bold text-gray-400">{label}</span>
+  </div>
+);
 
 export default MyMissions;

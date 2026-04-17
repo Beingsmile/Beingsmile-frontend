@@ -17,18 +17,22 @@ import AdminDashboard from "../layouts/AdminDashboard.jsx";
 import AdminOverview from "../pages/admin/AdminOverview.jsx";
 import CampaignReview from "../pages/admin/CampaignReview.jsx";
 import AdminRoute from "./AdminRoute.jsx";
+import Transactions from "../pages/admin/Transactions.jsx";
 import UserManagement from "../pages/admin/UserManagement.jsx";
 import VerificationReview from "../pages/admin/VerificationReview.jsx";
 import PublicProfile from "../pages/PublicProfile.jsx";
 import AccountStatus from "../pages/Dashboard/AccountStatus.jsx";
 import VerificationStatus from "../pages/Dashboard/VerificationStatus.jsx";
 import PayoutReview from "../pages/admin/PayoutReview.jsx";
+import AdminPayoutLogs from "../pages/admin/AdminPayoutLogs.jsx";
 import AdminCampaigns from "../pages/admin/AdminCampaigns.jsx";
 import PendingUpdates from "../pages/admin/PendingUpdates.jsx";
 import PlatformSettings from "../pages/admin/PlatformSettings.jsx";
 import MyMissions from "../pages/Dashboard/MyMissions.jsx";
 import SavedCampaigns from "../pages/Dashboard/SavedCampaigns.jsx";
 import MissionSettings from "../pages/Dashboard/MissionSettings.jsx";
+import Donations from "../pages/Dashboard/Donations.jsx";
+import MyWallet from "../pages/Dashboard/MyWallet.jsx";
 
 const router = createBrowserRouter([
   {
@@ -86,7 +90,7 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard/",
+    path: "/dashboard",
     element: <Dashboard />,
     children: [
       {
@@ -114,8 +118,8 @@ const router = createBrowserRouter([
         element: <div>Manage Users</div>,
       },
       {
-        path: "transactions",
-        element: <div>Transactions</div>,
+        path: "donations",
+        element: <Donations />,
       },
       {
         path: "reports",
@@ -132,6 +136,10 @@ const router = createBrowserRouter([
       {
         path: "verification-status",
         element: <VerificationStatus />,
+      },
+      {
+        path: "wallet",
+        element: <MyWallet />,
       },
     ],
   },
@@ -176,12 +184,16 @@ const router = createBrowserRouter([
         element: <PayoutReview />,
       },
       {
+        path: "payout-logs",
+        element: <AdminPayoutLogs />,
+      },
+      {
         path: "settings",
         element: <PlatformSettings />,
       },
       {
         path: "transactions",
-        element: <div>Transaction Logs</div>,
+        element: <Transactions />,
       },
     ],
   },

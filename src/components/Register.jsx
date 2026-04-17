@@ -69,6 +69,8 @@ const Register = ({ setAuth }) => {
   const [formData, setFormData] = useState(null);
   const [otpValue, setOtpValue] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isResending, setIsResending] = useState(false);
   const {
     register, handleSubmit,
     formState: { errors },
@@ -92,6 +94,7 @@ const Register = ({ setAuth }) => {
       setIsVerifying(true);
       await axiosInstance.post("/auth/send-otp", { email: data.email });
       setStep(2);
+      setTimeLeft(60); // Start 60s cooldown
       toast.success("Verification code sent to your email!");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send verification code");
@@ -117,7 +120,6 @@ const Register = ({ setAuth }) => {
           avatar: res.user.photoURL || "",
           bio: "",
           donatedCampaigns: [],
-          userType: formData.userType,
           isEmailVerified: true,
         });
         res.user.data = serverRes.user;
@@ -132,12 +134,36 @@ const Register = ({ setAuth }) => {
     }
   };
 
+  const handleResendOTP = async () => {
+    if (timeLeft > 0 || isResending) return;
+    try {
+      setIsResending(true);
+      await axiosInstance.post("/auth/send-otp", { email: formData.email });
+      setTimeLeft(60);
+      toast.success("New verification code sent!");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to resend code");
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   const passwordValue = watch("password");
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    let timer;
+    if (step === 2 && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [step, timeLeft]);
 
   const isLoadingUI = loading || isPending;
 
@@ -170,27 +196,6 @@ const Register = ({ setAuth }) => {
               <div>
                 <p className="text-[10px] font-black uppercase tracking-wider text-[#52B788] mb-1">Step 1 of 2</p>
                 <h2 className="text-2xl font-black text-[#0f2418] tracking-tight">Create your account</h2>
-              </div>
-
-              {/* Role Selection — compact inline pills */}
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase tracking-wide text-gray-400">I want to</label>
-                <div className="flex gap-2">
-                  <label className="cursor-pointer flex-1">
-                    <input type="radio" value="donor" {...register("userType")} defaultChecked className="peer hidden" />
-                    <div className="px-3 py-2 rounded-lg bg-[#F8FDFB] border border-[#E5F0EA] peer-checked:border-[#2D6A4F] peer-checked:bg-[#F0FBF4] transition-all flex items-center justify-center gap-1.5">
-                      <FiHeart size={12} className="text-[#2D6A4F]" />
-                      <span className="text-[11px] font-black uppercase tracking-wide text-[#0f2418]">Donor</span>
-                    </div>
-                  </label>
-                  <label className="cursor-pointer flex-1">
-                    <input type="radio" value="fundraiser" {...register("userType")} className="peer hidden" />
-                    <div className="px-3 py-2 rounded-lg bg-[#F8FDFB] border border-[#E5F0EA] peer-checked:border-[#2D6A4F] peer-checked:bg-[#F0FBF4] transition-all flex items-center justify-center gap-1.5">
-                      <FiActivity size={12} className="text-[#2D6A4F]" />
-                      <span className="text-[11px] font-black uppercase tracking-wide text-[#0f2418]">Fundraiser</span>
-                    </div>
-                  </label>
-                </div>
               </div>
 
               {/* Name */}
@@ -353,12 +358,23 @@ const Register = ({ setAuth }) => {
                     </>
                   )}
                 </button>
-                <button
-                  onClick={() => setStep(1)}
-                  className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-[#2D6A4F] transition-colors py-1"
-                >
-                  ← Edit my details
-                </button>
+
+                <div className="flex flex-col items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleResendOTP}
+                    disabled={timeLeft > 0 || isResending}
+                    className="text-[10px] font-black uppercase tracking-widest text-[#2D6A4F] hover:underline disabled:opacity-30 disabled:no-underline transition-all cursor-pointer"
+                  >
+                    {isResending ? "Sending..." : timeLeft > 0 ? `Resend code in ${timeLeft}s` : "Resend Verification Code"}
+                  </button>
+                  <button
+                    onClick={() => setStep(1)}
+                    className="text-center text-[10px] font-bold uppercase tracking-wider text-gray-400 hover:text-[#2D6A4F] transition-colors py-1 cursor-pointer"
+                  >
+                    ← Edit my details
+                  </button>
+                </div>
               </div>
             </div>
           )}

@@ -47,11 +47,10 @@ export function NavComponent({ setAuth }) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
-        isScrolled
-          ? "bg-white shadow-sm border-b border-gray-100"
-          : "bg-white border-b border-gray-100"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${isScrolled
+        ? "bg-white shadow-sm border-b border-gray-100"
+        : "bg-white border-b border-gray-100"
+        }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-[60px]">
@@ -72,8 +71,7 @@ export function NavComponent({ setAuth }) {
                 key={link.to}
                 to={link.to}
                 className={({ isActive }) =>
-                  `text-sm font-semibold transition-colors hover:text-[#2D6A4F] ${
-                    isActive ? "text-[#2D6A4F]" : "text-gray-600"
+                  `text-sm font-semibold transition-colors hover:text-[#2D6A4F] ${isActive ? "text-[#2D6A4F]" : "text-gray-600"
                   }`
                 }
               >
@@ -99,7 +97,7 @@ export function NavComponent({ setAuth }) {
                 <NotificationBell />
 
                 <Link
-                  to="/dashboard/saved"
+                  to="/dashboard/saved-campaigns"
                   className="p-2 text-gray-400 hover:text-[#2D6A4F] relative group transition-colors"
                   title="Saved Missions"
                 >
@@ -126,32 +124,30 @@ export function NavComponent({ setAuth }) {
                     }
                   }}
                   label={
-                    <div className="w-9 h-9 rounded-xl border-2 border-emerald-100 hover:border-emerald-500 transition-all p-0.5 overflow-hidden bg-white shadow-sm">
-                      <Avatar
-                        alt="User"
-                        img={user.data?.avatar || user?.photoURL || profile}
-                        rounded
-                        size="xs"
-                        className="object-cover"
+                    <div className="w-9 h-9 rounded-xl border-2 border-primary hover:border-primary transition-all p-0 overflow-hidden bg-white shadow-sm flex items-center justify-center">
+                      <img
+                        alt="User Profile"
+                        src={user.data?.avatar || user?.photoURL || profile}
+                        className="w-full h-full object-cover"
                       />
                     </div>
                   }
                 >
                   <DropdownHeader>
                     <div className="flex flex-col">
-                        <span className="block text-sm font-black text-gray-900 tracking-tight">
+                      <span className="block text-sm font-black text-gray-900 tracking-tight">
                         {user.data?.name || "Member"}
-                        </span>
-                        <span className="block text-[11px] font-bold text-emerald-600 mt-0.5 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            {user.email}
-                        </span>
+                      </span>
+                      <span className="block text-[11px] font-bold text-emerald-600 mt-0.5 flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        {user.email}
+                      </span>
                     </div>
                   </DropdownHeader>
                   <DropdownItem as={Link} to="/dashboard">
                     <FiUser className="mr-2" /> {t("nav.profile")}
                   </DropdownItem>
-                  <DropdownItem as={Link} to="/dashboard/settings">
+                  <DropdownItem as={Link} to="/dashboard/donations">
                     <FiHeart className="mr-2" /> My Contributions
                   </DropdownItem>
                   <DropdownDivider className="my-1 border-gray-100/50" />
@@ -196,7 +192,7 @@ export function NavComponent({ setAuth }) {
             ))}
             {user && (
               <NavLink
-                to="/dashboard/saved"
+                to="/dashboard/saved-campaigns"
                 onClick={() => setIsMenuOpen(false)}
                 className="flex items-center gap-2 px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-[#F0FBF4] hover:text-[#2D6A4F] rounded-lg"
               >

@@ -32,6 +32,9 @@ const AdminCampaigns = () => {
     onSuccess: () => {
       qc.invalidateQueries(["adminCampaigns"]);
       toast.success("Featured status updated");
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || "Failed to update featured status");
     }
   });
 
@@ -40,6 +43,9 @@ const AdminCampaigns = () => {
     onSuccess: () => {
       qc.invalidateQueries(["adminCampaigns"]);
       toast.success("Campaign status updated");
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || "Failed to update campaign status");
     }
   });
 
@@ -48,6 +54,9 @@ const AdminCampaigns = () => {
     onSuccess: () => {
       qc.invalidateQueries(["adminCampaigns"]);
       toast.success("Admin notice updated");
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || "Failed to post notice");
     }
   });
 

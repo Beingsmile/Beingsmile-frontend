@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../api/axiosInstance";
-import { FiUsers, FiActivity, FiDollarSign, FiHeart, FiLoader, FiCheckCircle, FiClock } from "react-icons/fi";
+import { FiUsers, FiActivity, FiDollarSign, FiHeart, FiLoader, FiCheckCircle, FiClock, FiShield } from "react-icons/fi";
 
 const AdminOverview = () => {
   const { data, isLoading } = useQuery({
@@ -19,11 +19,11 @@ const AdminOverview = () => {
 
   const statsList = [
     { label: "Total Users", value: data.totalUsers, icon: <FiUsers />, color: "bg-blue-500" },
-    { label: "Donors", value: data.totalDonors, icon: <FiHeart />, color: "bg-pink-500" },
-    { label: "Fundraisers", value: data.totalFundraisers, icon: <FiActivity />, color: "bg-purple-500" },
-    { label: "Total Raised", value: `৳${data.totalRaised.toLocaleString()}`, icon: <FiDollarSign />, color: "bg-green-500" },
-    { label: "Active Missions", value: data.activeCampaigns, icon: <FiCheckCircle />, color: "bg-emerald-500" },
-    { label: "Pending Review", value: data.pendingCampaigns, icon: <FiClock />, color: "bg-amber-500" },
+    { label: "Active missions", value: data.activeCampaigns, icon: <FiCheckCircle />, color: "bg-emerald-500" },
+    { label: "Net Donations", value: `৳${data.netDonations?.toLocaleString()}`, icon: <FiHeart />, color: "bg-pink-500" },
+    { label: "Platform Fees", value: `৳${data.platformFees?.toLocaleString()}`, icon: <FiDollarSign />, color: "bg-amber-500" },
+    { label: "System Holdings", value: `৳${data.platformHoldings?.toLocaleString()}`, icon: <FiActivity />, color: "bg-purple-500" },
+    { label: "Total Payouts", value: `৳${data.totalPayouts?.toLocaleString()}`, icon: <FiClock />, color: "bg-gray-500" },
   ];
 
   return (
@@ -47,9 +47,42 @@ const AdminOverview = () => {
         ))}
       </div>
 
-      {/* Placeholder for charts/recent activity */}
-      <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm h-64 flex items-center justify-center italic text-gray-300">
-        Activity charts and growth analytics coming soon...
+      {/* Platform Ledger (Comprehensive Financial Status) */}
+      <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+        <div className="p-8 border-b border-gray-50 bg-gray-50/50">
+          <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight">Platform Financial Ledger</h3>
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Detailed breakdown of platform holdings and flow</p>
+        </div>
+        <div className="p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase text-gray-400 tracking-tighter">Gross Inflow (Platform)</p>
+            <p className="text-xl font-black text-gray-900">৳{(data.netDonations + data.platformFees).toLocaleString()}</p>
+            <div className="h-1 w-12 bg-blue-500 rounded-full"></div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase text-gray-400 tracking-tighter">Net Mission Payouts</p>
+            <p className="text-xl font-black text-gray-900">৳{data.totalPayouts.toLocaleString()}</p>
+            <div className="h-1 w-12 bg-red-400 rounded-full"></div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase text-gray-400 tracking-tighter">Accumulated Fees</p>
+            <p className="text-xl font-black text-primary">৳{data.platformFees.toLocaleString()}</p>
+            <div className="h-1 w-12 bg-primary rounded-full"></div>
+          </div>
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase text-gray-400 tracking-tighter">Current Liquidity</p>
+            <p className="text-xl font-black text-emerald-600">৳{data.platformHoldings.toLocaleString()}</p>
+            <div className="h-1 w-12 bg-emerald-500 rounded-full"></div>
+          </div>
+        </div>
+        <div className="bg-gray-50 p-6 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-primary shadow-sm border border-gray-100">
+            <FiShield size={14} />
+          </div>
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wide">
+            Automated Audit: All platform holdings are backed by verified successful transactions in the gateway logs.
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -2,332 +2,302 @@ import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
 import axiosInstance from "../api/axiosInstance";
 import {
-    FiUser, FiMail, FiCalendar, FiCheckCircle,
-    FiXCircle, FiPhone, FiEdit, FiLayers,
-    FiHeart, FiLogOut, FiSettings, FiImage, FiActivity, FiShield, FiChevronRight, FiClock
+  FiUser, FiMail, FiPhone, FiEdit,
+  FiCheckCircle, FiXCircle, FiShield, FiChevronRight,
+  FiClock, FiAward, FiEye, FiHash, FiActivity,
 } from "react-icons/fi";
+import { motion, AnimatePresence } from "framer-motion";
 import EditProfile from "../components/EditProfile";
 import { Link } from "react-router";
-import UserCampaigns from "../components/UserCampaigns";
-import UserDonations from "../components/UserDonations";
-import AccountSettings from "../components/AccountSettings";
 import RequestVerification from "../components/RequestVerification";
 
 const Profile = () => {
-    const { user, logout } = useContext(AuthContext);
-    const [activeTab, setActiveTab] = useState("info");
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
-    const [verificationRequests, setVerificationRequests] = useState([]);
-    const [isStatusLoading, setIsStatusLoading] = useState(true);
+  const { user, logout } = useContext(AuthContext);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
+  const [verificationRequests, setVerificationRequests] = useState([]);
+  const [isStatusLoading, setIsStatusLoading] = useState(true);
 
-    const fetchVerificationStatus = async () => {
-        try {
-            setIsStatusLoading(true);
-            const res = await axiosInstance.get("/verification/my-requests");
-            setVerificationRequests(res.data.requests);
-        } catch (err) {
-            console.error("Failed to fetch verification status");
-        } finally {
-            setIsStatusLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        if (user) {
-            fetchVerificationStatus();
-        }
-    }, [user]);
-
-    const pendingRequest = verificationRequests.find(r => r.status === 'pending');
-
-    if (!user) {
-        return (
-            <div className="bg-neutral min-h-screen flex items-center justify-center">
-                <div className="text-center space-y-6">
-                    <div className="w-20 h-20 bg-primary/10 text-primary rounded-[2rem] flex items-center justify-center text-3xl mx-auto">
-                        <FiUser />
-                    </div>
-                    <div>
-                        <h2 className="text-4xl font-black text-gray-900 tracking-tight uppercase">Access <span className="text-primary">Denied</span></h2>
-                        <p className="text-gray-500 font-medium mt-2">Please login to view your humanitarian dashboard.</p>
-                    </div>
-                    <Link to="/login" className="inline-block bg-primary text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
-                        Secure Login
-                    </Link>
-                </div>
-            </div>
-        );
+  const fetchVerificationStatus = async () => {
+    try {
+      setIsStatusLoading(true);
+      const res = await axiosInstance.get("/verification/my-requests");
+      setVerificationRequests(res.data.requests);
+    } catch (err) {
+      console.error("Failed to fetch verification status");
+    } finally {
+      setIsStatusLoading(false);
     }
+  };
 
-    return (
-        <div className="bg-[#F8FDFB] min-h-screen pb-16">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="bg-white rounded-2xl shadow-sm border border-[#E5F0EA] overflow-hidden">
-                    {/* Header/Cover Area */}
-                    <div className="h-40 bg-gradient-to-br from-[#2D6A4F]/10 via-[#F0FBF4] to-transparent relative overflow-hidden">
-                        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-[#2D6A4F] via-transparent to-transparent"></div>
-                    </div>
+  useEffect(() => {
+    if (user) fetchVerificationStatus();
+  }, [user]);
 
-                    <div className="px-6 lg:px-10 pb-10">
-                        <div className="relative flex flex-col md:flex-row md:items-end -mt-16 mb-10 gap-6 lg:gap-8">
-                            {/* Avatar */}
-                            <div className="relative">
-                                <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl bg-white p-1.5 shadow-xl border border-[#E5F0EA] overflow-hidden group">
-                                    <div className="w-full h-full rounded-xl bg-[#F8FDFB] overflow-hidden relative">
-                                        {user?.data?.avatar ? (
-                                            <img src={user.data.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50">
-                                                <FiUser size={48} />
-                                            </div>
-                                        )}
-                                        <button
-                                            onClick={() => setIsEditModalOpen(true)}
-                                            className="absolute inset-0 bg-[#2D6A4F]/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all cursor-pointer backdrop-blur-[2px]"
-                                        >
-                                            <FiImage className="text-xl" />
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="absolute -bottom-1.5 -right-1.5 w-10 h-10 bg-[#F59E0B] rounded-xl flex items-center justify-center text-white shadow-lg border-4 border-white">
-                                    <FiActivity size={14} />
-                                </div>
-                            </div>
+  const pendingRequest = verificationRequests.find(r => r.status === 'pending');
 
-                            {/* Name & Basic Info */}
-                            <div className="flex-1 space-y-3">
-                                <div className="space-y-1">
-                                    <div className="flex items-center gap-3 flex-wrap">
-                                        <h1 className="text-3xl font-black text-gray-900 tracking-tight uppercase">
-                                            {user?.data?.name || user?.displayName}
-                                        </h1>
-                                        {user?.data?.isVerified && (
-                                            <span className="flex items-center gap-1 px-3 py-1 bg-green-50 text-green-600 text-[9px] font-black uppercase rounded-full tracking-wider border border-green-100">
-                                                <FiCheckCircle size={10} /> Verified
-                                            </span>
-                                        )}
-                                    </div>
-                                    <p className="text-sm font-bold text-gray-400 flex items-center gap-2 uppercase tracking-wide">
-                                        <FiMail className="text-[#2D6A4F]" /> {user?.email}
-                                    </p>
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                    <span className="px-3 py-1.5 bg-[#F8FDFB] text-gray-500 text-[10px] font-black uppercase tracking-widest rounded-lg border border-[#E5F0EA]">
-                                        Role: {user?.data?.role || "Supporter"}
-                                    </span>
-                                    <span className="px-3 py-1.5 bg-[#2D6A4F]/5 text-[#2D6A4F] text-[10px] font-black uppercase tracking-widest rounded-lg border border-[#2D6A4F]/10">
-                                        Since {new Date(user?.data?.createdAt).getFullYear()}
-                                    </span>
-                                </div>
-                            </div>
+  if (!user) return (
+    <div className="flex items-center justify-center min-h-[50vh]">
+      <div className="text-center space-y-4">
+        <div className="w-16 h-16 bg-[#EDFAF3] rounded-2xl flex items-center justify-center text-[#2D6A4F] text-2xl mx-auto">
+          <FiShield />
+        </div>
+        <h2 className="text-xl font-black text-gray-900 uppercase tracking-tight">Access Restricted</h2>
+        <Link to="/login" className="inline-block bg-[#2D6A4F] text-white px-8 py-3 rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-[#2D6A4F]/20 hover:bg-[#1B4332] transition-all">
+          Sign In
+        </Link>
+      </div>
+    </div>
+  );
 
-                            {/* Actions */}
-                            <div className="flex flex-row gap-2 mt-4 md:mt-0">
-                                <button
-                                    onClick={() => setIsEditModalOpen(true)}
-                                    className="px-5 py-3 bg-[#2D6A4F] text-white font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#2D6A4F]/20 hover:bg-[#1B4332] transition-all flex items-center justify-center gap-2 cursor-pointer"
-                                >
-                                    <FiEdit size={12} /> Edit Profile
-                                </button>
-                                <button
-                                    onClick={logout}
-                                    className="px-5 py-3 bg-white text-gray-500 font-black uppercase tracking-widest text-[10px] rounded-xl border border-gray-100 hover:bg-red-50 hover:text-red-500 hover:border-red-100 transition-all flex items-center justify-center gap-2 cursor-pointer"
-                                >
-                                    <FiLogOut size={12} /> Logout
-                                </button>
-                            </div>
-                        </div>
+  return (
+    <div className="space-y-5">
 
-                        {/* Tabs Navigation */}
-                        <div className="flex items-center gap-2 border-b border-[#F0FBF4] mb-8 overflow-x-auto no-scrollbar">
-                            {[
-                                { id: "info", icon: <FiUser />, label: "Information" },
-                                { id: "campaigns", icon: <FiLayers />, label: "My Missions" },
-                                { id: "donations", icon: <FiHeart />, label: "Gifts" },
-                                { id: "settings", icon: <FiSettings />, label: "Security" }
-                            ].map((tab) => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-2 px-6 py-4 text-[11px] font-black uppercase tracking-wider transition-all relative group whitespace-nowrap cursor-pointer ${activeTab === tab.id ? "text-[#2D6A4F]" : "text-gray-400 hover:text-gray-600"
-                                        }`}
-                                >
-                                    {tab.icon} {tab.label}
-                                    {activeTab === tab.id && (
-                                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#2D6A4F] rounded-full shadow-lg animate-in fade-in zoom-in duration-300"></div>
-                                    )}
-                                </button>
-                            ))}
-                        </div>
+      {/* ─── Two Column Grid ────────────────────────────────────── */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
 
-                        {/* Tab Content */}
-                        <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-                            {activeTab === "info" && (
-                                <PersonalInfo 
-                                    user={user} 
-                                    pendingRequest={pendingRequest}
-                                    isStatusLoading={isStatusLoading}
-                                    onVerifyClick={() => setIsVerifyModalOpen(true)} 
-                                />
-                            )}
-                            {activeTab === "campaigns" && <UserCampaigns />}
-                            {activeTab === "donations" && <UserDonations />}
-                            {activeTab === "settings" && <AccountSettings />}
-                        </div>
-                    </div>
-                </div>
+        {/* LEFT — Identity + Bio */}
+        <div className="xl:col-span-2 space-y-5">
+
+          {/* Identity Card */}
+          <SectionCard title="Core Identity" icon={<FiUser />}>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {/* Role Badge */}
+              <span className="flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-lg border border-slate-100">
+                <FiUser size={12} /> {user.data?.role || 'User'}
+              </span>
+
+              {/* Donor Badge */}
+              {user.data?.metrics?.totalDonated > 0 && (
+                <span className="flex items-center gap-1.5 px-2.5 py-1 bg-rose-50 text-rose-600 text-[10px] font-black uppercase tracking-widest rounded-lg border border-rose-100 animate-in fade-in zoom-in duration-500">
+                  <FiHeart size={12} className="fill-rose-100" /> Donor
+                </span>
+              )}
+
+              {/* Fundraiser Badge */}
+              {user.data?.metrics?.campaignCount > 0 && (
+                <span className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest rounded-lg border border-blue-100 animate-in fade-in zoom-in duration-500">
+                  <FiActivity size={12} /> Fundraiser
+                </span>
+              )}
             </div>
 
-            {isEditModalOpen && (
-                <EditProfile onClose={() => setIsEditModalOpen(false)} />
-            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <InfoField label="Legal Name" value={user.data?.name} sub="Verified display name" />
+              <InfoField label="Email" value={user.email} sub="Primary contact" />
+              <InfoField label="Phone" value={user.data?.phoneNumber || "—"} sub="Secure line" />
+              <InfoField label="Profile ID" value={`BS-${user.data?._id?.slice(-6).toUpperCase()}`} sub="Platform identifier" />
+            </div>
+            <div className="pt-3 border-t border-[#F0F9F4] flex flex-wrap gap-2 mt-1">
+              <button
+                onClick={() => setIsEditModalOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-[#2D6A4F] text-white rounded-xl text-[11px] font-black uppercase tracking-widest hover:bg-[#1B4332] transition-all shadow-sm shadow-[#2D6A4F]/20 cursor-pointer"
+              >
+                <FiEdit size={12} /> Edit Identity
+              </button>
+              <Link
+                to={`/p/${user.data?.slug || user.data?._id}`}
+                className="flex items-center gap-2 px-4 py-2 border border-[#E5F0EA] text-gray-500 rounded-xl text-[11px] font-black uppercase tracking-widest hover:border-[#2D6A4F]/30 hover:text-[#2D6A4F] transition-all"
+              >
+                <FiEye size={12} /> Public Profile
+              </Link>
+            </div>
+          </SectionCard>
 
-            {isVerifyModalOpen && (
-                <RequestVerification
-                    onClose={() => setIsVerifyModalOpen(false)}
-                    onSubmitted={() => {
-                        setIsVerifyModalOpen(false);
-                        fetchVerificationStatus();
-                    }}
-                />
+          {/* Mission Statement */}
+          <SectionCard title="Mission Statement" icon={<FiActivity />}>
+            {user.data?.bio ? (
+              <blockquote className="text-gray-700 font-medium leading-relaxed text-sm p-4 bg-[#F8FDFB] rounded-xl border border-[#E5F0EA] italic">
+                "{user.data.bio}"
+              </blockquote>
+            ) : (
+              <div className="p-6 bg-[#F8FDFB] rounded-xl border border-dashed border-[#E5F0EA] text-center space-y-2">
+                <p className="text-gray-400 text-sm font-medium">Your bio is empty.</p>
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="text-[#2D6A4F] text-[11px] font-black uppercase tracking-widest hover:underline cursor-pointer flex items-center gap-1 mx-auto"
+                >
+                  Add your mission <FiChevronRight size={12} />
+                </button>
+              </div>
             )}
+          </SectionCard>
+
+          {/* Quick Access Links */}
+          <SectionCard title="Quick Access" icon={<FiChevronRight />}>
+            <div className="space-y-1">
+              <AccessRow icon={<FiEdit />} label="Edit Personal Information" onClick={() => setIsEditModalOpen(true)} />
+              <AccessRow icon={<FiEye />} label="View Public Profile" to={`/p/${user.data?.slug || user.data?._id}`} />
+              <AccessRow icon={<FiClock />} label="Donation History" to="/dashboard/donations" />
+              <AccessRow icon={<FiHash />} label="Account Status" to="/dashboard/account-status" />
+            </div>
+          </SectionCard>
         </div>
-    );
+
+        {/* RIGHT — Trust + Security */}
+        <div className="space-y-5">
+
+          {/* Trust Score Card */}
+          <div className="bg-gradient-to-br from-[#1B4332] to-[#2D6A4F] rounded-2xl p-6 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-10 -mt-10" />
+            <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-6 -mb-6" />
+            <div className="relative z-10 space-y-5">
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-emerald-300 mb-1">Platform Status</p>
+                <h3 className="text-2xl font-black tracking-tight">Trust Center</h3>
+              </div>
+
+              <div className="space-y-3">
+                <TrustRow
+                  label="Identity Verified"
+                  status={user.data?.identity?.isVerified ? "verified" : (pendingRequest ? "pending" : "incomplete")}
+                  icon={<FiShield size={14} />}
+                />
+                <TrustRow
+                  label="Email Confirmed"
+                  status={user?.emailVerified ? "verified" : "incomplete"}
+                  icon={<FiMail size={14} />}
+                />
+              </div>
+
+              <div className="pt-4 border-t border-white/10">
+                {!user.data?.identity?.isVerified ? (
+                  pendingRequest ? (
+                    <div className="bg-white/10 rounded-xl p-4 flex items-center gap-3">
+                      <FiClock className="text-amber-300 shrink-0 animate-pulse" size={18} />
+                      <p className="text-xs font-bold text-emerald-100 leading-snug">
+                        Documents under review. Est. 24h.
+                      </p>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setIsVerifyModalOpen(true)}
+                      className="w-full bg-white text-[#1B4332] py-3 rounded-xl font-black uppercase tracking-widest text-[11px] hover:shadow-lg transition-all cursor-pointer"
+                    >
+                      Apply for Verified Badge
+                    </button>
+                  )
+                ) : (
+                  <div className="bg-white/10 rounded-xl p-4 flex items-center gap-3 border border-emerald-400/20">
+                    <FiAward className="text-emerald-300 shrink-0" size={18} />
+                    <p className="text-xs font-black uppercase tracking-widest text-emerald-50">Identity Verified ✓</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Card */}
+          <SectionCard title="Activity Stats" icon={<FiActivity />}>
+            <div className="grid grid-cols-2 gap-3">
+              <StatBox label="Missions" value={user.data?.campaignCount ?? 0} color="green" />
+              <StatBox label="Role" value={user.data?.role || "Supporter"} color="blue" text />
+              <StatBox
+                label="Since"
+                value={user.data?.createdAt
+                  ? new Date(user.data.createdAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })
+                  : '—'}
+                color="purple" text
+              />
+              <StatBox label="Status" value={user.data?.status || "Active"} color="emerald" text />
+            </div>
+          </SectionCard>
+        </div>
+      </div>
+
+      {/* Modals */}
+      <AnimatePresence>
+        {isEditModalOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <EditProfile onClose={() => setIsEditModalOpen(false)} />
+          </motion.div>
+        )}
+        {isVerifyModalOpen && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <RequestVerification
+              onClose={() => setIsVerifyModalOpen(false)}
+              onSubmitted={() => {
+                setIsVerifyModalOpen(false);
+                fetchVerificationStatus();
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 };
 
-const PersonalInfo = ({ user, onVerifyClick, pendingRequest, isStatusLoading }) => (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-        <div className="lg:col-span-7 space-y-10">
-            <section>
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2D6A4F] mb-6 flex items-center gap-2">
-                    <FiShield className="text-base" /> Identity Breakdown
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <InfoItem label="Legal Name" value={user?.data?.name} icon={<FiUser />} />
-                    <InfoItem label="Email Identity" value={user?.email} icon={<FiMail />} verified={user?.emailVerified} />
-                    <InfoItem label="Phone Connection" value={user?.data?.phoneNumber || "Not Connected"} icon={<FiPhone />} />
-                    <InfoItem label="Impact Joined" value={new Date(user?.data?.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })} icon={<FiCalendar />} />
-                </div>
-            </section>
+/* ─── Shared UI ─────────────────────────────────────────────── */
 
-            <section>
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2D6A4F] mb-6 flex items-center gap-2">
-                    <FiActivity className="text-base" /> Mission Statement
-                </h3>
-                <div className="p-8 bg-[#F8FDFB] rounded-2xl border border-[#E5F0EA] min-h-[160px] relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-6 text-5xl text-[#2D6A4F]/5 group-hover:text-primary/10 transition-colors">
-                        <FiEdit />
-                    </div>
-                    {user?.data?.bio ? (
-                        <p className="text-base font-semibold text-gray-700 leading-relaxed whitespace-pre-wrap relative z-10">{user.data.bio}</p>
-                    ) : (
-                        <p className="text-gray-400 font-bold text-sm italic relative z-10">You haven't added a mission statement yet. Share your story with the world!</p>
-                    )}
-                </div>
-            </section>
-        </div>
-
-        <div className="lg:col-span-5">
-            <div className="bg-[#F0FBF4]/50 rounded-2xl p-8 border border-[#E5F0EA] space-y-6">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-[#2D6A4F]">Security & Trust</h4>
-
-                <div className="space-y-4">
-                    <StatusBadge
-                        label="Account Status"
-                        value={user?.data?.status}
-                        type={user?.data?.status === "active" ? "success" : "danger"}
-                        icon={<FiCheckCircle />}
-                    />
-                    <StatusBadge
-                        label="Verification Level"
-                        value={user?.data?.identity?.isVerified ? "Trusted Hero" : "Standard"}
-                        type={user?.data?.identity?.isVerified ? "success" : "warning"}
-                        icon={<FiShield />}
-                        description={
-                            user?.data?.identity?.isVerified 
-                                ? "Your identity is officially verified." 
-                                : pendingRequest 
-                                    ? "Your request is being reviewed."
-                                    : "Verify to unlock platform features."
-                        }
-                        action={
-                            !user?.data?.identity?.isVerified ? (
-                                isStatusLoading ? (
-                                    <div className="mt-4 flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-gray-400">
-                                        <FiClock className="animate-spin" /> Verifying...
-                                    </div>
-                                ) : pendingRequest ? (
-                                    <Link
-                                        to="/dashboard/verification-status"
-                                        className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-700 text-[9px] font-black uppercase rounded-lg border border-amber-200"
-                                    >
-                                        <FiClock /> Under Review
-                                    </Link>
-                                ) : (
-                                    <button
-                                        onClick={onVerifyClick}
-                                        className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#2D6A4F] hover:underline group cursor-pointer"
-                                    >
-                                        Request Trust Stamp <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                )
-                            ) : (
-                                <Link 
-                                    to="/dashboard/verification-status"
-                                    className="mt-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#2D6A4F] hover:underline group cursor-pointer"
-                                >
-                                    View Record <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-                                </Link>
-                            )
-                        }
-                    />
-                </div>
-
-                <div className="pt-4 border-t border-[#E5F0EA]">
-                    <p className="text-[10px] font-bold text-gray-400 leading-relaxed uppercase tracking-wider">
-                        Transparency ensures higher campaign success.
-                    </p>
-                </div>
-            </div>
-        </div>
+const SectionCard = ({ title, icon, children }) => (
+  <div className="bg-white rounded-2xl border border-[#E5F0EA] shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+    <div className="px-6 py-4 border-b border-[#F0F9F4] flex items-center gap-2.5">
+      <div className="w-7 h-7 bg-[#EDFAF3] text-[#2D6A4F] rounded-lg flex items-center justify-center text-sm">
+        {icon}
+      </div>
+      <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-600">{title}</h2>
     </div>
+    <div className="p-6">{children}</div>
+  </div>
 );
 
-const InfoItem = ({ label, value, icon, verified }) => (
-    <div className="p-5 bg-white rounded-xl border border-[#E5F0EA] shadow-sm hover:shadow-md transition-all group">
-        <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest block mb-4 group-hover:text-[#2D6A4F] transition-colors">{label}</label>
-        <div className="flex items-center text-gray-900 font-bold tracking-tight text-sm">
-            <span className="w-9 h-9 bg-[#F8FDFB] text-[#2D6A4F] rounded-lg flex items-center justify-center mr-3 group-hover:bg-[#2D6A4F] group-hover:text-white transition-all shadow-sm">{icon}</span>
-            <div className="flex-1 overflow-hidden overflow-ellipsis whitespace-nowrap">
-                {value}
-                {verified && <FiCheckCircle className="inline-block ml-2 text-green-500" />}
-            </div>
-        </div>
-    </div>
+const InfoField = ({ label, value, sub }) => (
+  <div className="p-3.5 bg-[#F8FDFB] rounded-xl border border-[#E5F0EA] hover:border-[#C8EDDA] hover:bg-white transition-all duration-200 group">
+    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-[#2D6A4F]/60 mb-1">{label}</p>
+    <p className="text-sm font-bold text-gray-900 truncate">{value || "—"}</p>
+    {sub && <p className="text-[10px] text-gray-400 mt-0.5">{sub}</p>}
+  </div>
 );
 
-const StatusBadge = ({ label, value, type, action, icon, description }) => {
-    const colors = {
-        success: "text-green-600 bg-green-50/50 border-green-100",
-        warning: "text-amber-600 bg-amber-50/50 border-amber-100",
-        danger: "text-red-600 bg-red-50/50 border-red-100"
-    };
-    return (
-        <div className={`p-6 rounded-2xl border ${colors[type] || colors.warning} space-y-3`}>
-            <div className="flex items-center gap-3">
-                <div className="text-xl opacity-80">{icon}</div>
-                <div>
-                    <label className="text-[9px] font-black uppercase tracking-wider opacity-60 block">{label}</label>
-                    <span className="text-xs font-black uppercase tracking-widest block mt-0.5">
-                        {value}
-                    </span>
-                </div>
-            </div>
-            {description && <p className="text-[10px] font-bold leading-relaxed opacity-70 uppercase tracking-wide">{description}</p>}
-            {action}
+const TrustRow = ({ label, status, icon }) => {
+  const ok = status === "verified";
+  const pending = status === "pending";
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2.5">
+        <div className={`p-1.5 rounded-lg ${ok ? "bg-emerald-400 text-[#1B4332]" : "bg-white/10 text-white/60"}`}>
+          {icon}
         </div>
-    );
+        <div>
+          <p className="text-[9px] font-black uppercase tracking-widest text-white/50">{label}</p>
+          <p className={`text-xs font-black uppercase ${ok ? "text-emerald-300" : pending ? "text-amber-300" : "text-white/40"}`}>
+            {status}
+          </p>
+        </div>
+      </div>
+      {ok ? <FiCheckCircle className="text-emerald-400" size={15} /> : <FiXCircle className="text-white/20" size={15} />}
+    </div>
+  );
+};
+
+const AccessRow = ({ icon, label, to, onClick }) => {
+  const content = (
+    <div className="flex items-center justify-between px-3 py-3 rounded-xl hover:bg-[#F8FDFB] border border-transparent hover:border-[#E5F0EA] transition-all group cursor-pointer">
+      <div className="flex items-center gap-3">
+        <span className="text-gray-400 group-hover:text-[#2D6A4F] transition-colors text-sm">{icon}</span>
+        <span className="text-[11px] font-bold text-gray-600 group-hover:text-gray-900 transition-colors">{label}</span>
+      </div>
+      <FiChevronRight className="text-gray-300 group-hover:text-[#2D6A4F] transform group-hover:translate-x-0.5 transition-all" size={14} />
+    </div>
+  );
+  if (to) return <Link to={to} className="block">{content}</Link>;
+  return <div onClick={onClick}>{content}</div>;
+};
+
+const StatBox = ({ label, value, color, text }) => {
+  const colors = {
+    green: "bg-emerald-50 text-emerald-700",
+    blue: "bg-blue-50 text-blue-700",
+    purple: "bg-violet-50 text-violet-700",
+    emerald: "bg-teal-50 text-teal-700",
+  };
+  return (
+    <div className={`rounded-xl p-3 ${colors[color]}`}>
+      <p className={`${text ? "text-xs" : "text-2xl"} font-black leading-tight truncate`}>{value}</p>
+      <p className="text-[9px] font-bold uppercase tracking-widest opacity-60 mt-1">{label}</p>
+    </div>
+  );
 };
 
 export default Profile;

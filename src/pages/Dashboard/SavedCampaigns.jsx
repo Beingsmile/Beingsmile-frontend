@@ -1,14 +1,10 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../api/axiosInstance";
 import CampaignCard from "../../components/Campaign";
-import { FiBookmark, FiHeart, FiLoader, FiSearch } from "react-icons/fi";
+import { FiBookmark, FiLoader, FiCompass } from "react-icons/fi";
 import { Link } from "react-router";
-import { toast } from "react-toastify";
 
 const SavedCampaigns = () => {
-  const qc = useQueryClient();
-
-  // Fetch saved campaigns
   const { data, isLoading } = useQuery({
     queryKey: ["savedCampaigns"],
     queryFn: async () => {
@@ -21,37 +17,49 @@ const SavedCampaigns = () => {
 
   if (isLoading) return (
     <div className="flex items-center justify-center h-64">
-      <FiLoader className="animate-spin text-primary" size={32} />
+      <FiLoader className="animate-spin text-[#2D6A4F]" size={26} />
     </div>
   );
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <div>
-        <h1 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Saved Missions</h1>
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">
-          Causes you've bookmarked for later
-        </p>
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-black text-gray-900 tracking-tight">Saved Missions</h1>
+          <p className="text-[11px] text-gray-400 font-semibold mt-0.5">
+            {campaigns.length} bookmarked mission{campaigns.length !== 1 ? "s" : ""}
+          </p>
+        </div>
+        <Link
+          to="/campaigns/browse"
+          className="flex items-center gap-2 px-4 py-2.5 border border-[#E5F0EA] text-gray-500 text-[11px] font-black uppercase tracking-widest rounded-xl hover:border-[#2D6A4F]/40 hover:text-[#2D6A4F] transition-all"
+        >
+          <FiCompass size={13} />
+          Browse More
+        </Link>
       </div>
 
       {campaigns.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-[#E5F0EA] p-16 text-center space-y-4 border-dashed">
-          <div className="w-16 h-16 bg-[#F8FDFB] rounded-xl flex items-center justify-center text-gray-300 mx-auto mb-2 border border-[#E5F0EA]">
-            <FiBookmark size={28} />
+        <div className="bg-white rounded-2xl border border-dashed border-[#E5F0EA] p-16 text-center space-y-5">
+          <div className="w-14 h-14 bg-[#F8FDFB] rounded-2xl flex items-center justify-center text-gray-300 mx-auto border border-[#E5F0EA]">
+            <FiBookmark size={26} />
           </div>
-          <h3 className="text-lg font-bold text-gray-900 uppercase tracking-tight">No Saved Missions</h3>
-          <p className="text-xs text-gray-400 max-w-xs mx-auto leading-relaxed font-bold uppercase tracking-wide">
-            Bookmarked missions will appear here for easy access.
-          </p>
-          <Link 
-            to="/campaigns"
-            className="inline-block px-8 py-3 bg-[#2D6A4F] text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-[#2D6A4F]/20 hover:bg-[#1B4332] active:scale-95 transition-all mt-4"
+          <div className="space-y-1.5">
+            <h3 className="text-base font-black text-gray-900 uppercase tracking-tight">No Saved Missions</h3>
+            <p className="text-xs text-gray-400 max-w-xs mx-auto leading-relaxed font-medium">
+              Bookmark missions that inspire you — they'll appear here for easy access.
+            </p>
+          </div>
+          <Link
+            to="/campaigns/browse"
+            className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#2D6A4F] text-white text-[11px] font-black uppercase tracking-widest rounded-xl shadow-sm shadow-[#2D6A4F]/20 hover:bg-[#1B4332] transition-all"
           >
-            Explore Causes
+            <FiCompass size={13} /> Explore Causes
           </Link>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">
           {campaigns.map((campaign) => (
             <CampaignCard key={campaign._id} campaign={campaign} />
           ))}

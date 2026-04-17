@@ -317,16 +317,17 @@ export default function CampaignDetails() {
             </div>
 
             {/* Tabs Navigation */}
-            <div className="flex border-b border-[#E5F0EA] sticky top-[60px] bg-white z-10 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex border-b border-[#E5F0EA] sticky top-[60px] bg-white z-10 -mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto no-scrollbar">
               {[
                 { id: 'story', label: 'Story', icon: <FiHeart size={12} /> },
                 { id: 'updates', label: 'Updates', count: campaign.updates?.length || 0, icon: <FiBell size={12} /> },
+                { id: 'supporters', label: 'Supporters', count: campaign.donations?.length || 0, icon: <FiUser size={12} /> },
                 { id: 'discussion', label: 'Discussion', count: commentData?.total || 0, icon: <FiMessageSquare size={12} /> }
               ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`relative px-4 sm:px-6 py-4 text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all transition-colors ${
+                  className={`relative flex-shrink-0 px-4 sm:px-6 py-4 text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all transition-colors ${
                     activeTab === tab.id ? "text-[#2D6A4F]" : "text-gray-400 hover:text-gray-600"
                   }`}
                 >
@@ -369,6 +370,44 @@ export default function CampaignDetails() {
                     campaignId={id}
                     isCreator={isCreator}
                   />
+                </div>
+              )}
+
+              {activeTab === 'supporters' && (
+                <div className="bg-white border border-[#E5F0EA] rounded-2xl p-6 md:p-8 shadow-sm">
+                  <h2 className="text-[10px] font-black text-[#2D6A4F] uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                    <FiUser size={14} /> Global Supporters
+                  </h2>
+                  <div className="space-y-4">
+                    {campaign.donations?.length > 0 ? (
+                      [...campaign.donations].reverse().map((d, i) => (
+                        <div key={i} className="flex items-center justify-between p-4 bg-gray-50 border border-gray-100 rounded-xl hover:bg-white hover:shadow-sm transition-all group">
+                          <div className="flex items-center gap-4">
+                             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary border border-emerald-100 shadow-sm font-black text-sm">
+                                {d.isAnonymous || d.isAnonymousFromAll ? "?" : (d.donorName || d.donor?.name || "K")[0].toUpperCase()}
+                             </div>
+                             <div>
+                                <h4 className="text-sm font-black text-gray-900 uppercase tracking-tight">
+                                   {d.isAnonymousFromAll ? "Anonymous Helper" : (d.isAnonymous ? (isCreator ? `${d.donorName} (Privately)` : "Anonymous") : d.donorName || d.donor?.name || "Kind Soul")}
+                                </h4>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                                   {timeStr(d.donatedAt)} {d.message && `• "${d.message}"`}
+                                </p>
+                             </div>
+                          </div>
+                          <div className="text-right">
+                             <p className="text-sm font-black text-primary">৳{d.amount.toLocaleString()}</p>
+                             {d.isAnonymous && <p className="text-[8px] font-black text-gray-300 uppercase">Private Contribution</p>}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-12">
+                         <FiHeart className="mx-auto text-gray-100 mb-2" size={48} />
+                         <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">No contributions yet. Be the first!</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 

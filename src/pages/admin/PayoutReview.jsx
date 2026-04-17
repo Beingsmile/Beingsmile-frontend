@@ -1,13 +1,39 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "../../api/axiosInstance";
-import { FiClock, FiCheck, FiX, FiDollarSign, FiUser, FiHome, FiCheckCircle, FiLoader, FiExternalLink, FiCreditCard } from "react-icons/fi";
+import { FiClock, FiCheck, FiX, FiDollarSign, FiUser, FiHome, FiCheckCircle, FiLoader, FiExternalLink, FiCreditCard, FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useRef } from "react";
+
+const toBase64 = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = reject;
+});
 
 const PayoutReview = () => {
   const queryClient = useQueryClient();
   const [processingId, setProcessingId] = useState(null);
   const [txnRef, setTxnRef] = useState("");
+  const [proofDoc, setProofDoc] = useState("");
+  const [fileName, setFileName] = useState("");
+  const fileInputRef = useRef(null);
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+       toast.error("File must be under 5MB");
+       return;
+    }
+    setFileName(file.name);
+    try {
+      const base64 = await toBase64(file);
+      setProofDoc(base64);
+    } catch (err) {
+      toast.error("Failed to read file.");
+    }
+  };
 
   const { data, isLoading } = useQuery({
     queryKey: ["pendingPayouts"],
@@ -28,13 +54,15 @@ const PayoutReview = () => {
   });
 
   const completeMutation = useMutation({
-    mutationFn: ({ id, transactionReference }) => 
-      axiosInstance.patch(`/payouts/complete/${id}`, { transactionReference }),
+    mutationFn: ({ id, transactionReference, proofDocument }) => 
+      axiosInstance.patch(`/payouts/complete/${id}`, { transactionReference, proofDocument }),
     onSuccess: () => {
       queryClient.invalidateQueries(["pendingPayouts"]);
       toast.success("Payout marked as completed");
       setProcessingId(null);
       setTxnRef("");
+      setProofDoc("");
+      setFileName("");
     },
     onError: (err) => toast.error(err.response?.data?.message || "Failed to complete")
   });
@@ -51,7 +79,7 @@ const PayoutReview = () => {
       toast.warn("Please enter a transaction reference ID");
       return;
     }
-    completeMutation.mutate({ id, transactionReference: txnRef });
+    completeMutation.mutate({ id, transactionReference: txnRef, proofDocument: proofDoc });
   };
 
   if (isLoading) return <div className="p-20 flex justify-center"><FiLoader className="animate-spin text-primary text-4xl" /></div>;
@@ -121,22 +149,30 @@ const PayoutReview = () => {
               <div className="w-full md:w-64 space-y-3 flex flex-col justify-center">
                  {processingId === request._id ? (
                      <div className="space-y-3 animate-in zoom-in duration-300">
-                        <p className="text-[10px] font-black uppercase text-amber-500 mb-2">Step 2: Enter Bank Ref ID</p>
+                        <p className="text-[10px] font-black uppercase text-amber-500 mb-2">Step 2: Enter Completion Info</p>
                         <input 
                             value={txnRef}
                             onChange={(e) => setTxnRef(e.target.value)}
-                            placeholder="e.g. CITY-55231"
+                            placeholder="Bank Ref ID (e.g. CITY-55231)"
                             className="w-full bg-neutral p-3 rounded-xl text-xs font-bold border-2 border-primary/20 focus:border-primary outline-none"
                         />
+                        <div 
+                            onClick={() => fileInputRef.current?.click()}
+                            className={`w-full p-3 rounded-xl text-xs font-bold border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${proofDoc ? 'border-emerald-400 bg-emerald-50 text-emerald-700' : 'border-primary/20 bg-neutral text-gray-500 hover:border-primary/50'}`}
+                        >
+                            <input type="file" accept="image/*,.pdf" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
+                            <FiUpload className="mb-1" size={16} />
+                            {fileName ? <span className="truncate w-full text-center px-2">{fileName}</span> : "Upload Proof Document"}
+                        </div>
                         <button 
                              onClick={() => handleComplete(request._id)}
-                             disabled={completeMutation.isPending}
-                             className="w-full bg-emerald-500 text-white p-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all"
+                             disabled={completeMutation.isPending || !proofDoc}
+                             className={`w-full text-white p-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg ${completeMutation.isPending || !proofDoc ? 'bg-gray-400 cursor-not-allowed' : 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-100'}`}
                         >
-                            {completeMutation.isPending ? "Processing..." : "Confirm Transfer"}
+                            {completeMutation.isPending ? "Processing Upload..." : "Confirm & Complete"}
                         </button>
                         <button 
-                             onClick={() => { setProcessingId(null); setTxnRef(""); }}
+                             onClick={() => { setProcessingId(null); setTxnRef(""); setProofDoc(""); setFileName(""); }}
                              className="w-full text-[10px] font-black uppercase text-gray-400 hover:text-red-500"
                         >
                             Cancel
