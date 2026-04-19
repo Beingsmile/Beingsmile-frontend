@@ -14,11 +14,14 @@ import { toast } from "react-toastify";
 import axioInstance from "../api/axiosInstance";
 import axiosInstance from "../api/axiosInstance";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -109,6 +112,8 @@ const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     setLoading(true);
+    // Clear all cached queries to prevent data leaking between users
+    queryClient.clear();
     await axioInstance.post("/auth/logout").catch((error) => {
       return error;
     });

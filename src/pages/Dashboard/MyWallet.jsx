@@ -4,31 +4,36 @@ import axiosInstance from "../../api/axiosInstance";
 import { FiDollarSign, FiArrowUpRight, FiArrowDownLeft, FiClock, FiCheckCircle, FiFileText } from "react-icons/fi";
 import { motion } from "framer-motion";
 import WithdrawFundsModal from "../../components/WithdrawFundsModal";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthProvider";
 
 const MyWallet = () => {
+  const { user } = useContext(AuthContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, isLoading, refetch: refetchWallet } = useQuery({
-    queryKey: ["myWallet"],
+    queryKey: ["myWallet", user?.uid],
     staleTime: 5 * 60 * 1000, // Keep data fresh for 5 mins
     refetchOnWindowFocus: false,
     queryFn: async () => {
       const res = await axiosInstance.get("/payouts/wallet");
       return res.data.wallet;
     },
+    enabled: !!user,
   });
 
   const { data: missionsData, isLoading: missionsLoading } = useQuery({
-    queryKey: ["userCampaignsPayouts"],
+    queryKey: ["userCampaignsPayouts", user?.uid],
     staleTime: 5 * 60 * 1000, // Keep data fresh for 5 mins
     refetchOnWindowFocus: false,
     queryFn: async () => {
       const res = await axiosInstance.get("/campaigns/my-missions");
       return res.data.campaigns;
     },
+    enabled: !!user,
   });
 
   const { data: withdrawalsData, isLoading: withdrawalsLoading, refetch: refetchWithdrawals } = useQuery({
-    queryKey: ["myWithdrawals"],
+    queryKey: ["myWithdrawals", user?.uid],
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     queryFn: async () => {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import { toast } from "react-toastify";
-import { FiCheck, FiX, FiEye, FiUser, FiFileText, FiClock, FiAlertCircle, FiLoader, FiCheckSquare } from "react-icons/fi";
+import { FiCheck, FiX, FiEye, FiUser, FiFileText, FiClock, FiAlertCircle, FiLoader, FiCheckSquare, FiAlertTriangle, FiShield } from "react-icons/fi";
 
 const VerificationReview = () => {
   const [requests, setRequests] = useState([]);
@@ -85,8 +85,20 @@ const VerificationReview = () => {
           {requests.map((request) => (
             <div 
               key={request._id} 
-              className="bg-white rounded-[2rem] p-6 border border-gray-100 shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all group"
+              className={`bg-white rounded-[2rem] p-6 border shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all group relative ${
+                request.duplicateWarning?.isDuplicate 
+                  ? 'border-red-200 ring-2 ring-red-100' 
+                  : 'border-gray-100'
+              }`}
             >
+              {/* Duplicate Warning Badge on Card */}
+              {request.duplicateWarning?.isDuplicate && (
+                <div className="absolute -top-2.5 left-4 flex items-center gap-1.5 bg-red-500 text-white text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
+                  <FiAlertTriangle size={9} />
+                  Duplicate ID Detected
+                </div>
+              )}
+
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-12 h-12 bg-neutral rounded-xl overflow-hidden flex-shrink-0">
                   {request.user?.avatar ? (
@@ -136,12 +148,41 @@ const VerificationReview = () => {
               <FiX className="group-hover:rotate-90 transition-transform" />
             </button>
 
-            <div className="mb-8">
+            <div className="mb-6">
               <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase mb-2">Review <span className="text-primary">Verification</span></h2>
               <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest">
                 <FiUser className="text-primary" /> {selectedRequest.user?.name}
               </div>
             </div>
+
+            {/* ⚠️ Duplicate ID Warning Banner */}
+            {selectedRequest.duplicateWarning?.isDuplicate && (
+              <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-2xl flex items-start gap-4">
+                <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center shrink-0">
+                  <FiAlertTriangle className="text-red-500 text-lg" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-red-600 mb-1">⚠️ Critical: Duplicate Identity Detected</p>
+                  <p className="text-xs font-bold text-red-800 leading-relaxed">
+                    This identity document is already registered and verified to another account:
+                  </p>
+                  <div className="mt-2 flex items-center gap-2 bg-white p-2 rounded-xl border border-red-100">
+                    {selectedRequest.duplicateWarning.conflictingUser?.avatar ? (
+                      <img src={selectedRequest.duplicateWarning.conflictingUser.avatar} alt="" className="w-8 h-8 rounded-lg object-cover" />
+                    ) : (
+                      <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center">
+                        <FiShield className="text-red-400 text-sm" />
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-xs font-black text-red-900">{selectedRequest.duplicateWarning.conflictingUser?.name}</p>
+                      <p className="text-[10px] font-bold text-red-500">{selectedRequest.duplicateWarning.conflictingUser?.email}</p>
+                    </div>
+                  </div>
+                  <p className="mt-2 text-[10px] font-bold text-red-600 uppercase tracking-wide">Approving this will be blocked by the system. Reject this request.</p>
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <div className="space-y-6">

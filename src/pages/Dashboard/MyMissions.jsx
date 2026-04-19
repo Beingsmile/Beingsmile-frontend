@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../api/axiosInstance";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthProvider";
 import {
   FiPlus, FiGlobe, FiLoader, FiChevronRight,
   FiHash, FiTrendingUp, FiUsers, FiRss
@@ -8,12 +10,14 @@ import { Link } from "react-router";
 import { motion } from "framer-motion";
 
 const MyMissions = () => {
+  const { user } = useContext(AuthContext);
   const { data, isLoading } = useQuery({
-    queryKey: ["myMissions"],
+    queryKey: ["myMissions", user?.uid],
     queryFn: async () => {
       const res = await axiosInstance.get("/campaigns/my-missions");
       return res.data;
-    }
+    },
+    enabled: !!user,
   });
 
   const missions = data?.campaigns || [];

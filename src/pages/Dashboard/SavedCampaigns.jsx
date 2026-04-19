@@ -3,14 +3,18 @@ import axiosInstance from "../../api/axiosInstance";
 import CampaignCard from "../../components/Campaign";
 import { FiBookmark, FiLoader, FiCompass } from "react-icons/fi";
 import { Link } from "react-router";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthProvider";
 
 const SavedCampaigns = () => {
+  const { user } = useContext(AuthContext);
   const { data, isLoading } = useQuery({
-    queryKey: ["savedCampaigns"],
+    queryKey: ["savedCampaigns", user?.uid],
     queryFn: async () => {
       const res = await axiosInstance.get("/campaigns/saved");
       return res.data;
-    }
+    },
+    enabled: !!user,
   });
 
   const campaigns = data?.campaigns || [];

@@ -5,7 +5,7 @@ export const createUser = async (userData) => {
   return res.data;
 }
 
-export const loginUser = async ({ email }) => {
-  const res = await axiosInstance.post("/auth/login", { email });
+export const loginUser = async ({ email, uid }) => {
+  const res = await axiosInstance.post("/auth/login", { email, uid });
   return res.data;
 }

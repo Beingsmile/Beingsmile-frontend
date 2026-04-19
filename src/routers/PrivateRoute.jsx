@@ -6,13 +6,15 @@ import { AuthContext } from "../contexts/AuthProvider";
 const PrivateRoute = ({ children }) => {
     const { user, loading } = useContext(AuthContext)
 
-    if(!user && !loading) return  <Navigate to="/" replace />
+    if (loading) {
+        return <LoadingSpinner />
+    }
 
-    if(loading) <LoadingSpinner />
+    if (!user) {
+        return <Navigate to="/" replace />
+    }
 
-    return (
-        children
-    );
+    return children;
 };
 
 export default PrivateRoute;

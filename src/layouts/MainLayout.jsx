@@ -5,9 +5,20 @@ import { useState } from "react";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import { ToastContainer } from "react-toastify";
+import { useLocation } from "react-router";
+import { useEffect } from "react";
 
 const MainLayout = () => {
   const [auth, setAuth] = useState(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.openLogin) {
+      setAuth("login");
+      // Clear the state to prevent re-opening on manual refresh or back button
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   return (
     <>

@@ -74,7 +74,7 @@ const Login = ({ setAuth }) => {
       const res = await loginWithEmail(email, password);
       if (res?.success) {
         try {
-          const serverRes = await mutateAsync({ email });
+          const serverRes = await mutateAsync({ email, uid: res.user.uid });
           res.user.data = serverRes.user;
           setUser(res.user);
           setAuth(null);
@@ -195,6 +195,7 @@ const Login = ({ setAuth }) => {
                     <input
                       type={showPassword ? "text" : "password"}
                       {...register("password", { required: "Password is required" })}
+                      autoComplete="off"
                       className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#0f2418] placeholder-gray-300 transition-all outline-none pr-10"
                       placeholder="••••••••"
                     />
@@ -284,6 +285,9 @@ const Login = ({ setAuth }) => {
                   className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-4 py-4 rounded-lg text-center text-2xl font-black tracking-[0.5em] text-[#2D6A4F] transition-all outline-none placeholder:opacity-20"
                   placeholder="000000"
                 />
+                <p className="text-[9px] font-black uppercase tracking-widest text-[#2D6A4F]/60 text-center mt-2 flex items-center justify-center gap-1.5">
+                   <FiActivity size={10} className="animate-pulse" /> This code expires in 5 minutes
+                </p>
               </div>
 
               <div className="space-y-3">

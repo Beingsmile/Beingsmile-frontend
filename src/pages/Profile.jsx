@@ -4,7 +4,7 @@ import axiosInstance from "../api/axiosInstance";
 import {
   FiUser, FiMail, FiPhone, FiEdit,
   FiCheckCircle, FiXCircle, FiShield, FiChevronRight,
-  FiClock, FiAward, FiEye, FiHash, FiActivity,
+  FiClock, FiAward, FiEye, FiHash, FiActivity, FiHeart
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import EditProfile from "../components/EditProfile";

@@ -9,7 +9,7 @@ import { useContext, useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import { AuthContext } from "../contexts/AuthProvider";
 import { toast } from "react-toastify";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { FiHeart, FiUser, FiLogOut, FiMenu, FiX, FiBookmark } from "react-icons/fi";
 import profile from "../assets/user.png";
 import NotificationBell from "./NotificationBell";
@@ -21,6 +21,7 @@ export function NavComponent({ setAuth }) {
   const { user, logout } = useContext(AuthContext);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +34,7 @@ export function NavComponent({ setAuth }) {
   const handleLogout = async () => {
     try {
       await logout();
+      navigate("/");
       toast.success("Logged out successfully");
     } catch (error) {
       toast.error(`Logout failed: ${error.message}`);
@@ -124,7 +126,7 @@ export function NavComponent({ setAuth }) {
                     }
                   }}
                   label={
-                    <div className="w-9 h-9 rounded-xl border-2 border-primary hover:border-primary transition-all p-0 overflow-hidden bg-white shadow-sm flex items-center justify-center">
+                    <div className="w-9 h-9 rounded-xl border-2 border-primary hover:border-primary transition-all p-0 overflow-hidden bg-white shadow-sm flex items-center justify-center cursor-pointer">
                       <img
                         alt="User Profile"
                         src={user.data?.avatar || user?.photoURL || profile}

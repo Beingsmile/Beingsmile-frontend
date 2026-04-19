@@ -49,9 +49,9 @@ const Footer = () => {
       { label: "Payment Safety", to: "/contact-us" },
     ],
     legal: [
-      { label: "Privacy Policy", to: "/contact-us" },
-      { label: "Terms of Service", to: "/contact-us" },
-      { label: "Cookie Policy", to: "/contact-us" },
+      { label: "Privacy Policy", to: "/terms#privacy" },
+      { label: "Terms of Service", to: "/terms" },
+      { label: "Cookie Policy", to: "/terms" },
     ]
   };
 

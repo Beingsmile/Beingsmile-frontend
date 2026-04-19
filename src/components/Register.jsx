@@ -149,6 +149,55 @@ const Register = ({ setAuth }) => {
   };
 
   const passwordValue = watch("password");
+  const emailValue = watch("email");
+  const nameValue = watch("name");
+
+  // Password Strength Logic
+  const getStrength = (pass) => {
+    if (!pass) return { score: 0, text: "" };
+    let score = 0;
+    if (pass.length >= 8) score++;
+    if (/[A-Z]/.test(pass)) score++;
+    if (/[a-z]/.test(pass)) score++;
+    if (/[0-9]/.test(pass)) score++;
+    if (/[\W_]/.test(pass)) score++;
+    
+    // Similarity check - Aggressive normalization (remove dots, spaces, etc)
+    const normalizedPass = pass.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const eBase = (emailValue || "").split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
+    const nBase = (nameValue || "").toLowerCase().replace(/[^a-z0-9]/g, '');
+    
+    if (eBase && normalizedPass.includes(eBase)) score = Math.min(score, 1);
+    if (nBase && normalizedPass.includes(nBase)) score = Math.min(score, 1);
+
+    const levels = [
+      { text: "Very Weak", color: "bg-red-500" },
+      { text: "Weak", color: "bg-orange-500" },
+      { text: "Fair", color: "bg-yellow-500" },
+      { text: "Good", color: "bg-emerald-400" },
+      { text: "Strong", color: "bg-[#2D6A4F]" },
+      { text: "Maximum Impact", color: "bg-[#2D6A4F]" }
+    ];
+    return { score, ...levels[score] };
+  };
+
+  const strength = getStrength(passwordValue);
+  const isPasswordValid = strength.score >= 5;
+
+  // Criteria checks for UI
+  const checks = {
+    length: passwordValue?.length >= 8,
+    upper: /[A-Z]/.test(passwordValue),
+    lower: /[a-z]/.test(passwordValue),
+    number: /[0-9]/.test(passwordValue),
+    special: /[\W_]/.test(passwordValue),
+    unique: (() => {
+      const p = (passwordValue || "").toLowerCase().replace(/[^a-z0-9]/g, '');
+      const e = (emailValue || "").split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
+      const n = (nameValue || "").toLowerCase().replace(/[^a-z0-9]/g, '');
+      return !((e && p.includes(e)) || (n && p.includes(n)));
+    })()
+  };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -207,7 +256,7 @@ const Register = ({ setAuth }) => {
                   type="text"
                   {...register("name", { required: "Name is required" })}
                   className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#0f2418] placeholder-gray-300 transition-all outline-none"
-                  placeholder="e.g. Atik Rahman"
+                  placeholder="Full Name"
                 />
                 {errors.name && <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider">{errors.name.message}</p>}
               </div>
@@ -238,7 +287,22 @@ const Register = ({ setAuth }) => {
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
-                      {...register("password", { required: "Password is required" })}
+                      autoComplete="new-password"
+                      {...register("password", { 
+                        required: "Password is required",
+                        minLength: { value: 8, message: "Min 8 characters required" },
+                        validate: {
+                          strength: (v) => getStrength(v).score >= 5 || "Password must be strong and unique",
+                          similarity: (v) => {
+                             const p = v.toLowerCase().replace(/[^a-z0-9]/g, '');
+                             const e = (emailValue || "").split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '');
+                             const n = (nameValue || "").toLowerCase().replace(/[^a-z0-9]/g, '');
+                             if (e && p.includes(e)) return "Password cannot contain parts of your email";
+                             if (n && p.includes(n)) return "Password cannot contain your name";
+                             return true;
+                          }
+                        }
+                      })}
                       className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-3.5 py-2.5 rounded-lg text-sm font-semibold text-[#0f2418] placeholder-gray-300 transition-all outline-none pr-10"
                       placeholder="••••••••"
                     />
@@ -250,13 +314,32 @@ const Register = ({ setAuth }) => {
                       {showPassword ? <FiEyeOff size={15} /> : <FiEye size={15} />}
                     </button>
                   </div>
-                  {errors.password && <p className="text-red-500 text-[10px] font-bold uppercase">{errors.password.message}</p>}
+                  
+                  {/* Strength Meter UI */}
+                  {passwordValue && (
+                    <div className="space-y-1 mt-1">
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((level) => (
+                          <div
+                            key={level}
+                            className={`h-1 flex-1 rounded-full transition-all duration-500 ${
+                              strength.score >= level ? strength.color : "bg-gray-100"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <p className={`text-[8px] font-black uppercase tracking-widest ${strength.score > 0 ? 'opacity-100' : 'opacity-0'} transition-opacity`}>
+                         Strength: <span className={strength.score < 3 ? 'text-red-500' : 'text-[#2D6A4F]'}>{strength.text}</span>
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-wide text-gray-400">Confirm</label>
                   <input
                     type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
                     {...register("confirmPassword", {
                       required: "Required",
                       validate: (val) => val === passwordValue || "Passwords must match",
@@ -268,9 +351,38 @@ const Register = ({ setAuth }) => {
                 </div>
               </div>
 
+              {/* Password Policy Policy Checklist */}
+              <div className="bg-[#F8FDFB] border border-[#E5F0EA] rounded-xl p-4 space-y-3">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">Security Policy</p>
+                  {isPasswordValid && (
+                    <span className="flex items-center gap-1 text-[9px] font-black text-[#2D6A4F] uppercase">
+                      <FiCheckCircle size={10} /> Policy Met
+                    </span>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                  <PolicyItem met={checks.length} text="8+ Characters" />
+                  <PolicyItem met={checks.upper} text="Uppercase Letter" />
+                  <PolicyItem met={checks.lower} text="Lowercase Letter" />
+                  <PolicyItem met={checks.number} text="Number included" />
+                  <PolicyItem met={checks.special} text="Special Character" />
+                  <PolicyItem met={checks.unique} text="Unique (No Name/Email)" />
+                </div>
+                
+                {errors.password && (
+                  <div className="pt-2 border-t border-gray-100">
+                    <p className="text-red-500 text-[9px] font-bold uppercase tracking-tight italic">
+                      ⚠ {errors.password.message}
+                    </p>
+                  </div>
+                )}
+              </div>
+
               <button
                 type="submit"
-                disabled={isVerifying || isLoadingUI}
+                disabled={isVerifying || isLoadingUI || !isPasswordValid}
                 className="w-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white font-black uppercase tracking-wider py-3 rounded-lg transition-all shadow-lg shadow-[#2D6A4F]/20 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 text-xs flex items-center justify-center gap-2.5 group cursor-pointer"
               >
                 {isVerifying || isLoadingUI ? (
@@ -341,6 +453,9 @@ const Register = ({ setAuth }) => {
                   className="w-full bg-[#F8FDFB] border-2 border-[#E5F0EA] focus:border-[#2D6A4F] focus:bg-white px-4 py-4 rounded-lg text-center text-2xl font-black tracking-[0.5em] text-[#2D6A4F] transition-all outline-none placeholder:opacity-20"
                   placeholder="000000"
                 />
+                <p className="text-[9px] font-black uppercase tracking-widest text-[#2D6A4F]/60 text-center mt-2 flex items-center justify-center gap-1.5">
+                   <FiActivity size={10} className="animate-pulse" /> This code expires in 5 minutes
+                </p>
               </div>
 
               <div className="space-y-3">
@@ -383,5 +498,14 @@ const Register = ({ setAuth }) => {
     </div>
   );
 };
+
+const PolicyItem = ({ met, text }) => (
+  <div className={`flex items-center gap-2 transition-all duration-300 ${met ? "text-[#2D6A4F]" : "text-red-500"}`}>
+    <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center shrink-0 transition-colors ${met ? "bg-[#2D6A4F] border-[#2D6A4F]" : "bg-red-50 border-red-200"}`}>
+      {met ? <FiCheckCircle size={10} className="text-white" /> : <FiX size={10} className="text-red-400" />}
+    </div>
+    <span className="text-[10px] font-bold tracking-tight">{text}</span>
+  </div>
+);
 
 export default Register;

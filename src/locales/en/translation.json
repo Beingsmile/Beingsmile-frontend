@@ -49,5 +49,19 @@
     "loading": "Loading...",
     "error": "Something went wrong",
     "success": "Success!"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "last_updated": "Last Updated: April 2026",
+    "intro_title": "The Heart of BeingSmile",
+    "intro_p1": "Welcome to BeingSmile. By accessing our platform, you are joining a global community dedicated to healing lives through transparency and kindness. These terms govern your use of our services.",
+    "donation_title": "1. Donation Integrity",
+    "donation_p1": "Every donation you make is a direct contribution to a verified mission. BeingSmile ensures that funds reach the intended cause after a standard verification period to prevent fraud.",
+    "responsibility_title": "2. Fundraiser Obligations",
+    "responsibility_p1": "Mission creators must provide accurate documentation and regular progress updates. Misrepresentation of facts or misuse of funds will result in immediate permanent suspension from the platform.",
+    "transparency_title": "3. Transparency & Fees",
+    "transparency_p1": "We keep our operations lean. A standard platform fee is applied to each transaction to cover secure payment processing and maintenance, which is always clearly stated before you donate.",
+    "privacy_title": "4. Privacy & Safety",
+    "privacy_p1": "Your data is protected by industry-grade encryption. We never sell your personal information to third parties. Verified status is required for all fundraisers to maintain high-trust levels."
   }
 }

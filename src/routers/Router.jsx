@@ -33,6 +33,7 @@ import SavedCampaigns from "../pages/Dashboard/SavedCampaigns.jsx";
 import MissionSettings from "../pages/Dashboard/MissionSettings.jsx";
 import Donations from "../pages/Dashboard/Donations.jsx";
 import MyWallet from "../pages/Dashboard/MyWallet.jsx";
+import Terms from "../pages/Terms.jsx";
 
 const router = createBrowserRouter([
   {
@@ -86,6 +87,10 @@ const router = createBrowserRouter([
       {
         path: "p/:slug",
         element: <PublicProfile />,
+      },
+      {
+        path: "terms",
+        element: <Terms />,
       },
     ],
   },

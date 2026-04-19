@@ -2,19 +2,30 @@ import { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthProvider";
 import { FiMail, FiArrowLeft, FiLoader, FiShield, FiCheckCircle } from "react-icons/fi";
 import { Link } from "react-router";
+import axiosInstance from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const ForgotPass = () => {
     const [email, setEmail] = useState("");
-    const { forgotPassword, loading } = useContext(AuthContext);
+    const { forgotPassword } = useContext(AuthContext); // Removed unused loading from context
     const [sent, setSent] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!email) return;
+        if (!email || isSubmitting) return;
 
-        const result = await forgotPassword(email);
-        if (result.success) {
-            setSent(true);
+        try {
+            setIsSubmitting(true);
+            const response = await axiosInstance.post("/auth/forgot-password", { email });
+            if (response.data.success) {
+                setSent(true);
+                toast.success("Security reset link sent!");
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to send reset link");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -59,10 +70,10 @@ const ForgotPass = () => {
 
                             <button
                                 type="submit"
-                                disabled={loading}
+                                disabled={isSubmitting}
                                 className="w-full bg-[#2D6A4F] hover:bg-[#1B4332] text-white font-black uppercase tracking-wider py-3 rounded-lg transition-all shadow-lg shadow-[#2D6A4F]/20 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 text-xs flex items-center justify-center gap-2.5 group cursor-pointer"
                             >
-                                {loading ? (
+                                {isSubmitting ? (
                                     <FiLoader className="animate-spin text-lg" />
                                 ) : (
                                     <>

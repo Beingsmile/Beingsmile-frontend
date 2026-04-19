@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiX, FiShield, FiLoader, FiCheck, FiInfo, FiActivity, FiUpload, FiCreditCard, FiTrash2, FiEye } from "react-icons/fi";
+import { FiX, FiShield, FiLoader, FiCheck, FiInfo, FiActivity, FiUpload, FiCreditCard, FiTrash2 } from "react-icons/fi";
 import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 
@@ -8,25 +8,21 @@ const RequestVerification = ({ onClose, onSubmitted }) => {
     const [reason, setReason] = useState("");
     const [identityType, setIdentityType] = useState("NID");
     const [identityNumber, setIdentityNumber] = useState("");
-    const [documents, setDocuments] = useState([]); // { type: string, url: string }
+    const [documents, setDocuments] = useState([]); 
     const [isUploading, setIsUploading] = useState(false);
 
-    // Update file selection to use local previews and store File objects
     const handleFileUpload = (e, type) => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Generate a local preview URL
         const previewUrl = URL.createObjectURL(file);
         
-        // Store document metadata and the actual File object for later upload
         setDocuments(prev => {
-            // Remove if type already exists
             const filtered = prev.filter(d => d.type !== type);
             return [...filtered, { type, url: previewUrl, file, isLocal: true }];
         });
         
-        toast.success(`${type.replace('_', ' ')} ready!`);
+        toast.success(`${type.replace('_', ' ').toUpperCase()} ready!`);
     };
 
     const removeDocument = (index) => {
@@ -51,7 +47,6 @@ const RequestVerification = ({ onClose, onSubmitted }) => {
 
         setLoading(true);
         try {
-            // Convert files to Base64 for backend upload (matches StartCampaign logic)
             const uploadResults = await Promise.all(
                 documents.map(async (doc) => {
                     const reader = new FileReader();
@@ -67,13 +62,13 @@ const RequestVerification = ({ onClose, onSubmitted }) => {
                 reason,
                 identityType,
                 identityNumber,
-                documents: uploadResults, // Sending Base64 to backend
+                documents: uploadResults,
                 userType: 'donor'
             };
 
             const response = await axiosInstance.post("/verification/submit", payload);
             if (response.data.success) {
-                toast.success("Verification request submitted for admin review!");
+                toast.success("Verification request submitted successfully!");
                 onSubmitted();
                 onClose();
             }
@@ -86,94 +81,130 @@ const RequestVerification = ({ onClose, onSubmitted }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-md animate-in fade-in duration-300 overflow-y-auto">
-            <div className="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300 border-8 border-white relative my-8">
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-8 right-8 w-10 h-10 bg-neutral rounded-2xl flex items-center justify-center text-gray-400 hover:text-primary transition-all cursor-pointer group z-10"
-                >
-                    <FiX className="group-hover:rotate-90 transition-transform" />
-                </button>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0f2418]/60 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="bg-white w-full max-w-[520px] max-h-[90vh] rounded-[2rem] shadow-[0_32px_120px_-20px_rgba(27,67,50,0.3)] border border-emerald-50 relative flex flex-col overflow-hidden animate-in zoom-in-95 duration-400">
+                
+                {/* Header Section */}
+                <div className="p-6 md:p-8 pb-4 border-b border-gray-50 relative">
+                    {/* Close Button */}
+                    <button
+                        onClick={onClose}
+                        className="absolute top-6 right-6 w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-emerald-50 hover:text-[#2D6A4F] transition-all cursor-pointer group z-20"
+                    >
+                        <FiX size={16} className="group-hover:rotate-90 transition-transform" />
+                    </button>
 
-                <div className="p-8 md:p-12">
-                    <div className="text-center mb-10 space-y-2">
-                        <div className="w-16 h-16 bg-primary/10 text-primary rounded-[1.5rem] flex items-center justify-center text-2xl mx-auto mb-4">
+                    <div className="flex items-center gap-4">
+                        <div className="w-11 h-11 bg-emerald-50 text-[#2D6A4F] rounded-xl flex items-center justify-center text-xl shrink-0">
                             <FiShield />
                         </div>
-                        <h2 className="text-4xl font-black text-gray-900 tracking-tight uppercase font-sans">
-                            Trust <span className="text-primary">Stamp</span>
-                        </h2>
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">Industry-grade identity validation.</p>
+                        <div className="text-left">
+                            <h2 className="text-xl font-black text-[#0f2418] tracking-tight uppercase">
+                                Trust <span className="text-[#2D6A4F]">Stamp</span>
+                            </h2>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600/60">Tier-1 Identity Validation</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Scrollable Form Body */}
+                <div className="flex-1 overflow-y-auto p-6 md:p-8 pt-4 space-y-6 custom-scrollbar">
+                    
+                    {/* Compact Info Box */}
+                    <div className="p-4 bg-emerald-50/50 rounded-xl border border-emerald-100 flex items-start gap-3">
+                        <FiInfo size={16} className="text-[#2D6A4F] shrink-0 mt-0.5" />
+                        <p className="text-[10px] font-bold text-emerald-800/80 leading-relaxed uppercase tracking-tight">
+                            Identity documents are strictly private and visible only to administrators for secure verification.
+                        </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        {/* Documentation Info */}
-                        <div className="p-6 bg-primary/5 rounded-[2rem] border-2 border-primary/10 flex items-start gap-4">
-                            <FiInfo className="text-primary text-xl shrink-0 mt-1" />
-                            <div className="space-y-1">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Required Documents</p>
-                                <p className="text-[10px] font-bold text-primary/70 leading-relaxed uppercase">
-                                    Please upload a clear photo of your Govt ID (NID/Passport) and a selfie for validation.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Identity Type & Number */}
-                            <div className="space-y-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-4">Identity Document Type</label>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 gap-5">
+                            {/* Document Type & ID Number */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">ID Type</label>
                                     <select 
                                         value={identityType}
                                         onChange={(e) => setIdentityType(e.target.value)}
-                                        className="w-full bg-neutral border-2 border-transparent focus:border-primary/20 focus:bg-white px-6 py-4 rounded-2xl text-sm font-bold text-gray-900 outline-none transition-all cursor-pointer appearance-none"
+                                        className="w-full bg-[#F8FDFB] border border-gray-200 focus:border-[#2D6A4F] focus:bg-white px-3 py-2.5 rounded-xl text-xs font-bold text-gray-900 outline-none transition-all cursor-pointer appearance-none"
                                     >
                                         <option value="NID">National ID (NID)</option>
-                                        <option value="Passport">International Passport</option>
+                                        <option value="Passport">Passport</option>
                                         <option value="Driving License">Driving License</option>
                                     </select>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-4">ID / Passport Number</label>
-                                    <div className="relative group">
-                                        <FiCreditCard className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors" />
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Document Number</label>
+                                    <div className="relative">
+                                        <FiCreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs" />
                                         <input
                                             type="text"
                                             value={identityNumber}
                                             onChange={(e) => setIdentityNumber(e.target.value)}
-                                            className="w-full pl-14 pr-6 py-4 bg-neutral border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl outline-none text-sm font-bold text-gray-900 transition-all placeholder:text-gray-300"
-                                            placeholder="Ex: 1234567890"
+                                            className="w-full pl-9 pr-4 py-2.5 bg-[#F8FDFB] border border-gray-200 focus:border-[#2D6A4F] focus:bg-white rounded-xl outline-none text-xs font-bold text-[#0f2418] transition-all placeholder:text-gray-400/60"
+                                            placeholder="Ex: 8234-5678"
                                             required
                                         />
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Document Uploads */}
-                            <div className="space-y-2">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-4">Upload Proofs</label>
-                                <div className="grid grid-cols-2 gap-3">
+                            {/* Verification Statement */}
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Why verify?</label>
+                                <div className="relative">
+                                    <FiActivity className="absolute left-3.5 top-3.5 text-gray-400 text-sm" />
+                                    <textarea
+                                        value={reason}
+                                        onChange={(e) => setReason(e.target.value)}
+                                        rows="2"
+                                        className="w-full pl-9 pr-4 py-3 bg-[#F8FDFB] border border-gray-200 focus:border-[#2D6A4F] focus:bg-white rounded-xl outline-none text-xs font-bold text-[#0f2418] transition-all resize-none placeholder:text-gray-400/60 leading-relaxed"
+                                        placeholder="E.g. I want to build trust with donors and start my fundraising mission."
+                                        required
+                                    ></textarea>
+                                </div>
+                            </div>
+
+                            {/* Document Grid - More Compact */}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between px-1">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-[#2D6A4F]">Proof of Identity</label>
+                                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">{documents.length}/4 uploaded</span>
+                                </div>
+                                <div className="grid grid-cols-4 gap-3">
                                     {['id_front', 'id_back', 'utility_bill', 'other'].map((type) => {
                                         const existing = documents.find(d => d.type === type);
                                         return (
                                             <div key={type} className="relative aspect-square">
                                                 {existing ? (
-                                                    <div className="w-full h-full rounded-2xl overflow-hidden border-2 border-primary/20 group">
+                                                    <div className="w-full h-full rounded-xl overflow-hidden border border-emerald-100 group">
                                                         <img src={existing.url} alt="" className="w-full h-full object-cover" />
-                                                        <div className="absolute inset-0 bg-gray-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                                            <button type="button" onClick={() => removeDocument(documents.indexOf(existing))} className="p-2 bg-white rounded-lg text-red-500 hover:scale-110 transition-transform"><FiTrash2 /></button>
+                                                        <div className="absolute inset-0 bg-gray-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                            <button 
+                                                                type="button" 
+                                                                onClick={() => removeDocument(documents.indexOf(existing))} 
+                                                                className="p-1.5 bg-white text-red-500 rounded-lg hover:scale-110 shadow-sm transition-transform cursor-pointer"
+                                                            >
+                                                                <FiTrash2 size={12} />
+                                                            </button>
                                                         </div>
-                                                        <div className="absolute bottom-1 left-1 right-1 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg">
-                                                            <p className="text-[8px] font-black uppercase text-center truncate">{type.replace('_', ' ')}</p>
+                                                        <div className="absolute bottom-0 inset-x-0 bg-[#0f2418]/80 backdrop-blur-sm px-1.5 py-0.5">
+                                                            <p className="text-[7px] font-black text-white uppercase text-center truncate">{type.replace('_', ' ')}</p>
                                                         </div>
                                                     </div>
                                                 ) : (
-                                                    <label className="w-full h-full rounded-2xl bg-neutral border-2 border-dashed border-gray-200 hover:border-primary/40 hover:bg-primary/5 transition-all flex flex-col items-center justify-center gap-2 cursor-pointer group">
-                                                        <input type="file" className="hidden" accept="image/*" onChange={(e) => handleFileUpload(e, type)} disabled={isUploading} />
-                                                        <FiUpload className="text-gray-300 group-hover:text-primary transition-colors text-xl" />
-                                                        <span className="text-[8px] font-black uppercase text-gray-400 text-center px-1">{type.replace('_', ' ')}</span>
+                                                    <label className="w-full h-full rounded-xl bg-gray-50 border border-dashed border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/30 transition-all flex flex-col items-center justify-center gap-1.5 cursor-pointer group">
+                                                        <input 
+                                                            type="file" 
+                                                            className="hidden" 
+                                                            accept="image/*" 
+                                                            onChange={(e) => handleFileUpload(e, type)} 
+                                                            disabled={isUploading} 
+                                                        />
+                                                        <FiUpload className="text-gray-300 group-hover:text-[#2D6A4F] transition-colors text-sm" />
+                                                        <span className="text-[7px] font-black uppercase text-gray-400 group-hover:text-[#2D6A4F] text-center px-1 leading-tight">{type.replace('_', ' ')}</span>
                                                     </label>
                                                 )}
                                             </div>
@@ -183,35 +214,25 @@ const RequestVerification = ({ onClose, onSubmitted }) => {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 ml-4">Verification Statement</label>
-                            <div className="relative group">
-                                <FiActivity className="absolute left-6 top-6 text-gray-400 group-focus-within:text-primary transition-colors text-xl" />
-                                <textarea
-                                    value={reason}
-                                    onChange={(e) => setReason(e.target.value)}
-                                    rows="3"
-                                    className="w-full pl-16 pr-8 py-6 bg-neutral border-2 border-transparent focus:border-primary/20 rounded-[2rem] outline-none text-sm font-bold text-gray-900 transition-all resize-none placeholder:text-gray-300"
-                                    placeholder="Explain why you wish to be verified..."
-                                    required
-                                ></textarea>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                        {/* Action Buttons */}
+                        <div className="flex gap-3 pt-2">
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="flex-1 px-8 py-5 bg-neutral text-gray-500 font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl border border-gray-100 hover:bg-gray-200 transition-all cursor-pointer"
+                                className="flex-1 px-4 py-3 text-gray-400 font-black uppercase tracking-widest text-[10px] rounded-xl border border-gray-100 hover:bg-gray-50 hover:text-gray-600 transition-all cursor-pointer"
                             >
                                 Not Now
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading || isUploading || documents.length === 0}
-                                className="flex-2 px-10 py-5 bg-primary text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all disabled:opacity-20 flex items-center justify-center gap-3 cursor-pointer"
+                                className="flex-[2] px-6 py-3 bg-[#2D6A4F] text-white font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#2D6A4F]/20 hover:bg-[#1B4332] transition-colors disabled:opacity-20 flex items-center justify-center gap-2 cursor-pointer"
                             >
-                                {loading ? <FiLoader className="animate-spin" /> : <><FiCheck /> Submit Request</>}
+                                {loading ? (
+                                    <FiLoader className="animate-spin text-sm" />
+                                ) : (
+                                    <><FiCheck size={14} /> Submit Application</>
+                                )}
                             </button>
                         </div>
                     </form>
