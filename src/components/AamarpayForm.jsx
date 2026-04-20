@@ -58,7 +58,7 @@ const AamarpayForm = ({ campaignId, amount, isAnonymous = false, isAnonymousFrom
     setShowConfirmModal(false);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
       const response = await fetch(`${apiUrl}/api/payment/aamarpay/initiate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

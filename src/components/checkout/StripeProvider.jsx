@@ -23,7 +23,7 @@ export default function StripeProvider({ campaignId, amount }) {
     setLoading(true);
     setError("");
 
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
     fetch(`${apiUrl}/api/payment/create-intent`, {
       method: "POST",
