@@ -6,7 +6,7 @@ const CTABanner = () => (
     <div className="max-w-3xl mx-auto text-center space-y-6">
       <p className="text-[#52B788] text-xs font-bold uppercase tracking-widest">আজই যোগ দিন</p>
       <h2 className="text-3xl md:text-4xl font-bold text-white leading-snug">
-        আজই আপনার ভোটের প্রকৃত প্রকাশ করুন!
+        আজই একটি হাসি ফোটান!
       </h2>
       <p className="text-sm text-white/60 leading-relaxed max-w-xl mx-auto">
         Start your mission today, or donate to a cause you believe in. Together, we build a bridge of hope and transparency for Bangladesh.

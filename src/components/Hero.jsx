@@ -92,7 +92,7 @@ const Hero = () => {
                 />
                 {/* Bottom overlay with text */}
                 <div className="absolute bottom-0 left-0 right-0 bg-[#1B4332]/90 p-4">
-                  <p className="text-white text-xs font-semibold opacity-80">গণতন্ত্র উদ্যোগ</p>
+                  <p className="text-white text-xs font-semibold opacity-80">মানবিক উদ্যোগ</p>
                   <p className="text-white text-sm font-bold mt-0.5">BeingSmile — মানুষের পাশে আছি</p>
                 </div>
               </div>
