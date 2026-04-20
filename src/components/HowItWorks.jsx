@@ -54,7 +54,7 @@ const HowItWorks = () => {
         {/* 4-column horizontal steps — like reference */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {steps.map((step, idx) => (
-            <Link key={idx} to={step.link} className="group flex flex-col items-center text-center space-y-4">
+            <div key={idx} className="group flex flex-col items-center text-center space-y-4">
               {/* Icon circle with step badge */}
               <div className="relative">
                 <div className="w-16 h-16 bg-white rounded-full border border-[#D1EAD9] flex items-center justify-center text-[#2D6A4F] group-hover:bg-[#2D6A4F] group-hover:text-white group-hover:border-[#2D6A4F] transition-all duration-300 shadow-sm">
@@ -74,7 +74,7 @@ const HowItWorks = () => {
               <p className="text-xs text-gray-500 leading-relaxed px-1">
                 {step.text}
               </p>
-            </Link>
+            </div>
           ))}
         </div>
       </div>
